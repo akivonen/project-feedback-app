@@ -1,8 +1,13 @@
+import Header from "./components/Header";
+import Main from "./components/Main";
+
 export default function Home() {
   return (
-    <div className="flex flex-col gap-x-[30px] p-4 text-white sm:gap-y-10 lg:flex-row">
-      <div className="w-full bg-red-700 lg:max-w-[255px]">header</div>
-      <div className="w-full bg-blue-500">feedbacks</div>
-    </div>
+    <>
+      <div className="flex flex-col gap-x-[30px] text-white md:gap-y-10 md:px-10 md:pt-[56px] lg:flex-row lg:px-[min(165px,10%)] xl:pt-[94px]">
+        <Header />
+        <Main />
+      </div>
+    </>
   );
 }
