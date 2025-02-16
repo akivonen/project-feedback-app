@@ -6,12 +6,16 @@ export default {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  safelist: ["text-orange-100", "text-blue-100", "text-purple-200"],
   theme: {
     colors: {
       white: "#FFF",
       light: {
         100: "#F2F4FE",
         200: "#F7F8FD",
+        300: "#F2F4FF",
+        400: "#CFD7FF",
+        500: "#CDD2EE",
       },
       dark: {
         100: "#656EA3",
@@ -33,9 +37,17 @@ export default {
       },
     },
     fontSize: {
+      sm: "0.8125rem",
       base: "1rem",
+      lg: "1.125rem",
+      xl: "1.25rem",
+      "2xl": "1.5rem",
     },
-    extend: {},
+    extend: {
+      boxShadow: {
+        dropShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+      },
+    },
   },
   plugins: [],
 } satisfies Config;

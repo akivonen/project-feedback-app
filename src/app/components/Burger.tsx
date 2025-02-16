@@ -7,7 +7,6 @@ type BurgerProps = {
 
 const Burger: React.FC<BurgerProps> = (props) => {
   const { isOpen, handleClick } = props;
-  console.log(isOpen);
 
   return (
     <button

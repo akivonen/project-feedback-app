@@ -26,7 +26,7 @@ const RoadmapHeaderList: React.FC = () => {
         <h2 className="text-[18px] font-bold text-dark-400">Roadmap</h2>
         <Link
           href="/roadmap"
-          className="text-blue-300 text-[13px] font-semibold underline"
+          className="text-sm font-semibold text-blue-300 underline"
         >
           View
         </Link>
