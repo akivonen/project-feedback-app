@@ -23,6 +23,12 @@
     }
   },
   "types": ["@svgr/webpack"],
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "src/services/pglite.js"
+  ],
   "exclude": ["node_modules"]
 }

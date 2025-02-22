@@ -11,11 +11,16 @@ export type Comment = {
 };
 
 export type Feedback = {
-  id: number;
+  id: string;
   title: string;
   category: string;
   upvotes: number;
   status: string;
   description: string;
   comments?: Comment[];
+  commentCount: number;
 };
+
+export type RoadmapStatus = 'planned' | 'in-progress' | 'live';
+
+export type Roadmap = Record<RoadmapStatus, number>;

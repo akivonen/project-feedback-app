@@ -1,24 +1,34 @@
-"use client";
-import React, { useState } from "react";
-import Image from "next/image";
-import data from "../../../data/data.json";
-import SuggestionsList from "./SuggestionsList";
-import AddFeedbackButton from "../AddFeedbackButton";
-import SuggestionsNoFeedback from "./SuggestionsNoFeedback";
-import SuggestionsSorting from "./SuggestionsSorting";
+'use client';
+import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
+import SuggestionsList from './SuggestionsList';
+import AddFeedbackButton from '../AddFeedbackButton';
+import SuggestionsNoFeedback from './SuggestionsNoFeedback';
+import SuggestionsSorting from './SuggestionsSorting';
+import { Feedback } from '@/types';
 
-const sortingOptions = [
-  "Most upvotes",
-  "Least upvotes",
-  "Most comments",
-  "Least comments",
-];
+type SuggestionsProps = {
+  feedbacks: Feedback[];
+};
 
-const Suggestions = () => {
-  const [selectedSorting, setSelectedSorting] = useState<string>(
-    sortingOptions[0],
-  );
-  const { productRequests } = data;
+type SortingFunction = (first: Feedback, second: Feedback) => number;
+
+const sortingOptionsMap: Record<string, SortingFunction> = {
+  'Most upvotes': (first: Feedback, second: Feedback) => second.upvotes - first.upvotes,
+  'Least upvotes': (first: Feedback, second: Feedback) => first.upvotes - second.upvotes,
+  'Most comments': (first: Feedback, second: Feedback) => first.commentCount - second.commentCount,
+  'Least comments': (first: Feedback, second: Feedback) => second.commentCount - first.commentCount,
+};
+
+const Suggestions: React.FC<SuggestionsProps> = ({ feedbacks }) => {
+  const sortingOptions = Object.keys(sortingOptionsMap);
+  const [selectedSorting, setSelectedSorting] = useState<string>(sortingOptions[0]);
+  const [sortedFeedback, setSortedFeedback] = useState<Feedback[]>(feedbacks);
+  useEffect(() => {
+    const sortedProducts = feedbacks.sort(sortingOptionsMap[selectedSorting]);
+    setSortedFeedback(sortedProducts);
+  }, [feedbacks, selectedSorting]);
+
   return (
     <section id="suggestions">
       <div className="flex items-center justify-between bg-dark-300 px-6 py-2 align-middle md:rounded-lg lg:w-full">
@@ -33,7 +43,7 @@ const Suggestions = () => {
               />
             </div>
             <span className="ml-4 text-[18px] font-bold text-white">
-              6 Suggestions
+              {feedbacks?.length || 0} Suggestions
             </span>
           </div>
           <SuggestionsSorting
@@ -44,8 +54,8 @@ const Suggestions = () => {
         </div>
         <AddFeedbackButton />
       </div>
-      {productRequests ? (
-        <SuggestionsList productRequests={productRequests} />
+      {sortedFeedback ? (
+        <SuggestionsList productRequests={sortedFeedback} />
       ) : (
         <SuggestionsNoFeedback />
       )}
