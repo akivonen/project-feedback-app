@@ -5,13 +5,8 @@ import Burger from './Burger';
 import MobileMenu from './MobileMenu';
 import FeedbackCategories from './FeedbackCategories';
 import RoadmapHeaderList from './roadmap/RoadmapHeaderList';
-import { Roadmap } from '@/types';
 
-type HeaderProps = {
-  roadmap: Roadmap;
-};
-
-const Header: React.FC<HeaderProps> = ({ roadmap }) => {
+const Header: React.FC = () => {
   const [isOpen, toggleMobileMenu] = useState(false);
 
   return (
@@ -31,7 +26,7 @@ const Header: React.FC<HeaderProps> = ({ roadmap }) => {
           <FeedbackCategories />
         </div>
         <div className="hidden md:flex md:flex-1">
-          <RoadmapHeaderList roadmap={roadmap} />
+          <RoadmapHeaderList />
         </div>
       </div>
 

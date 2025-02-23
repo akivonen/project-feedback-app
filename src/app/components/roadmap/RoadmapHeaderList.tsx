@@ -1,14 +1,21 @@
+'use client';
 import React from 'react';
 import Link from 'next/link';
 import RoadmapHeaderItem from './RoadmapHeaderItem';
-import { Roadmap } from '@/types';
-type RoadmapHeaderListProps = {
-  roadmap: Roadmap;
-};
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { getFeedbacksHandler } from '@/services/feedbacks';
+import { getRoadmapStats } from '@/services/roadmap';
 
-const RoadmapHeaderList: React.FC<RoadmapHeaderListProps> = ({ roadmap }) => {
+const RoadmapHeaderList: React.FC = () => {
+  const { data: feedbacks } = useSuspenseQuery({
+    queryKey: ['feedbacks'],
+    queryFn: () => getFeedbacksHandler(),
+  });
+
+  const roadmapStats = getRoadmapStats(feedbacks);
+
   const roadmapBulletsColors = ['orange-100', 'purple-200', 'blue-100'];
-  const roadmapList = Object.entries(roadmap).map(([state, tasksCount], index) => ({
+  const roadmapList = Object.entries(roadmapStats).map(([state, tasksCount], index) => ({
     state,
     tasksCount,
     color: roadmapBulletsColors[index],

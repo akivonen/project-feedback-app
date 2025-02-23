@@ -24,3 +24,5 @@ export type Feedback = {
 export type RoadmapStatus = 'planned' | 'in-progress' | 'live';
 
 export type Roadmap = Record<RoadmapStatus, number>;
+
+export type Category = 'All' | 'UI' | 'UX' | 'Enhancement' | 'Bug' | 'Feature';

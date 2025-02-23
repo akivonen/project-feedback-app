@@ -1,6 +1,7 @@
-import React from "react";
-import FeedbackCategories from "./FeedbackCategories";
-import RoadmapHeaderList from "./roadmap/RoadmapHeaderList";
+'use client';
+import React from 'react';
+import FeedbackCategories from './FeedbackCategories';
+import RoadmapHeaderList from './roadmap/RoadmapHeaderList';
 
 const MobileMenu: React.FC = () => {
   return (
