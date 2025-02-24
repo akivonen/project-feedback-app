@@ -5,6 +5,21 @@ import RoadmapHeaderItem from './RoadmapHeaderItem';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { getFeedbacksHandler } from '@/services/feedbacks';
 import { getRoadmapStats } from '@/services/roadmap';
+import LoadingSpinner from '../LoadingSpinner';
+
+export const RoadmapHeaderListSkeleton = () => {
+  return (
+    <div className="w-full min-w-[223px] rounded-lg bg-white p-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-[18px] font-bold text-dark-400">Roadmap</h2>
+        <Link href="/roadmap" className="text-sm font-semibold text-blue-300 underline">
+          View
+        </Link>
+      </div>
+      <LoadingSpinner />
+    </div>
+  );
+};
 
 const RoadmapHeaderList: React.FC = () => {
   const { data: feedbacks } = useSuspenseQuery({

@@ -3,7 +3,7 @@ import { getAllFeedbacks } from '@/db/queries/feedbacks';
 import { Feedback } from '@/types';
 
 export async function GET(): Promise<
-  NextResponse<{ success: boolean; message?: string; data: Feedback[] }>
+  NextResponse<{ success: boolean; message?: string; data: Feedback[] | [] }>
 > {
   try {
     const feedbacks = await getAllFeedbacks();

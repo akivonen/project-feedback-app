@@ -1,12 +1,12 @@
 'use client';
-import React from 'react';
+import React, { Suspense } from 'react';
 import { useState } from 'react';
 import Burger from './Burger';
 import MobileMenu from './MobileMenu';
 import FeedbackCategories from './FeedbackCategories';
-import RoadmapHeaderList from './roadmap/RoadmapHeaderList';
+import RoadmapHeaderList, { RoadmapHeaderListSkeleton } from './roadmap/RoadmapHeaderList';
 
-const Header: React.FC = () => {
+const MainHeader: React.FC = () => {
   const [isOpen, toggleMobileMenu] = useState(false);
 
   return (
@@ -26,7 +26,9 @@ const Header: React.FC = () => {
           <FeedbackCategories />
         </div>
         <div className="hidden md:flex md:flex-1">
-          <RoadmapHeaderList />
+          <Suspense fallback={<RoadmapHeaderListSkeleton />}>
+            <RoadmapHeaderList />
+          </Suspense>
         </div>
       </div>
 
@@ -34,4 +36,4 @@ const Header: React.FC = () => {
     </header>
   );
 };
-export default Header;
+export default MainHeader;

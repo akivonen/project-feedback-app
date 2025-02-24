@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import Button from './Button';
+import Button from './buttons/Button';
 import useFilter from '@/hooks/useFilter';
 import { Category } from '@/types';
 

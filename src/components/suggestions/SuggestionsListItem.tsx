@@ -7,10 +7,9 @@ type SuggestionsListItemProps = {
 };
 
 const SuggestionsListItem: React.FC<SuggestionsListItemProps> = ({ feedback }) => {
-  const { title, category, upvotes, description, commentCount } = feedback;
-
+  const { title, category, upvotes, description, comments } = feedback;
   return (
-    <li className="flex w-full flex-wrap justify-between gap-y-4 rounded-lg bg-white p-6 md:flex-nowrap md:px-8 md:py-7">
+    <div className="flex w-full flex-wrap justify-between gap-y-4 rounded-lg bg-white p-6 md:flex-nowrap md:px-8 md:py-7">
       <div className="w-full gap-y-2 md:ml-10 md:mr-6">
         <h3 className="text-sm font-bold text-dark-400 md:text-lg">{title}</h3>
         <p className="mt-2 text-sm text-dark-200 md:mt-1 md:text-base">{description}</p>
@@ -27,10 +26,10 @@ const SuggestionsListItem: React.FC<SuggestionsListItemProps> = ({ feedback }) =
       <span className="flex items-center gap-x-1">
         <Icons.Comments />
         <strong className="text-sm text-dark-400">
-          <span className="text-light-500">{commentCount}</span>
+          <span className="text-light-500">{comments?.length || 0}</span>
         </strong>
       </span>
-    </li>
+    </div>
   );
 };
 

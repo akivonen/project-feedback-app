@@ -4,11 +4,16 @@ import React from 'react';
 type ButtonProps = {
   children: React.ReactNode;
   variant: 'grey' | 'blue';
+  size?: 'sm' | 'lg';
   isActive?: boolean;
   onClick?: () => void;
 };
 
-const Button: React.FC<ButtonProps> = ({ children, variant, isActive, onClick }) => {
+const Button: React.FC<ButtonProps> = ({ children, variant, size = 'sm', isActive, onClick }) => {
+  const paddings = {
+    sm: `px-[16px] py-[6px]`,
+    lg: `px-6 py-3`,
+  };
   const colors = {
     grey: 'bg-light-300 text-blue-300',
     blue: 'bg-blue-300 text-light-100',
@@ -23,7 +28,7 @@ const Button: React.FC<ButtonProps> = ({ children, variant, isActive, onClick })
   return (
     <button
       onClick={() => onClick && onClick()}
-      className={`rounded-lg px-[16px] py-[6px] text-sm font-semibold ${buttonColorStyles} ${hoverColors[variant]}`}
+      className={`rounded-lg text-sm font-semibold ${paddings[size]} ${buttonColorStyles} ${hoverColors[variant]}`}
     >
       {children}
     </button>
