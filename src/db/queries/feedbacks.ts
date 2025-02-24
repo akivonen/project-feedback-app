@@ -14,7 +14,16 @@ export const getAllFeedbacks = async (): Promise<Feedback[]> => {
 export const getFeedbackById = async (feedbackId: string): Promise<Feedback> => {
   const [feedback] = await db.query.feedbacks.findMany({
     with: {
-      comments: true,
+      comments: {
+        with: {
+          users: true,
+          replies: {
+            with: {
+              users: true,
+            },
+          },
+        },
+      },
     },
     where: eq(feedbacks.id, feedbackId),
   });

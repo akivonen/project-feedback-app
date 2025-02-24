@@ -13,6 +13,7 @@ type FeedbackDetailsPageProps = {
 export default async function FeedbackDetailsPage({ params }: FeedbackDetailsPageProps) {
   const { feedbackId } = await params;
   const feedback = await getFeedbackByIdAction(feedbackId);
+  console.log(feedback);
   if (!feedback) {
     return <LoadingSpinner />;
   }
