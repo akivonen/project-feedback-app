@@ -8,6 +8,9 @@ type SuggestionsListItemProps = {
 
 const SuggestionsListItem: React.FC<SuggestionsListItemProps> = ({ feedback }) => {
   const { title, category, upvotes, description, comments } = feedback;
+  const repliesCount = comments.reduce((total, comment) => (total += comment.replies.length), 0);
+  const totalCommentsCount = comments.length + repliesCount;
+  const commentsCountColor = totalCommentsCount > 0 ? 'text-dark-400' : 'text-light-500';
   return (
     <div className="flex w-full flex-wrap justify-between gap-y-4 rounded-lg bg-white p-6 md:flex-nowrap md:px-8 md:py-7">
       <div className="w-full gap-y-2 md:ml-10 md:mr-6">
@@ -23,10 +26,10 @@ const SuggestionsListItem: React.FC<SuggestionsListItemProps> = ({ feedback }) =
           <strong className="text-sm text-dark-400 md:ml-0">{upvotes}</strong>
         </span>
       </button>
-      <span className="flex items-center gap-x-1">
+      <span className="flex items-center gap-x-1 md:gap-x-2">
         <Icons.Comments />
-        <strong className="text-sm text-dark-400">
-          <span className="text-light-500">{comments?.length || 0}</span>
+        <strong className={`text-sm md:text-base ${commentsCountColor}`}>
+          {totalCommentsCount || 0}
         </strong>
       </span>
     </div>

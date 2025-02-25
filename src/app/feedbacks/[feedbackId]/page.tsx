@@ -3,6 +3,7 @@ import { getFeedbackByIdAction } from '@/app/actions/feedback-actions';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import SuggestionsListItem from '@/components/suggestions/SuggestionsListItem';
 import CommentList from '@/components/comments/CommentsList';
+import AddComment from '@/components/AddComment';
 
 type FeedbackDetailsPageProps = {
   params: {
@@ -13,7 +14,7 @@ type FeedbackDetailsPageProps = {
 export default async function FeedbackDetailsPage({ params }: FeedbackDetailsPageProps) {
   const { feedbackId } = await params;
   const feedback = await getFeedbackByIdAction(feedbackId);
-  console.log(feedback);
+  // console.log(feedback);
   if (!feedback) {
     return <LoadingSpinner />;
   }
@@ -21,6 +22,7 @@ export default async function FeedbackDetailsPage({ params }: FeedbackDetailsPag
     <main className="flex flex-col gap-y-6">
       <SuggestionsListItem feedback={feedback} />
       <CommentList comments={feedback.comments} />
+      <AddComment />
     </main>
   );
 }

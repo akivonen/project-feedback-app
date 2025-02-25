@@ -10,12 +10,19 @@ const CommentList: React.FC<CommentsListProps> = ({ comments }) => {
   return (
     <section
       id="comments"
-      className="flex w-full flex-wrap justify-between gap-y-4 rounded-lg bg-white p-6 md:flex-nowrap md:px-8 md:py-7"
+      className="flex w-full flex-col justify-between gap-y-4 rounded-lg bg-white p-6 md:px-8 md:py-7"
     >
-      <h2>{`${comments.length | 0} Comments`}</h2>
-      <ul className="mt-6">
+      <h2 className="text-lg font-bold -tracking-[0.25px] text-dark-400">{`${comments.length | 0} Comments`}</h2>
+      <ul className="mt-6 flex flex-col md:mt-7">
         {comments &&
-          comments.map((comment) => <CommentListItem key={comment.id} comment={comment} />)}
+          comments.map((comment, index) => (
+            <React.Fragment key={comment.id}>
+              <CommentListItem comment={comment} />
+              {index < comments.length - 1 && (
+                <hr className="my-6 border-t text-light-600/25 md:my-8" />
+              )}
+            </React.Fragment>
+          ))}
       </ul>
     </section>
   );

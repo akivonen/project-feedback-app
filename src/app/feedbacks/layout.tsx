@@ -6,7 +6,7 @@ export default function FeedbackLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="mx-10 mb-[120px] mt-14 flex flex-col gap-x-[30px] gap-y-6 md:px-10 md:pt-[56px] lg:px-[min(165px,8%)] xl:pt-[94px]">
+    <div className="mx-6 mb-[88px] mt-14 flex flex-col gap-y-6 md:mx-10 md:mb-[120px] md:mt-14 lg:mx-auto lg:mb-[130px] lg:mt-20 lg:max-w-[730px]">
       <FeedbackHeader />
       {children}
     </div>

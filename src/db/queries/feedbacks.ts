@@ -7,7 +7,13 @@ import { Feedback } from '@/types';
 export const getAllFeedbacks = async (): Promise<Feedback[]> => {
   return await db.query.feedbacks.findMany({
     with: {
-      comments: true,
+      user: true,
+      comments: {
+        with: {
+          user: true,
+          replies: true,
+        },
+      },
     },
   });
 };
@@ -16,10 +22,10 @@ export const getFeedbackById = async (feedbackId: string): Promise<Feedback> => 
     with: {
       comments: {
         with: {
-          users: true,
+          user: true,
           replies: {
             with: {
-              users: true,
+              user: true,
             },
           },
         },

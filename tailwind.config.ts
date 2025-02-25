@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss';
+import plugin from 'tailwindcss/plugin';
 
 export default {
   content: [
@@ -16,6 +17,7 @@ export default {
         300: '#F2F4FF',
         400: '#CFD7FF',
         500: '#CDD2EE',
+        600: '#8C92B3',
       },
       dark: {
         100: '#656EA3',
@@ -49,5 +51,14 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(function ({ addUtilities }) {
+      addUtilities({
+        '.vertical-line-left': {
+          '@apply before:absolute md:before:left-[20px] before:left-0 before:top-0 md:before:top-0 before:h-[calc(100%+44px)] before:w-px before:bg-dark-200/10':
+            {},
+        },
+      });
+    }),
+  ],
 } satisfies Config;

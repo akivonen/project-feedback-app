@@ -5,7 +5,7 @@ export type User = {
   id: string;
   name: string;
   username: string;
-  image: string;
+  image: string | null;
   created_at: Date;
 };
 
@@ -19,6 +19,7 @@ export type Feedback = {
   description: string;
   comments: Comment[];
   created_at: Date;
+  user?: User;
 };
 
 export type Comment = {
@@ -27,6 +28,8 @@ export type Comment = {
   content: string;
   user_id: string;
   created_at: Date;
+  user: User;
+  replies: Reply[];
 };
 
 export type Reply = {
@@ -36,6 +39,7 @@ export type Reply = {
   comment_id: string;
   user_id: string;
   created_at: Date;
+  user: User;
 };
 
 export type Roadmap = Record<RoadmapStatus, number>;

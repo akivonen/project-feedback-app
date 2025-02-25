@@ -13,12 +13,6 @@ export const users = pgTable('users', {
   created_at: timestamp('created_at').notNull().defaultNow(),
 });
 
-export const usersRelations = relations(users, ({ many }) => ({
-  feedbacks: many(feedbacks),
-  comments: many(comments),
-  replies: many(replies),
-}));
-
 export const feedbacks = pgTable('feedbacks', {
   id: uuid('id').primaryKey(),
   category: categoryType('category').notNull(),
@@ -48,15 +42,21 @@ export const replies = pgTable('replies', {
 });
 
 export const feedbacksRelations = relations(feedbacks, ({ one, many }) => ({
-  users: one(users, {
+  user: one(users, {
     fields: [feedbacks.user_id],
     references: [users.id],
   }),
   comments: many(comments),
 }));
 
+export const usersRelations = relations(users, ({ many }) => ({
+  feedbacks: many(feedbacks),
+  comments: many(comments),
+  replies: many(replies),
+}));
+
 export const commentsRelations = relations(comments, ({ one, many }) => ({
-  users: one(users, {
+  user: one(users, {
     fields: [comments.user_id],
     references: [users.id],
   }),
@@ -65,9 +65,9 @@ export const commentsRelations = relations(comments, ({ one, many }) => ({
 }));
 
 export const repliesRelations = relations(replies, ({ one }) => ({
-  users: one(users, {
+  user: one(users, {
     fields: [replies.user_id],
     references: [users.id],
   }),
-  comments: one(comments, { fields: [replies.comment_id], references: [comments.id] }),
+  comment: one(comments, { fields: [replies.comment_id], references: [comments.id] }),
 }));

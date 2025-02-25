@@ -1,20 +1,16 @@
 'use client';
 import React from 'react';
-import { Comment } from '@/types';
+import { Reply } from '@/types';
 import Image from 'next/image';
-import ReplyItem from '../ReplyItem';
 
-type CommentsListItemProps = {
-  comment: Comment;
+type ReplyProps = {
+  reply: Reply;
 };
 
-const CommentListItem: React.FC<CommentsListItemProps> = ({ comment }) => {
-  const { user, content, replies } = comment;
-  const reliesCount = replies.length;
-  const commentWithRepliesStyles = 'md:border-l md:first:border-dark-200/10';
-
+const ReplyItem: React.FC<ReplyProps> = ({ reply }) => {
+  const { user, content, replying_to } = reply;
   return (
-    <li className="flex flex-col text-dark-200">
+    <li className="mt-6 pl-[23px] text-dark-200 first:border-l first:border-dark-200/10 md:ml-5 md:mt-0 md:pt-8">
       <div className="flex w-full items-center justify-between">
         <div className="flex gap-x-4 md:gap-x-8">
           {user.image && (
@@ -33,19 +29,12 @@ const CommentListItem: React.FC<CommentsListItemProps> = ({ comment }) => {
         </div>
         <button className="text-sm font-semibold text-blue-300">Reply</button>
       </div>
-      <div>
-        <p
-          className={`mt-4 text-[15px] md:ml-5 md:pl-[52px] ${reliesCount > 0 && commentWithRepliesStyles}`}
-        >
-          {content}
-        </p>
-      </div>
-
-      <ul className="">
-        {replies && replies.map((reply) => <ReplyItem key={reply.id} reply={reply} />)}
-      </ul>
+      <p className="mt-4 text-[15px] md:pl-[72px]">
+        <span className="font-bold text-purple-200">{`@${replying_to}`}</span>
+        &nbsp;&nbsp;{content}
+      </p>
     </li>
   );
 };
 
-export default CommentListItem;
+export default ReplyItem;

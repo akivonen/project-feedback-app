@@ -9,7 +9,7 @@ const GoBack: React.FC = () => {
   return (
     <button
       onClick={() => router.back()}
-      className="flex items-center justify-between px-4 py-[10px] text-[14px] font-bold text-dark-200 md:px-6 md:py-3 md:text-[14px]"
+      className="flex items-center justify-between py-[10px] text-[14px] font-bold text-dark-200 md:px-6 md:py-3 md:text-[14px]"
     >
       <span className="text-blue-300">
         <Icons.ArrowLeft />
