@@ -1,3 +1,4 @@
+'use client';
 import { MoonLoader } from 'react-spinners';
 
 const LoadingSpinner = () => {

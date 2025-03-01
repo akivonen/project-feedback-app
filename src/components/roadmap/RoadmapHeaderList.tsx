@@ -1,11 +1,9 @@
-'use client';
 import React from 'react';
 import Link from 'next/link';
 import RoadmapHeaderItem from './RoadmapHeaderItem';
-import { useSuspenseQuery } from '@tanstack/react-query';
-import { getFeedbacksHandler } from '@/services/feedbacks';
 import { getRoadmapStats } from '@/services/roadmap';
 import LoadingSpinner from '../LoadingSpinner';
+import { Feedback } from '@/types';
 
 export const RoadmapHeaderListSkeleton = () => {
   return (
@@ -21,12 +19,11 @@ export const RoadmapHeaderListSkeleton = () => {
   );
 };
 
-const RoadmapHeaderList: React.FC = () => {
-  const { data: feedbacks } = useSuspenseQuery({
-    queryKey: ['feedbacks'],
-    queryFn: () => getFeedbacksHandler(),
-  });
+type RoadmapHeaderListProps = {
+  feedbacks: Feedback[];
+};
 
+const RoadmapHeaderList: React.FC<RoadmapHeaderListProps> = ({ feedbacks }) => {
   const roadmapStats = getRoadmapStats(feedbacks);
 
   const roadmapBulletsColors = ['orange-100', 'purple-200', 'blue-100'];

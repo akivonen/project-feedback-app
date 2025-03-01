@@ -1,13 +1,12 @@
-import { Feedback } from '@/types';
+import { getFeedbacksAction } from '@/app/actions/feedback-actions';
 
-const getFeedbacksHandler = async (): Promise<Feedback[]> => {
-  const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
-  const res = await fetch(`${baseUrl}/api/feedbacks`);
-  const response = await res.json();
-  if (response.success) {
-    return response.data;
-  } else {
-    throw new Error(response.message || 'Unknown error occurred');
+const getFeedbacksHandler = async () => {
+  try {
+    const feedbacks = await getFeedbacksAction();
+    return feedbacks;
+  } catch (error) {
+    console.error('Failed to fetch feedbacks:', error);
+    return [];
   }
 };
 

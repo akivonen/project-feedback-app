@@ -6,15 +6,13 @@ import CommentList from '@/components/comments/CommentsList';
 import AddComment from '@/components/AddComment';
 
 type FeedbackDetailsPageProps = {
-  params: {
-    feedbackId: string;
-  };
+  params: Promise<{ feedbackId: string }>;
 };
 
 export default async function FeedbackDetailsPage({ params }: FeedbackDetailsPageProps) {
   const { feedbackId } = await params;
   const feedback = await getFeedbackByIdAction(feedbackId);
-  // console.log(feedback);
+
   if (!feedback) {
     return <LoadingSpinner />;
   }

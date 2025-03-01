@@ -15,11 +15,12 @@ const ReplyItem: React.FC<ReplyProps> = ({ reply }) => {
         <div className="flex gap-x-4 md:gap-x-8">
           {user.image && (
             <Image
-              className="rounded-full"
+              className="h-auto w-[40px] rounded-full"
               src={user.image}
               alt={user.name}
-              width="40"
-              height="40"
+              width={80}
+              height={80}
+              sizes="50px"
             />
           )}
           <div className="flex flex-col text-sm md:text-[14px]">

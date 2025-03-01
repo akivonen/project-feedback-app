@@ -1,6 +1,21 @@
 'use server';
-import { getFeedbackById } from '@/db/queries/feedbacks';
+import { getAllFeedbacks, getFeedbackById } from '@/db/queries/feedbacks';
 import { Feedback } from '@/types';
+
+export async function getFeedbacksAction() {
+  try {
+    const feedbacks = await getAllFeedbacks();
+    if (!feedbacks) {
+      return [];
+    }
+    return feedbacks;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error('Unknown error');
+  }
+}
 
 export async function getFeedbackByIdAction(id: string): Promise<Feedback | null> {
   try {
