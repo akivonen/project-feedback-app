@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Comment, Reply } from '@/types';
 import Image from 'next/image';
-import Button from '../buttons/Button';
+import MessageForm from '../forms/messageForm';
 
 type MessageProps = {
   item: Comment | Reply;
@@ -56,24 +56,7 @@ const Message: React.FC<MessageProps> = ({ item, isReply = false }) => {
           {isReply && <span className="font-bold text-purple-200">{`@${replying_to}`}</span>}
           {isReply ? `  ${content}` : content}
         </p>
-        {toggleReplyForm && (
-          <form className="mt-6 flex flex-col items-end gap-x-4 gap-y-4 md:flex-row md:items-start">
-            <label htmlFor="reply" className="sr-only">
-              Reply
-            </label>
-
-            <textarea
-              name="reply"
-              id="reply"
-              className="w-full rounded-md border-0 bg-light-200 p-4 text-sm text-dark-400 outline-none placeholder:text-light-600 focus:border focus:border-solid focus:border-blue-300 md:flex-1 md:text-[15px]"
-              placeholder="Type your reply here"
-              aria-label="Type your reply here"
-            />
-            <Button variant="purple" size="lg">
-              Post Reply
-            </Button>
-          </form>
-        )}
+        {toggleReplyForm && <MessageForm isReplyForm={true} />}
       </div>
       {!isReply && replies.length > 0 && (
         <ul className="">

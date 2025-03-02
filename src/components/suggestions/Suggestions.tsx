@@ -4,7 +4,7 @@ import Image from 'next/image';
 import SuggestionsList from './SuggestionsList';
 import AddFeedbackButton from '../buttons/AddFeedbackButton';
 import SuggestionsNoFeedback from './SuggestionsNoFeedback';
-import SuggestionsSorting from './SuggestionsSorting';
+import SuggestionsSorting from './Dropdown';
 import { Feedback } from '@/types';
 import useFilter from '@/hooks/useFilter';
 
@@ -50,7 +50,7 @@ const Suggestions: React.FC<SuggestionsProps> = ({ feedbacks }) => {
             </span>
           </div>
           <SuggestionsSorting
-            sortingOptions={sortingOptions}
+            dropdownOptions={sortingOptions}
             selectedOption={selectedSorting}
             handleChange={setSelectedSorting}
           />

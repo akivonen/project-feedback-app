@@ -3,8 +3,8 @@ import React from 'react';
 
 type ButtonProps = {
   children: React.ReactNode;
-  variant: 'grey' | 'blue' | 'purple';
-  size?: 'sm' | 'lg';
+  variant: 'grey' | 'blue' | 'purple' | 'dark-blue';
+  size?: 'sm' | 'lg' | 'xl';
   type?: 'submit' | 'button' | 'reset';
   isActive?: boolean;
   onClick?: () => void;
@@ -21,18 +21,21 @@ const Button: React.FC<ButtonProps> = ({
   disabled,
 }) => {
   const paddings = {
-    sm: `px-[16px] py-[6px]`,
-    lg: `px-6 py-3`,
+    sm: 'px-[16px] py-[6px]',
+    lg: 'px-6 py-3',
+    xl: 'px-6 py-3 w-full md:w-fit',
   };
   const colors = {
     grey: 'bg-light-300 text-blue-300',
     blue: 'bg-blue-300 text-light-100',
     purple: 'bg-purple-200 text-light-100',
+    'dark-blue': 'bg-dark-400 text-light-100',
   };
   const hoverColors = {
     grey: 'hover:bg-light-400 hover:text-blue-300',
     blue: 'hover:bg-blue-200',
     purple: 'hover:bg-purple-100 text-light-100',
+    'dark-blue': 'hover:bg-dark-100 text-light-100',
   };
   const activeColors = 'bg-blue-300 text-white';
   const buttonColorStyles = isActive ? activeColors : colors[variant];

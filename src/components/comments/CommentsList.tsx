@@ -8,10 +8,7 @@ type CommentsListProps = {
 
 const CommentList: React.FC<CommentsListProps> = ({ comments }) => {
   return (
-    <section
-      id="comments"
-      className="flex w-full flex-col justify-between gap-y-4 rounded-lg bg-white p-6 md:px-8 md:py-7"
-    >
+    <section className="flex w-full flex-col justify-between gap-y-4 rounded-lg bg-white p-6 md:px-8 md:py-7">
       <h2 className="text-lg font-bold -tracking-[0.25px] text-dark-400">{`${comments.length | 0} Comments`}</h2>
       <ul className="mt-6 flex flex-col md:mt-7">
         {comments &&
