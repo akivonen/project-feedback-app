@@ -8,6 +8,7 @@ type ButtonProps = {
   type?: 'submit' | 'button' | 'reset';
   isActive?: boolean;
   onClick?: () => void;
+  disabled?: boolean;
 };
 
 const Button: React.FC<ButtonProps> = ({
@@ -17,6 +18,7 @@ const Button: React.FC<ButtonProps> = ({
   type = 'button',
   isActive,
   onClick,
+  disabled,
 }) => {
   const paddings = {
     sm: `px-[16px] py-[6px]`,
@@ -40,6 +42,7 @@ const Button: React.FC<ButtonProps> = ({
     <button
       type={type}
       onClick={() => onClick && onClick()}
+      disabled={disabled}
       className={`max-h-[44px] w-fit rounded-lg text-sm font-semibold ${lgButtonTextSize} ${paddings[size]} ${buttonColorStyles} ${hoverColors[variant]}`}
     >
       {children}

@@ -37,6 +37,7 @@ export default {
       orange: {
         100: '#D73737',
       },
+      transparent: 'transparent',
     },
     fontSize: {
       sm: '0.8125rem',
@@ -51,14 +52,5 @@ export default {
       },
     },
   },
-  plugins: [
-    plugin(function ({ addUtilities }) {
-      addUtilities({
-        '.vertical-line-left': {
-          '@apply before:absolute md:before:left-[20px] before:left-0 before:top-0 md:before:top-0 before:h-[calc(100%+44px)] before:w-px before:bg-dark-200/10':
-            {},
-        },
-      });
-    }),
-  ],
+  plugins: [],
 } satisfies Config;

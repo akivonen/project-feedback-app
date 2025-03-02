@@ -1,6 +1,6 @@
 import React from 'react';
 import { Comment } from '@/types';
-import CommentListItem from './CommentsListItem';
+import Message from './Message';
 
 type CommentsListProps = {
   comments: Comment[];
@@ -17,7 +17,7 @@ const CommentList: React.FC<CommentsListProps> = ({ comments }) => {
         {comments &&
           comments.map((comment, index) => (
             <React.Fragment key={comment.id}>
-              <CommentListItem comment={comment} />
+              <Message item={comment} />
               {index < comments.length - 1 && (
                 <hr className="my-6 border-t text-light-600/25 md:my-8" />
               )}

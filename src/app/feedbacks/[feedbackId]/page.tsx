@@ -3,7 +3,7 @@ import { getFeedbackByIdAction } from '@/app/actions/feedback-actions';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import SuggestionsListItem from '@/components/suggestions/SuggestionsListItem';
 import CommentList from '@/components/comments/CommentsList';
-import AddComment from '@/components/AddComment';
+import AddComment from '@/components/comments/AddComment';
 
 type FeedbackDetailsPageProps = {
   params: Promise<{ feedbackId: string }>;

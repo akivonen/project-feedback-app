@@ -1,22 +1,31 @@
 'use client';
 import React, { useState } from 'react';
-import { Comment } from '@/types';
+import { Comment, Reply } from '@/types';
 import Image from 'next/image';
-import ReplyItem from './ReplyItem';
 import Button from '../buttons/Button';
 
-type CommentsListItemProps = {
-  comment: Comment;
+type MessageProps = {
+  item: Comment | Reply;
+  isReply?: boolean;
 };
 
-const CommentListItem: React.FC<CommentsListItemProps> = ({ comment }) => {
-  const { user, content, replies } = comment;
-  const reliesCount = replies.length;
-  const commentWithRepliesStyles = 'md:border-l md:border-dark-200/10';
+const Message: React.FC<MessageProps> = ({ item, isReply = false }) => {
+  const { user, content } = item;
+  const replying_to = 'replying_to' in item ? item.replying_to : undefined;
+  const replies = 'replies' in item ? item.replies : [];
+
+  const containerStyles = isReply
+    ? 'mt-6 pl-[23px] text-dark-200 first:border-l first:border-dark-200/10 md:ml-5 md:mt-0 md:pt-8'
+    : 'flex flex-col';
+  const contentStyles = isReply
+    ? 'mt-4 text-[15px] md:pl-[72px]'
+    : 'mt-4 flex flex-col gap-x-6 text-[15px] md:ml-5 md:pl-[52px]';
+  const borderStyles = !isReply && replies.length > 0 ? 'md:border-l md:border-dark-200/10' : '';
+
   const [toggleReplyForm, setToggleReplyForm] = useState(false);
 
   return (
-    <li className="flex flex-col">
+    <li className={containerStyles}>
       <div className="flex w-full items-center justify-between">
         <div className="flex gap-x-4 md:gap-x-8">
           {user.image && (
@@ -42,10 +51,11 @@ const CommentListItem: React.FC<CommentsListItemProps> = ({ comment }) => {
           Reply
         </button>
       </div>
-      <div
-        className={`mt-4 flex flex-col gap-x-6 text-[15px] md:ml-5 md:pl-[52px] ${reliesCount > 0 && commentWithRepliesStyles}`}
-      >
-        <p className="text-dark-200">{content}</p>
+      <div className={`${contentStyles} ${borderStyles}`}>
+        <p className="text-dark-200">
+          {isReply && <span className="font-bold text-purple-200">{`@${replying_to}`}</span>}
+          {isReply ? `  ${content}` : content}
+        </p>
         {toggleReplyForm && (
           <form className="mt-6 flex flex-col items-end gap-x-4 gap-y-4 md:flex-row md:items-start">
             <label htmlFor="reply" className="sr-only">
@@ -65,12 +75,13 @@ const CommentListItem: React.FC<CommentsListItemProps> = ({ comment }) => {
           </form>
         )}
       </div>
-
-      <ul className="">
-        {replies && replies.map((reply) => <ReplyItem key={reply.id} reply={reply} />)}
-      </ul>
+      {!isReply && replies.length > 0 && (
+        <ul className="">
+          {replies && replies.map((item) => <Message key={item.id} item={item} isReply={true} />)}
+        </ul>
+      )}
     </li>
   );
 };
 
-export default CommentListItem;
+export default Message;
