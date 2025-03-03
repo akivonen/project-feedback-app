@@ -46,7 +46,7 @@ const Suggestions: React.FC<SuggestionsProps> = ({ feedbacks }) => {
               />
             </div>
             <span className="ml-4 text-[18px] font-bold text-white">
-              {feedbacks?.length || 0} Suggestions
+              {sortedSuggestions?.length || 0} Suggestions
             </span>
           </div>
           <SuggestionsSorting
@@ -57,7 +57,11 @@ const Suggestions: React.FC<SuggestionsProps> = ({ feedbacks }) => {
         </div>
         <AddFeedbackButton />
       </div>
-      {feedbacks ? <SuggestionsList suggestions={sortedSuggestions} /> : <SuggestionsNoFeedback />}
+      {sortedSuggestions?.length > 0 ? (
+        <SuggestionsList suggestions={sortedSuggestions} />
+      ) : (
+        <SuggestionsNoFeedback />
+      )}
     </section>
   );
 };
