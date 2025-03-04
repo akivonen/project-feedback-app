@@ -4,14 +4,13 @@ import Button from './buttons/Button';
 import Image from 'next/image';
 import { useFormik } from 'formik';
 import { feedbackSchema } from '@/validation';
-import Dropdown from './suggestions/Dropdown';
+import Dropdown from './Dropdown';
 import { useRouter } from 'next/navigation';
-import useFilter from '@/hooks/useFilter';
 import { Category } from '@/types';
+import { categoryNames } from '@/lib/filter';
 
 const CreateFeedback: React.FC = () => {
-  const { categories } = useFilter();
-  const filteredCategories: Category[] = categories.filter((c) => c !== 'All');
+  const filteredCategories: Category[] = categoryNames.filter((c) => c !== 'All');
   const categoryOptions = [
     filteredCategories[filteredCategories.length - 1],
     ...filteredCategories.slice(0, filteredCategories.length - 1),

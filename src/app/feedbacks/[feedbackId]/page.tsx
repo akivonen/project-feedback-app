@@ -1,7 +1,7 @@
 import React from 'react';
 import { getFeedbackByIdAction } from '@/app/actions/feedback-actions';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import SuggestionsListItem from '@/components/suggestions/SuggestionsListItem';
+import { SuggestionsItem } from '@/components/suggestions/index';
 import CommentList from '@/components/comments/CommentsList';
 import AddComment from '@/components/comments/AddComment';
 
@@ -18,7 +18,7 @@ export default async function FeedbackDetailsPage({ params }: FeedbackDetailsPag
   }
   return (
     <main className="flex flex-col gap-y-6">
-      <SuggestionsListItem feedback={feedback} />
+      <SuggestionsItem feedback={feedback} />
       <CommentList comments={feedback.comments} />
       <AddComment />
     </main>

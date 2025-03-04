@@ -3,11 +3,11 @@ import { Icons } from '../Icons';
 import { Feedback } from '@/types';
 import Link from 'next/link';
 
-type SuggestionsListItemProps = {
+type SuggestionsItemProps = {
   feedback: Feedback;
 };
 
-const SuggestionsListItem: React.FC<SuggestionsListItemProps> = ({ feedback }) => {
+const SuggestionsItem: React.FC<SuggestionsItemProps> = ({ feedback }) => {
   const { title, category, upvotes, description, comments } = feedback;
   const repliesCount = comments.reduce((total, comment) => (total += comment.replies.length), 0);
   const totalCommentsCount = comments.length + repliesCount;
@@ -39,4 +39,4 @@ const SuggestionsListItem: React.FC<SuggestionsListItemProps> = ({ feedback }) =
   );
 };
 
-export default SuggestionsListItem;
+export default SuggestionsItem;

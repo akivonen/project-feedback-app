@@ -1,22 +1,27 @@
 'use client';
 import React from 'react';
+import { categoryOptions, categoryNamesMap, CategoryOption, SortOption } from '@/lib/filter';
 import Button from './buttons/Button';
-import useFilter from '@/hooks/useFilter';
-import { Category } from '@/types';
 
-const FeedbackCategories: React.FC = () => {
-  const { categories, currCategory, setCurrCategory } = useFilter();
+type FeedbackCategoriesProps = {
+  sortFilterParam: SortOption;
+  categoryFilterParam: CategoryOption;
+};
 
+const FeedbackCategories: React.FC<FeedbackCategoriesProps> = ({
+  sortFilterParam,
+  categoryFilterParam,
+}) => {
   return (
     <div className="flex min-w-[223px] flex-wrap gap-x-[8px] gap-y-[14px] rounded-lg bg-white p-6">
-      {categories.map((categoryName: Category, index) => (
+      {categoryOptions.map((categoryOption, index) => (
         <Button
           key={index}
+          href={`/${categoryOption}/${sortFilterParam}`}
           variant="grey"
-          isActive={categoryName === currCategory}
-          onClick={() => setCurrCategory(categoryName)}
+          isActive={categoryOption === categoryFilterParam}
         >
-          {categoryName}
+          {categoryNamesMap[categoryOption]}
         </Button>
       ))}
     </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
-import AddFeedbackButton from '../buttons/AddFeedbackButton';
+import Button from '../buttons/Button';
 
 const SuggestionsNoFeedback = () => {
   return (
@@ -9,7 +9,7 @@ const SuggestionsNoFeedback = () => {
         <Image
           width="130"
           height="137"
-          src="./icons/illustration-empty.svg"
+          src="/icons/illustration-empty.svg"
           alt="No feedbacks yet"
           className="h-[108px] w-[102px] md:h-[137px] md:w-[130px]"
         />
@@ -21,7 +21,9 @@ const SuggestionsNoFeedback = () => {
           to improve our app.
         </p>
         <div className="mt-6 md:mt-12">
-          <AddFeedbackButton />
+          <Button size="lg" variant="purple" href="/feedbacks/add">
+            + Add Feedback
+          </Button>
         </div>
       </div>
     </div>
