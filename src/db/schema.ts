@@ -6,7 +6,7 @@ export const categoryType = pgEnum('category', ['Feature', 'UI', 'UX', 'Enhancem
 export const statusType = pgEnum('status', ['Suggestion', 'Planned', 'In-Progress', 'Live']);
 
 export const users = pgTable('users', {
-  id: uuid('id').primaryKey(),
+  id: uuid('id').primaryKey().defaultRandom(),
   name: text('name').notNull(),
   username: text('username').notNull(),
   image: text('image'),
@@ -14,18 +14,18 @@ export const users = pgTable('users', {
 });
 
 export const feedbacks = pgTable('feedbacks', {
-  id: uuid('id').primaryKey(),
+  id: uuid('id').primaryKey().defaultRandom(),
   category: categoryType('category').notNull(),
   title: text('title').notNull(),
   upvotes: integer('upvotes').notNull().default(0),
-  status: statusType('status').notNull(),
+  status: statusType('status').notNull().default('Suggestion'),
   description: text('description').notNull(),
   user_id: uuid('user_id').notNull(),
   created_at: timestamp('created_at').notNull().defaultNow(),
 });
 
 export const comments = pgTable('comments', {
-  id: uuid('id').primaryKey(),
+  id: uuid('id').primaryKey().defaultRandom(),
   feedback_id: uuid('feedback_id').notNull(),
   content: text('content').notNull(),
   user_id: uuid('user_id').notNull(),
@@ -33,7 +33,7 @@ export const comments = pgTable('comments', {
 });
 
 export const replies = pgTable('replies', {
-  id: uuid('id').primaryKey(),
+  id: uuid('id').primaryKey().defaultRandom(),
   content: text('content').notNull(),
   replying_to: text('replying_to').notNull(),
   comment_id: uuid('comment_id').notNull(),

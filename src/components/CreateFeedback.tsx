@@ -6,8 +6,10 @@ import { useFormik } from 'formik';
 import { feedbackSchema } from '@/validation';
 import Dropdown from './Dropdown';
 import { useRouter } from 'next/navigation';
-import { Category } from '@/types';
+import { Category, FeedbackInsertData } from '@/types';
 import { categoryNames } from '@/lib/filter';
+import { addFeedbackAction } from '@/app/actions/feedback-actions';
+import LoadingSpinner from './LoadingSpinner';
 
 const CreateFeedback: React.FC = () => {
   const filteredCategories: Category[] = categoryNames.filter((c) => c !== 'All');
@@ -23,18 +25,35 @@ const CreateFeedback: React.FC = () => {
       description: '',
     },
     validationSchema: feedbackSchema,
-    onSubmit: async (values) => {
+    onSubmit: async (feedback) => {
       formik.setSubmitting(true);
       try {
-        console.log(values);
-        formik.resetForm();
+        const result = await addFeedbackAction(feedback as Omit<FeedbackInsertData, 'user_id'>);
+        if (result.success) {
+          console.log('feedback added');
+          formik.resetForm();
+          router.push('/');
+        }
       } catch (err) {
+        // implement error handling
         console.log(err);
       } finally {
         formik.setSubmitting(false);
       }
     },
   });
+
+  const ErrorBorderStyles: Record<string, string> = {
+    title: formik.touched.title && formik.errors.title ? 'border-orange-100' : 'border-transparent',
+    description:
+      formik.touched.description && formik.errors.description
+        ? 'border-orange-100'
+        : 'border-transparent',
+  };
+
+  if (formik.isSubmitting) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <section className="relative mx-auto mb-[77px] mt-[30px] flex w-full flex-col justify-between rounded-lg bg-white p-6 text-dark-400 md:mb-[224px] md:mt-[144px] md:max-w-[540px] md:px-10 md:pb-10 md:pt-[52px]">
@@ -59,8 +78,11 @@ const CreateFeedback: React.FC = () => {
             name="title"
             onChange={formik.handleChange}
             value={formik.values.title}
-            className={`mt-4 w-full rounded-md bg-light-200 p-4 text-sm text-dark-400 outline-none placeholder:text-sm placeholder:text-light-600 focus:border focus:border-blue-300 md:text-[15px]`}
+            className={`mt-4 w-full rounded-md border bg-light-200 p-4 text-sm text-dark-400 outline-none placeholder:text-sm placeholder:text-light-600 focus:border focus:border-blue-300 md:text-[15px] ${ErrorBorderStyles['title']}`}
           />
+          <div className="text-[14px] text-orange-100">
+            {formik.touched.title && formik.errors.title}
+          </div>
         </div>
         <div className="mt-6">
           <label htmlFor="category" className="mt-6">
@@ -93,8 +115,11 @@ const CreateFeedback: React.FC = () => {
             name="description"
             onChange={formik.handleChange}
             value={formik.values.description}
-            className="mt-4 w-full rounded-md bg-light-200 p-4 text-sm text-dark-400 outline-none placeholder:text-sm placeholder:text-light-600 focus:border focus:border-blue-300 md:text-[15px]"
+            className={`mt-4 w-full rounded-md border bg-light-200 p-4 text-sm text-dark-400 outline-none placeholder:text-sm placeholder:text-light-600 focus:border focus:border-blue-300 md:text-[15px] ${ErrorBorderStyles['description']}`}
           />
+          <div className="text-[14px] text-orange-100">
+            {formik.touched.description && formik.errors.description}
+          </div>
         </div>
         <div className="mt-10 flex flex-col gap-4 md:mt-8 md:flex-row-reverse">
           <Button type="submit" size="xl" variant="purple">

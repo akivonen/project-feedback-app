@@ -1,4 +1,4 @@
-import { Feedback, Category } from '@/types';
+import { Feedback, FilterCategory } from '@/types';
 
 export const categoryNamesMap = {
   all: 'All',
@@ -13,7 +13,7 @@ export type CategoryOption = keyof typeof categoryNamesMap;
 
 export const categoryOptions: CategoryOption[] = Object.keys(categoryNamesMap) as CategoryOption[];
 
-export const categoryNames: Category[] = Object.values(categoryNamesMap) as Category[];
+export const categoryNames: FilterCategory[] = Object.values(categoryNamesMap) as FilterCategory[];
 
 export const sortFunctionsMap = {
   'most-upvotes': (first: Feedback, second: Feedback) => second.upvotes - first.upvotes,

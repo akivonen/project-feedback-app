@@ -1,4 +1,5 @@
-export type Category = 'All' | 'UI' | 'UX' | 'Enhancement' | 'Bug' | 'Feature';
+export type Category = 'UI' | 'UX' | 'Enhancement' | 'Bug' | 'Feature';
+export type FilterCategory = Category | 'All';
 export type Status = 'Suggestion' | 'Planned' | 'In-Progress' | 'Live';
 export type RoadmapStatus = Exclude<Status, 'Suggestion'>;
 export type User = {
@@ -17,9 +18,16 @@ export type Feedback = {
   upvotes: number;
   status: Status;
   description: string;
-  comments: Comment[];
+  comments?: Comment[] | [];
   created_at: Date;
   user?: User;
+};
+
+export type FeedbackInsertData = {
+  title: string;
+  category: Category;
+  description: string;
+  user_id: string;
 };
 
 export type Comment = {
@@ -29,7 +37,7 @@ export type Comment = {
   user_id: string;
   created_at: Date;
   user: User;
-  replies: Reply[];
+  replies: Reply[] | [];
 };
 
 export type Reply = {

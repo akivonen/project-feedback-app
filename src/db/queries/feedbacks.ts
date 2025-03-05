@@ -2,7 +2,7 @@
 import db from '../index';
 import { feedbacks } from '../schema';
 import { eq } from 'drizzle-orm';
-import { Feedback } from '@/types';
+import { Feedback, FeedbackInsertData } from '@/types';
 import { unstable_cache } from 'next/cache';
 
 export const getAllFeedbacks = unstable_cache(
@@ -26,6 +26,7 @@ export const getAllFeedbacks = unstable_cache(
   ['feedbacks'],
   { revalidate: 3600, tags: ['feedbacks'] }
 );
+
 export const getFeedbackById = async (feedbackId: string): Promise<Feedback> => {
   const [feedback] = await db.query.feedbacks.findMany({
     with: {
@@ -43,4 +44,9 @@ export const getFeedbackById = async (feedbackId: string): Promise<Feedback> => 
     where: eq(feedbacks.id, feedbackId),
   });
   return feedback;
+};
+
+export const addFeedback = async (feedback: FeedbackInsertData) => {
+  const [result] = await db.insert(feedbacks).values(feedback).returning();
+  return result;
 };

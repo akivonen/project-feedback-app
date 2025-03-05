@@ -31,7 +31,7 @@ const MessageForm: React.FC<MessageFormProps> = ({ isReplyForm = false }) => {
     : '';
   const textareaStyles = isReplyForm ? 'flex-1' : 'mt-6';
   const textareaErrorStyles =
-    formik.touched.body && formik.errors.body ? 'border border-orange-100' : 'border-transparent';
+    formik.touched.body && formik.errors.body ? 'border-orange-100' : 'border-transparent';
 
   return (
     <form onSubmit={formik.handleSubmit} className={replyFormStyles}>

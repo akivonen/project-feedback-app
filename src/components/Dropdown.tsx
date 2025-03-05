@@ -43,11 +43,11 @@ const Dropdown: React.FC<DropdownProps> = ({
   };
 
   const fieldDefaultStyles =
-    'outline-none rounded-md p-4 w-full justify-between bg-light-200 md:text-[15px]';
-  const fieldIsOpenBorderStyles = 'border border-blue-300';
+    'outline-none rounded-md p-4 w-full border justify-between bg-light-200 md:text-[15px]';
+  const fieldIsOpenBorderStyles = isOpen ? 'border-blue-300' : 'border-transparent';
   const defaultStyles = isOpen ? 'text-light-100/75' : 'text-light-100';
   const dropDownBaseStyles = isFeedbackFormField
-    ? `${fieldDefaultStyles} ${isOpen && fieldIsOpenBorderStyles}`
+    ? `${fieldDefaultStyles} ${fieldIsOpenBorderStyles}`
     : defaultStyles;
   const dropdownOptionsStyles = isFeedbackFormField
     ? 'w-full top-[calc(100%+16px)]'
