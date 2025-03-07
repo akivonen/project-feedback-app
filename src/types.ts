@@ -18,7 +18,7 @@ export type Feedback = {
   upvotes: number;
   status: Status;
   description: string;
-  comments?: Comment[] | [];
+  comments: Comment[] | [];
   created_at: Date;
   user?: User;
 };
@@ -28,6 +28,14 @@ export type FeedbackInsertData = {
   category: Category;
   description: string;
   user_id: string;
+};
+
+export type FeedbackFormData = {
+  id: string;
+  title: string;
+  category: Category;
+  status: Status;
+  description: string;
 };
 
 export type Comment = {

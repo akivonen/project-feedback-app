@@ -34,7 +34,8 @@ export default {
         300: '#4661E6',
       },
       orange: {
-        100: '#D73737',
+        100: '#E98888',
+        200: '#D73737',
       },
       transparent: 'transparent',
     },

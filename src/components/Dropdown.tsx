@@ -78,7 +78,7 @@ const Dropdown: React.FC<DropdownProps> = ({
       </button>
       {isOpen && (
         <ul
-          className={`text absolute top-[calc(100%+18px)] flex min-w-[255px] flex-col rounded-lg bg-white shadow-dropShadow ${dropdownOptionsStyles}`}
+          className={`text absolute top-[calc(100%+18px)] z-30 flex min-w-[255px] flex-col rounded-lg bg-white shadow-dropShadow ${dropdownOptionsStyles}`}
           role="listbox"
         >
           {dropdownOptions &&

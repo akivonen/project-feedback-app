@@ -12,7 +12,7 @@ const SuggestionsList: React.FC<SuggestionsListProps> = ({ suggestions }) => {
       {suggestions &&
         suggestions.map((feedback) => (
           <li className="w-full" key={feedback.id}>
-            <SuggestionsItem feedback={feedback} />
+            <SuggestionsItem feedback={feedback} isLink />
           </li>
         ))}
     </ul>

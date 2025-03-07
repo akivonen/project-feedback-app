@@ -1,7 +1,7 @@
 import React from 'react';
 import { Icons } from '../Icons';
 
-type Color = 'orange-100' | 'blue-100' | 'purple-200' | string;
+type Color = 'orange-200' | 'blue-100' | 'purple-200' | string;
 
 interface RoadmapHeaderItemProps {
   state: string;

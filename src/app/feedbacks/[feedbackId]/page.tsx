@@ -1,9 +1,10 @@
-import React from 'react';
 import { getFeedbackByIdAction } from '@/app/actions/feedback-actions';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { SuggestionsItem } from '@/components/suggestions/index';
 import CommentList from '@/components/comments/CommentsList';
 import AddComment from '@/components/comments/AddComment';
+import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
 
 type FeedbackDetailsPageProps = {
   params: Promise<{ feedbackId: string }>;
@@ -14,13 +15,16 @@ export default async function FeedbackDetailsPage({ params }: FeedbackDetailsPag
   const feedback = await getFeedbackByIdAction(feedbackId);
 
   if (!feedback) {
-    return <LoadingSpinner />;
+    notFound();
   }
+
   return (
-    <main className="flex flex-col gap-y-6">
-      <SuggestionsItem feedback={feedback} />
-      <CommentList comments={feedback.comments} />
-      <AddComment />
-    </main>
+    <Suspense fallback={<LoadingSpinner />}>
+      <main className="flex flex-col gap-y-6">
+        <SuggestionsItem feedback={feedback} />
+        {feedback.comments && <CommentList comments={feedback.comments} />}
+        <AddComment />
+      </main>
+    </Suspense>
   );
 }

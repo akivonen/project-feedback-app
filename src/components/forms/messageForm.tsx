@@ -31,7 +31,7 @@ const MessageForm: React.FC<MessageFormProps> = ({ isReplyForm = false }) => {
     : '';
   const textareaStyles = isReplyForm ? 'flex-1' : 'mt-6';
   const textareaErrorStyles =
-    formik.touched.body && formik.errors.body ? 'border-orange-100' : 'border-transparent';
+    formik.touched.body && formik.errors.body ? 'border-orange-200' : 'border-transparent';
 
   return (
     <form onSubmit={formik.handleSubmit} className={replyFormStyles}>
@@ -49,7 +49,7 @@ const MessageForm: React.FC<MessageFormProps> = ({ isReplyForm = false }) => {
         placeholder={`Type your ${isReplyForm ? 'reply' : 'comment'} here`}
         aria-label={`Type your ${isReplyForm ? 'reply' : 'comment'} here`}
       />
-      <div className="text-[14px] text-orange-100">{formik.touched.body && formik.errors.body}</div>
+      <div className="text-orange-200 text-[14px]">{formik.touched.body && formik.errors.body}</div>
       <div className={`flex items-center justify-between ${isReplyForm ? '' : 'mt-4'}`}>
         {!isReplyForm && (
           <span className="text-sm text-dark-200">

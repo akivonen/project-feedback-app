@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import RoadmapHeaderItem from './RoadmapHeaderItem';
-import { getRoadmapStats } from '@/services/roadmap';
+import { getRoadmapStats } from '@/lib/status';
 import LoadingSpinner from '../LoadingSpinner';
 import { Feedback } from '@/types';
 
@@ -26,7 +26,7 @@ type RoadmapHeaderListProps = {
 const RoadmapHeaderList: React.FC<RoadmapHeaderListProps> = ({ feedbacks }) => {
   const roadmapStats = getRoadmapStats(feedbacks);
 
-  const roadmapBulletsColors = ['orange-100', 'purple-200', 'blue-100'];
+  const roadmapBulletsColors = ['orange-200', 'purple-200', 'blue-100'];
   const roadmapList = Object.entries(roadmapStats).map(([state, tasksCount], index) => ({
     state,
     tasksCount,

@@ -22,7 +22,7 @@ import { notFound } from 'next/navigation';
 import Dropdown from '@/components/Dropdown';
 
 type HomePageProps = {
-  params: Promise<{ filter?: string[] }>; // Correct type with Promise
+  params: Promise<{ filter?: string[] }>;
 };
 
 export default async function Home({ params }: HomePageProps) {

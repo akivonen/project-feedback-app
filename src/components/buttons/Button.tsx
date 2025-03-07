@@ -4,7 +4,7 @@ import React from 'react';
 
 type ButtonProps = {
   children: React.ReactNode;
-  variant: 'grey' | 'blue' | 'purple' | 'dark-blue';
+  variant: 'grey' | 'blue' | 'purple' | 'dark-blue' | 'orange';
   size?: 'sm' | 'lg' | 'xl';
   type?: 'submit' | 'button' | 'reset';
   isActive?: boolean;
@@ -34,12 +34,14 @@ const Button: React.FC<ButtonProps> = ({
     blue: 'bg-blue-300 text-light-100',
     purple: 'bg-purple-200 text-light-100',
     'dark-blue': 'bg-dark-400 text-light-100',
+    orange: 'bg-orange-200 text-light-100',
   };
   const hoverStyles = {
     grey: 'hover:bg-light-400 hover:text-blue-300',
     blue: 'hover:bg-blue-200',
     purple: 'hover:bg-purple-100 text-light-100',
     'dark-blue': 'hover:bg-dark-100 text-light-100',
+    orange: 'hover:bg-orange-100 text-light-100',
   };
   const activeColors = 'bg-blue-300 text-white';
   const buttonColorStyles = isActive ? activeColors : colorStyles[variant];

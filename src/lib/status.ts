@@ -1,8 +1,12 @@
 import { Feedback, Status } from '@/types';
 import { RoadmapStatus } from '@/types';
 
+export const statusOptions = ['Suggestion', 'Planned', 'In-Progress', 'Live'];
+
+export const roadmapStatus = statusOptions.filter((s) => s !== 'Suggestion');
+
 const isRoadmapStatus = (status: Status): status is RoadmapStatus => {
-  return ['Planned', 'In-Progress', 'Live'].includes(status);
+  return roadmapStatus.includes(status);
 };
 
 const getRoadmapStats = (feedbacks: Feedback[]) =>

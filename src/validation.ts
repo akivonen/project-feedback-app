@@ -8,6 +8,6 @@ export const feedbackSchema = Yup.object().shape({
   category: Yup.string()
     .oneOf(['Feature', 'UI', 'UX', 'Enhancement', 'Bug'], 'Invalid category')
     .required('Category is required'),
-  status: Yup.string().oneOf(['suggestion', 'planned', 'in-progress', 'live'], 'Invalid status'),
+  status: Yup.string().oneOf(['Suggestion', 'Planned', 'In-Progress', 'Live'], 'Invalid status'),
   description: Yup.string().min(1, "Can't be empty").required("Can't be empty"),
 });
