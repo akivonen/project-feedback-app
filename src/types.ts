@@ -59,3 +59,9 @@ export type Reply = {
 };
 
 export type Roadmap = Record<RoadmapStatus, number>;
+
+export type RoadmapDetails = {
+  color: string;
+  description: string;
+  feedbacks: Feedback[];
+};

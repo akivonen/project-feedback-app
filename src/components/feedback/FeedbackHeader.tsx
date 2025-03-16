@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
-import Button from './buttons/Button';
-import GoBack from './buttons/GoBack';
+import Button from '../buttons/Button';
+import GoBack from '../buttons/GoBack';
 import { useParams, usePathname } from 'next/navigation';
 
 const FeedbackHeader: React.FC = () => {

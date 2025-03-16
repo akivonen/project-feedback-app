@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import { categoryOptions, categoryNamesMap, CategoryOption, SortOption } from '@/lib/filter';
-import Button from './buttons/Button';
+import Button from '../buttons/Button';
 
 type FeedbackCategoriesProps = {
   sortFilterParam: SortOption;

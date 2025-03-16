@@ -6,7 +6,17 @@ export default {
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
-  safelist: ['text-orange-100', 'text-blue-100', 'text-purple-200'],
+  safelist: [
+    'text-orange-100',
+    'text-blue-100',
+    'text-purple-200',
+    'border-b-orange-100',
+    'border-b-blue-100',
+    'border-b-purple-200',
+    'border-t-orange-100',
+    'border-t-blue-100',
+    'border-t-purple-200',
+  ],
   theme: {
     colors: {
       white: '#FFF',

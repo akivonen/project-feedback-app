@@ -1,4 +1,4 @@
-import FeedbackHeader from '../../components/FeedbackHeader';
+import FeedbackHeader from '../../components/feedback/FeedbackHeader';
 
 export default function FeedbackLayout({
   children,

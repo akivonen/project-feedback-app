@@ -1,5 +1,5 @@
 import React from 'react';
-import { SuggestionsItem } from './index';
+import { FeedbackItem } from './index';
 import { Feedback } from '@/types';
 
 type SuggestionsListProps = {
@@ -12,7 +12,7 @@ const SuggestionsList: React.FC<SuggestionsListProps> = ({ suggestions }) => {
       {suggestions &&
         suggestions.map((feedback) => (
           <li className="w-full" key={feedback.id}>
-            <SuggestionsItem feedback={feedback} isLink />
+            <FeedbackItem feedback={feedback} isLink />
           </li>
         ))}
     </ul>

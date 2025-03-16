@@ -3,7 +3,15 @@ import React, { useEffect, useState } from 'react';
 import { Icons } from '../Icons';
 import { useRouter } from 'next/navigation';
 
-const GoBack: React.FC = () => {
+type GoBackProps = {
+  textColorStyle?: string;
+  arrowColorStyle?: string;
+};
+
+const GoBack: React.FC<GoBackProps> = ({
+  textColorStyle = 'text-dark-200',
+  arrowColorStyle = 'text-blue-300',
+}) => {
   const router = useRouter();
   const [hasHistory, setHasHistory] = useState(false);
 
@@ -16,13 +24,13 @@ const GoBack: React.FC = () => {
   return (
     <button
       onClick={() => handleRedirect()}
-      className="flex items-center justify-between py-[10px] text-[14px] font-bold text-dark-200 hover:underline hover:decoration-solid md:px-6 md:py-3 md:text-[14px]"
+      className={`flex items-center justify-between gap-4 text-sm font-bold hover:underline hover:decoration-solid md:text-[14px] ${textColorStyle}`}
       aria-label={ariaLabel}
     >
-      <span className="text-blue-300">
+      <span className={arrowColorStyle}>
         <Icons.ArrowLeft />
       </span>
-      <span className="ml-4">Go Back</span>
+      <span>Go Back</span>
     </button>
   );
 };

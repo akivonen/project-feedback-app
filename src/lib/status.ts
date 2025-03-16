@@ -1,23 +1,35 @@
 import { Feedback, Status } from '@/types';
-import { RoadmapStatus } from '@/types';
+import { RoadmapStatus, RoadmapDetails } from '@/types';
 
-export const statusOptions = ['Suggestion', 'Planned', 'In-Progress', 'Live'];
+export const statusOptions: Status[] = ['Suggestion', 'Planned', 'In-Progress', 'Live'] as const;
+export const roadmapStatuses: RoadmapStatus[] = ['Planned', 'In-Progress', 'Live'] as const;
+export const roadmapColors: string[] = ['orange-100', 'purple-200', 'blue-100'] as const;
 
-export const roadmapStatus = statusOptions.filter((s) => s !== 'Suggestion');
-
-const isRoadmapStatus = (status: Status): status is RoadmapStatus => {
-  return roadmapStatus.includes(status);
+const roadmapInitial: Record<RoadmapStatus, RoadmapDetails> = {
+  Planned: {
+    color: roadmapColors[0],
+    description: 'Ideas prioritized for research',
+    feedbacks: [],
+  },
+  'In-Progress': {
+    color: roadmapColors[1],
+    description: 'Currently being developed',
+    feedbacks: [],
+  },
+  Live: { color: roadmapColors[2], description: 'Released featuresh', feedbacks: [] },
 };
 
-const getRoadmapStats = (feedbacks: Feedback[]) =>
-  feedbacks.reduce(
-    (acc, curr) => {
-      if (isRoadmapStatus(curr.status)) {
-        acc[curr.status] += 1;
-      }
-      return acc;
-    },
-    { Planned: 0, 'In-Progress': 0, Live: 0 }
-  );
-
-export { getRoadmapStats };
+export const getRoadmapStats = (
+  feedbacks: Feedback[] | null
+): [RoadmapStatus, RoadmapDetails][] => {
+  if (!feedbacks) {
+    return Object.entries(roadmapInitial) as [RoadmapStatus, RoadmapDetails][];
+  }
+  const stats: Record<RoadmapStatus, RoadmapDetails> = feedbacks.reduce((acc, curFeedback) => {
+    if (roadmapStatuses.includes(curFeedback.status as RoadmapStatus)) {
+      acc[curFeedback.status as RoadmapStatus].feedbacks.push(curFeedback);
+    }
+    return acc;
+  }, structuredClone(roadmapInitial));
+  return Object.entries(stats) as [RoadmapStatus, RoadmapDetails][];
+};

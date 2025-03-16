@@ -1,17 +1,20 @@
 'use client';
 import React from 'react';
-import Button from './buttons/Button';
+import Button from '../buttons/Button';
 import Image from 'next/image';
 import { useFormik } from 'formik';
 import { feedbackSchema } from '@/validation';
-import Dropdown from './Dropdown';
+import Dropdown from '../Dropdown';
 import { useRouter } from 'next/navigation';
 import { FeedbackInsertData, FeedbackFormData } from '@/types';
 import { categoryNames } from '@/lib/filter';
-import { createFeedbackAction, deleteFeedbackAction } from '@/app/actions/feedback-actions';
-import LoadingSpinner from './LoadingSpinner';
+import {
+  createFeedbackAction,
+  updateFeedbackAction,
+  deleteFeedbackAction,
+} from '@/app/actions/feedback-actions';
+import LoadingSpinner from '../LoadingSpinner';
 import { statusOptions } from '@/lib/status';
-import { updateFeedback } from '@/db/queries/feedbacks';
 
 type FeedbackDataForm = {
   curFeedback?: FeedbackFormData;
@@ -22,7 +25,7 @@ const FeedbackForm: React.FC<FeedbackDataForm> = ({ curFeedback }) => {
   const initialValues = {
     title: '',
     category: 'Feature',
-    status: 'Planned',
+    status: 'Suggestion',
     description: '',
   };
   const formik = useFormik({
@@ -32,12 +35,12 @@ const FeedbackForm: React.FC<FeedbackDataForm> = ({ curFeedback }) => {
       formik.setSubmitting(true);
       try {
         if (curFeedback) {
-          await updateFeedback({ id: curFeedback.id, ...feedback } as FeedbackFormData);
+          await updateFeedbackAction({ id: curFeedback.id, ...feedback } as FeedbackFormData);
         } else {
           await createFeedbackAction(feedback as Omit<FeedbackInsertData, 'user_id'>);
         }
-        router.push('/');
         formik.resetForm();
+        router.push('/');
       } catch (err) {
         // implement error handling
         console.log(err);

@@ -6,10 +6,10 @@ import {
   SuggestionsNoFeedback,
 } from '@/components/suggestions/index';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import RoadmapHeaderList from '@/components/roadmap/RoadmapHeaderList';
+import RoadmapHomeWidget from '@/components/roadmap/RoadmapHomeWidget';
 import Burger from '@/components/Burger';
-import FeedbackCategories from '@/components/FeedbackCategories';
-import { getFeedbacksAction } from '../actions/feedback-actions';
+import FeedbackCategories from '@/components/feedback/FeedbackCategories';
+import { getAllFeedbacksAction } from '../actions/feedback-actions';
 import {
   CategoryOption,
   categoryOptions,
@@ -37,7 +37,7 @@ export default async function Home({ params }: HomePageProps) {
   }
   const currCategory: CategoryOption = (categoryParam as CategoryOption) || 'all';
   const currSort: SortOption = (sortParam as SortOption) || 'most-upvotes';
-  const feedbacks = await getFeedbacksAction();
+  const feedbacks = await getAllFeedbacksAction();
 
   const suggestions = feedbacks?.filter((f) => f.status === 'Suggestion');
   const suggestionsByCategories =
@@ -45,6 +45,7 @@ export default async function Home({ params }: HomePageProps) {
       ? suggestions
       : suggestions?.filter((s) => s.category === categoryNamesMap[currCategory]);
   const sortedSuggestions = suggestionsByCategories?.sort(sortFunctionsMap[currSort]);
+
   return (
     <div className="flex flex-col gap-x-[30px] md:gap-y-10 md:px-10 md:pt-[56px] lg:flex-row lg:px-[min(165px,8%)] xl:pt-[94px]">
       <MainHeader>
@@ -57,7 +58,7 @@ export default async function Home({ params }: HomePageProps) {
             <Burger>
               <div className="absolute right-0 top-[74px] flex h-[calc(100vh-74px)] max-w-[271] flex-col gap-y-6 bg-light-200 p-6 md:hidden">
                 <FeedbackCategories sortFilterParam={currSort} categoryFilterParam={currCategory} />
-                <RoadmapHeaderList feedbacks={feedbacks} />
+                <RoadmapHomeWidget feedbacks={feedbacks} />
               </div>
             </Burger>
           </div>
@@ -67,7 +68,7 @@ export default async function Home({ params }: HomePageProps) {
           <FeedbackCategories sortFilterParam={currSort} categoryFilterParam={currCategory} />
         </div>
         <div className="hidden md:flex md:flex-1">
-          <RoadmapHeaderList feedbacks={feedbacks} />
+          <RoadmapHomeWidget feedbacks={feedbacks} />
         </div>
       </MainHeader>
       <main className="flex-1">

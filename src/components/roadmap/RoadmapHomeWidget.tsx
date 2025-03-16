@@ -1,11 +1,11 @@
 import React from 'react';
 import Link from 'next/link';
-import RoadmapHeaderItem from './RoadmapHeaderItem';
+import RoadmapHomeWidgetItem from './RoadmapHomeWidgetItem';
 import { getRoadmapStats } from '@/lib/status';
 import LoadingSpinner from '../LoadingSpinner';
 import { Feedback } from '@/types';
 
-export const RoadmapHeaderListSkeleton = () => {
+export const RoadmapHomeWidgetSkeleton = () => {
   return (
     <div className="w-full min-w-[223px] rounded-lg bg-white p-6">
       <div className="flex items-center justify-between">
@@ -19,19 +19,13 @@ export const RoadmapHeaderListSkeleton = () => {
   );
 };
 
-type RoadmapHeaderListProps = {
+type RoadmapHomeWidgetProps = {
   feedbacks: Feedback[];
 };
 
-const RoadmapHeaderList: React.FC<RoadmapHeaderListProps> = ({ feedbacks }) => {
+const RoadmapHomeWidget: React.FC<RoadmapHomeWidgetProps> = ({ feedbacks }) => {
   const roadmapStats = getRoadmapStats(feedbacks);
 
-  const roadmapBulletsColors = ['orange-200', 'purple-200', 'blue-100'];
-  const roadmapList = Object.entries(roadmapStats).map(([state, tasksCount], index) => ({
-    state,
-    tasksCount,
-    color: roadmapBulletsColors[index],
-  }));
   return (
     <div className="w-full min-w-[223px] rounded-lg bg-white p-6">
       <div className="flex items-center justify-between">
@@ -41,17 +35,19 @@ const RoadmapHeaderList: React.FC<RoadmapHeaderListProps> = ({ feedbacks }) => {
         </Link>
       </div>
       <ul className="mt-6">
-        {roadmapList.map((item) => (
-          <RoadmapHeaderItem
-            key={item.state}
-            state={item.state}
-            tasksCount={item.tasksCount}
-            color={item.color}
-          />
-        ))}
+        {roadmapStats &&
+          roadmapStats.map(([status, props]) => (
+            <li key={status}>
+              <RoadmapHomeWidgetItem
+                state={status}
+                tasksCount={props.feedbacks.length}
+                color={props.color}
+              />
+            </li>
+          ))}
       </ul>
     </div>
   );
 };
 
-export default RoadmapHeaderList;
+export default RoadmapHomeWidget;

@@ -1,6 +1,6 @@
 import { getFeedbackByIdAction } from '@/app/actions/feedback-actions';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import { SuggestionsItem } from '@/components/suggestions/index';
+import { FeedbackItem } from '@/components/suggestions/index';
 import CommentList from '@/components/comments/CommentsList';
 import AddComment from '@/components/comments/AddComment';
 import { notFound } from 'next/navigation';
@@ -21,7 +21,7 @@ export default async function FeedbackDetailsPage({ params }: FeedbackDetailsPag
   return (
     <Suspense fallback={<LoadingSpinner />}>
       <main className="flex flex-col gap-y-6">
-        <SuggestionsItem feedback={feedback} />
+        <FeedbackItem feedback={feedback} />
         {feedback.comments && <CommentList comments={feedback.comments} />}
         <AddComment />
       </main>

@@ -7,9 +7,9 @@ import {
   updateFeedback,
 } from '@/db/queries/feedbacks';
 import { Feedback, FeedbackFormData, FeedbackInsertData } from '@/types';
-import { revalidateTag } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 
-export async function getFeedbacksAction() {
+export async function getAllFeedbacksAction() {
   try {
     const feedbacks = await getAllFeedbacks();
     if (!feedbacks) {
@@ -50,6 +50,7 @@ export async function createFeedbackAction(feedback: Omit<FeedbackInsertData, 'u
       throw new Error('Creating the feedback failed');
     }
     revalidateTag('feedbacks');
+    revalidatePath('/');
   } catch (error) {
     if (error instanceof Error) {
       throw error;
@@ -65,6 +66,7 @@ export async function updateFeedbackAction(feedback: FeedbackFormData) {
       throw new Error('Editing the feedback failed');
     }
     revalidateTag('feedbacks');
+    revalidatePath('/');
   } catch (error) {
     if (error instanceof Error) {
       throw error;
@@ -84,6 +86,7 @@ export async function deleteFeedbackAction(id: string): Promise<void> {
       throw new Error('Removing the feedback failed');
     }
     revalidateTag('feedbacks');
+    revalidatePath('/');
   } catch (error) {
     if (error instanceof Error) {
       throw error;

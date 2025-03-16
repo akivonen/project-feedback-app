@@ -4,9 +4,10 @@ import { feedbacks } from '../schema';
 import { eq } from 'drizzle-orm';
 import { Feedback, FeedbackInsertData, FeedbackFormData } from '@/types';
 import { unstable_cache } from 'next/cache';
+import { cache } from 'react';
 
 export const getAllFeedbacks = unstable_cache(
-  async (): Promise<Feedback[]> => {
+  cache(async (): Promise<Feedback[]> => {
     return await db.query.feedbacks.findMany({
       with: {
         user: true,
@@ -22,9 +23,9 @@ export const getAllFeedbacks = unstable_cache(
         },
       },
     });
-  },
+  }),
   ['feedbacks'],
-  { revalidate: 3600, tags: ['feedbacks'] }
+  { revalidate: 600, tags: ['feedbacks'] }
 );
 
 export const getFeedbackById = async (feedbackId: string): Promise<Feedback> => {

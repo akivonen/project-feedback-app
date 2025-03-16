@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import CreateFeedback from '@/components/FeedbackForm';
+import CreateFeedback from '@/components/forms/FeedbackForm';
 import LoadingSpinner from '@/components/LoadingSpinner';
 
 export default async function FeedbackAddPage() {

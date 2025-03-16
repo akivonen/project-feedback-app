@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Comment, Reply } from '@/types';
 import Image from 'next/image';
-import MessageForm from '../forms/messageForm';
+import MessageForm from '../forms/MessageForm';
 
 type MessageProps = {
   item: Comment | Reply;

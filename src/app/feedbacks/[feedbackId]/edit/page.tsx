@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import FeedbackForm from '@/components/FeedbackForm';
+import FeedbackForm from '@/components/forms/FeedbackForm';
 import { getFeedbackByIdAction } from '@/app/actions/feedback-actions';
 import { Feedback, FeedbackFormData } from '@/types';
 import { notFound } from 'next/navigation';

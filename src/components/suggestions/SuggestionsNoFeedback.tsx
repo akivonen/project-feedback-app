@@ -2,7 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import Button from '../buttons/Button';
 
-const SuggestionsNoFeedback = () => {
+const SuggestionsNoFeedback: React.FC = () => {
   return (
     <div className="mx-6 mb-12 mt-8 rounded-lg bg-white md:mx-0 md:mb-[54px] md:mt-6">
       <div className="flex flex-col items-center px-6 py-[76px] md:px-[140px] md:py-[110px] xl:px-[200px]">
