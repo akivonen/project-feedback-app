@@ -1,14 +1,25 @@
 'use client';
-import React from 'react';
+import React, { memo } from 'react';
 import { useFormik } from 'formik';
 import Button from '../buttons/Button';
 import { commentSchema } from '@/validation';
+import { useParams } from 'next/navigation';
+import { createCommentAction, createReplyAction } from '@/app/actions/feedback-actions';
 
 type MessageFormProps = {
+  id?: string;
   isReplyForm?: boolean;
+  commentId?: string;
+  replyingTo?: string;
 };
 
-const MessageForm: React.FC<MessageFormProps> = ({ isReplyForm = false }) => {
+const MessageForm: React.FC<MessageFormProps> = ({
+  id,
+  isReplyForm = false,
+  replyingTo,
+  commentId,
+}) => {
+  const { feedbackId } = useParams();
   const formik = useFormik({
     initialValues: {
       body: '',
@@ -17,9 +28,19 @@ const MessageForm: React.FC<MessageFormProps> = ({ isReplyForm = false }) => {
     onSubmit: async ({ body }, { setSubmitting }) => {
       setSubmitting(true);
       try {
-        console.log({ body });
-        formik.resetForm();
+        if (isReplyForm && commentId && replyingTo) {
+          await createReplyAction({
+            comment_id: commentId,
+            replying_to: replyingTo,
+            content: body,
+          });
+          formik.resetForm();
+        } else if (typeof feedbackId === 'string') {
+          await createCommentAction({ feedback_id: feedbackId, content: body });
+          formik.resetForm();
+        }
       } catch (err) {
+        // implement error handling
         console.log(err);
       } finally {
         setSubmitting(false);
@@ -27,16 +48,16 @@ const MessageForm: React.FC<MessageFormProps> = ({ isReplyForm = false }) => {
     },
   });
   const replyFormStyles = isReplyForm
-    ? 'mt-6 flex flex-col items-end gap-x-4 gap-y-4 md:flex-row md:items-start'
+    ? 'mt-6 flex flex-col items-end gap-4 md:flex-row md:items-start'
     : '';
   const textareaStyles = isReplyForm ? 'flex-1' : 'mt-6';
   const textareaErrorStyles =
     formik.touched.body && formik.errors.body ? 'border-orange-200' : 'border-transparent';
 
   return (
-    <form onSubmit={formik.handleSubmit} className={replyFormStyles}>
+    <form onSubmit={formik.handleSubmit} className={replyFormStyles} id={id}>
       <label htmlFor="body" className="sr-only">
-        ${isReplyForm ? 'reply' : 'comment'}
+        {isReplyForm ? 'reply' : 'comment'}
       </label>
       <textarea
         id="body"
@@ -48,20 +69,21 @@ const MessageForm: React.FC<MessageFormProps> = ({ isReplyForm = false }) => {
         rows={2}
         placeholder={`Type your ${isReplyForm ? 'reply' : 'comment'} here`}
         aria-label={`Type your ${isReplyForm ? 'reply' : 'comment'} here`}
+        aria-describedby={formik.touched.body && formik.errors.body ? 'body-error' : undefined}
       />
       <div className="text-[14px] text-orange-200">{formik.touched.body && formik.errors.body}</div>
       <div className={`flex items-center justify-between ${isReplyForm ? '' : 'mt-4'}`}>
         {!isReplyForm && (
           <span className="text-sm text-dark-200">
-            {250 - formik.values.body.length || 0} characters left
+            {250 - formik.values.body.length} characters left
           </span>
         )}
         <Button variant="purple" size="lg" type="submit" disabled={formik.isSubmitting}>
-          {`Post ${isReplyForm ? 'Reply' : 'Comment'}`}
+          {formik.isSubmitting ? 'Posting...' : `Post ${isReplyForm ? 'Reply' : 'Comment'}`}
         </Button>
       </div>
     </form>
   );
 };
 
-export default MessageForm;
+export default memo(MessageForm);

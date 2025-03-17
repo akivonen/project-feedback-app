@@ -1,4 +1,5 @@
 'use server';
+import { createComment } from '@/db/queries/comments';
 import {
   getAllFeedbacks,
   getFeedbackById,
@@ -6,7 +7,14 @@ import {
   deleteFeedback,
   updateFeedback,
 } from '@/db/queries/feedbacks';
-import { Feedback, FeedbackFormData, FeedbackInsertData } from '@/types';
+import { createReply } from '@/db/queries/replies';
+import {
+  CommentInsertData,
+  Feedback,
+  FeedbackFormData,
+  FeedbackInsertData,
+  ReplyInsertData,
+} from '@/types';
 import { revalidatePath, revalidateTag } from 'next/cache';
 
 export async function getAllFeedbacksAction() {
@@ -84,6 +92,46 @@ export async function deleteFeedbackAction(id: string): Promise<void> {
     const result = await deleteFeedback(id);
     if (!result) {
       throw new Error('Removing the feedback failed');
+    }
+    revalidateTag('feedbacks');
+    revalidatePath('/');
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error('Unknown error');
+  }
+}
+
+export async function createCommentAction(comment: Omit<CommentInsertData, 'user_id'>) {
+  try {
+    const commentData = {
+      ...comment,
+      user_id: '21c40a49-b9f0-426f-b608-724afbc019f0',
+    } as CommentInsertData;
+    const result = await createComment(commentData);
+    if (!result) {
+      throw new Error('Creating the comment failed');
+    }
+    revalidateTag('feedbacks');
+    revalidatePath('/');
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error('Unknown error');
+  }
+}
+
+export async function createReplyAction(reply: Omit<ReplyInsertData, 'user_id'>) {
+  try {
+    const replyData = {
+      ...reply,
+      user_id: '21c40a49-b9f0-426f-b608-724afbc019f0',
+    } as ReplyInsertData;
+    const result = await createReply(replyData);
+    if (!result) {
+      throw new Error('Creating the reply failed');
     }
     revalidateTag('feedbacks');
     revalidatePath('/');

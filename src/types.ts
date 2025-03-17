@@ -48,6 +48,12 @@ export type Comment = {
   replies: Reply[] | [];
 };
 
+export type CommentInsertData = {
+  feedback_id: string;
+  content: string;
+  user_id: string;
+};
+
 export type Reply = {
   id: string;
   content: string;
@@ -56,6 +62,13 @@ export type Reply = {
   user_id: string;
   created_at: Date;
   user: User;
+};
+
+export type ReplyInsertData = {
+  replying_to: string;
+  comment_id: string;
+  content: string;
+  user_id: string;
 };
 
 export type Roadmap = Record<RoadmapStatus, number>;
