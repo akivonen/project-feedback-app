@@ -13,9 +13,9 @@ const isReplyItem = (item: Comment | Reply): item is Reply => 'replying_to' in i
 
 const Message: React.FC<MessageProps> = ({ item, isReply = false }) => {
   const { user, content } = item;
-  const replying_to = isReplyItem(item) ? item.replying_to : '';
+  const replying_to = isReplyItem(item) ? item.replying_to : user.username;
   const replies = 'replies' in item ? item.replies : [];
-  const commentId = isReplyItem(item) ? item.comment_id : undefined;
+  const commentId = isReplyItem(item) ? item.comment_id : item.id;
 
   const containerStyles = isReply
     ? 'mt-6 pl-6 text-dark-200 first:border-l first:border-dark-200/10 md:ml-5 md:mt-0 md:pt-8'
@@ -62,13 +62,13 @@ const Message: React.FC<MessageProps> = ({ item, isReply = false }) => {
           {isReply ? `  ${content}` : content}
         </p>
         {showReplyForm && (
-          <MessageForm isReplyForm id={item.id} replyingTo={user.username} commentId={commentId} />
+          <MessageForm isReplyForm id={item.id} replyingTo={replying_to} commentId={commentId} />
         )}
       </div>
       {!isReply && replies.length > 0 && (
         <ul className="">
           {replies.map((item) => (
-            <Message key={item.id} item={item} isReply={true} />
+            <Message key={item.id} item={item} isReply />
           ))}
         </ul>
       )}
