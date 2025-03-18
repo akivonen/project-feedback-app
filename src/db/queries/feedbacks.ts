@@ -7,6 +7,7 @@ import { unstable_cache } from 'next/cache';
 import { cache } from 'react';
 
 export const getAllFeedbacks = unstable_cache(
+  // error handling
   cache(async (): Promise<Feedback[]> => {
     return await db.query.feedbacks.findMany({
       with: {
@@ -29,6 +30,7 @@ export const getAllFeedbacks = unstable_cache(
 );
 
 export const getFeedbackById = async (feedbackId: string): Promise<Feedback> => {
+  // error handling
   const [feedback] = await db.query.feedbacks.findMany({
     with: {
       comments: {
@@ -48,8 +50,19 @@ export const getFeedbackById = async (feedbackId: string): Promise<Feedback> => 
 };
 
 export const createFeedback = async (feedback: FeedbackInsertData) => {
-  const [result] = await db.insert(feedbacks).values(feedback).returning();
-  return result;
+  try {
+    const [result] = await db.insert(feedbacks).values(feedback).returning();
+    if (!result) {
+      throw new Error('Failed to insert feedback into database');
+    }
+    return result;
+  } catch (error) {
+    console.error('Database error in createFeedback:', error);
+    if (error instanceof Error) {
+      throw new Error(`Database operation failed: ${error.message}`);
+    }
+    throw new Error('An unexpected error occured while creating feedback');
+  }
 };
 
 export const updateFeedback = async (feedback: FeedbackFormData) => {

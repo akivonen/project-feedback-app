@@ -5,6 +5,7 @@ import Button from '../buttons/Button';
 import { commentSchema } from '@/validation';
 import { useParams } from 'next/navigation';
 import { createCommentAction, createReplyAction } from '@/app/actions/feedback-actions';
+import { toast } from 'react-toastify';
 
 type MessageFormProps = {
   id?: string;
@@ -35,13 +36,19 @@ const MessageForm: React.FC<MessageFormProps> = ({
             content: body,
           });
           formik.resetForm();
+          toast.success('Reply posted');
         } else if (typeof feedbackId === 'string') {
           await createCommentAction({ feedback_id: feedbackId, content: body });
           formik.resetForm();
+          toast.success('Comment posted');
         }
-      } catch (err) {
-        // implement error handling
-        console.log(err);
+      } catch (error) {
+        if (error instanceof Error) {
+          toast.error(error.message);
+        } else {
+          toast.error('Unknown error occured');
+          console.error(error);
+        }
       } finally {
         setSubmitting(false);
       }

@@ -26,9 +26,9 @@ export async function getAllFeedbacksAction() {
     return feedbacks;
   } catch (error) {
     if (error instanceof Error) {
-      throw error;
+      throw new Error(`Failed to get all feedbacks: ${error.message}`);
     }
-    throw new Error('Unknown error');
+    throw new Error('An unexpected error occurred while getting all feedbacks');
   }
 }
 
@@ -41,9 +41,9 @@ export async function getFeedbackByIdAction(id: string): Promise<Feedback | null
     return feedback;
   } catch (error) {
     if (error instanceof Error) {
-      throw error;
+      throw new Error(`Failed to get feedback by id: ${error.message}`);
     }
-    throw new Error('Unknown error');
+    throw new Error(`An unexpected error occurred while getting feedback by id`);
   }
 }
 
@@ -51,19 +51,21 @@ export async function createFeedbackAction(feedback: Omit<FeedbackInsertData, 'u
   try {
     const feedbackData = {
       ...feedback,
-      user_id: '21c40a49-b9f0-426f-b608-724afbc019f0',
+      user_id: '21c40a49-b9f0-426f-b608-724afbc019f0', //implement auth
     } as FeedbackInsertData;
+
     const result = await createFeedback(feedbackData);
     if (!result) {
-      throw new Error('Creating the feedback failed');
+      throw new Error('Feedback creation returned no result');
     }
     revalidateTag('feedbacks');
     revalidatePath('/');
+    return result;
   } catch (error) {
     if (error instanceof Error) {
-      throw error;
+      throw new Error(`Failed to create feedback: ${error.message}`);
     }
-    throw new Error('Unknown error');
+    throw new Error('An unexpected error occurred while processing feedback');
   }
 }
 
@@ -71,15 +73,16 @@ export async function updateFeedbackAction(feedback: FeedbackFormData) {
   try {
     const result = await updateFeedback(feedback);
     if (!result) {
-      throw new Error('Editing the feedback failed');
+      throw new Error('Feedback updating returned no result');
     }
     revalidateTag('feedbacks');
     revalidatePath('/');
+    return result;
   } catch (error) {
     if (error instanceof Error) {
-      throw error;
+      throw new Error(`Failed to update feedback: ${error.message}`);
     }
-    throw new Error('Unknown error');
+    throw new Error('An unexpected error occurred while processing feedback');
   }
 }
 
@@ -87,19 +90,19 @@ export async function deleteFeedbackAction(id: string): Promise<void> {
   try {
     const feedback = await getFeedbackById(id);
     if (!feedback) {
-      throw new Error('Feedback not found');
+      throw new Error('Feedback not found while deleting feedback');
     }
     const result = await deleteFeedback(id);
     if (!result) {
-      throw new Error('Removing the feedback failed');
+      throw new Error(`Feedback deleting returned no result`);
     }
     revalidateTag('feedbacks');
     revalidatePath('/');
   } catch (error) {
     if (error instanceof Error) {
-      throw error;
+      throw new Error(`Failed to delete feedback: ${error.message}`);
     }
-    throw new Error('Unknown error');
+    throw new Error('An unexpected error occurred while deleting feedback');
   }
 }
 
@@ -111,15 +114,15 @@ export async function createCommentAction(comment: Omit<CommentInsertData, 'user
     } as CommentInsertData;
     const result = await createComment(commentData);
     if (!result) {
-      throw new Error('Creating the comment failed');
+      throw new Error('Comment creation returned no result');
     }
     revalidateTag('feedbacks');
     revalidatePath('/');
   } catch (error) {
     if (error instanceof Error) {
-      throw error;
+      throw new Error(`Failed to create comment: ${error.message}`);
     }
-    throw new Error('Unknown error');
+    throw new Error('An unexpected error occurred while creating feedback');
   }
 }
 
@@ -131,14 +134,14 @@ export async function createReplyAction(reply: Omit<ReplyInsertData, 'user_id'>)
     } as ReplyInsertData;
     const result = await createReply(replyData);
     if (!result) {
-      throw new Error('Creating the reply failed');
+      throw new Error('Reply creation returned no result');
     }
     revalidateTag('feedbacks');
     revalidatePath('/');
   } catch (error) {
     if (error instanceof Error) {
-      throw error;
+      throw new Error(`Failed to create reply: ${error.message}`);
     }
-    throw new Error('Unknown error');
+    throw new Error('An unexpected error occurred while creating reply');
   }
 }

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Jost } from 'next/font/google';
 import './globals.css';
+import { ToastContainer } from 'react-toastify';
 
 const jost = Jost({ subsets: ['latin'] });
 
@@ -20,6 +21,7 @@ export default function RootLayout({
         className={`${jost.className} mx-auto min-h-svh max-w-[1440px] bg-light-200 text-white`}
       >
         {children}
+        <ToastContainer position="top-right" />
       </body>
     </html>
   );
