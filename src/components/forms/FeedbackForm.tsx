@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Button from '../buttons/Button';
 import Image from 'next/image';
 import { useFormik } from 'formik';
@@ -16,7 +16,7 @@ import {
 import LoadingSpinner from '../LoadingSpinner';
 import { statusOptions } from '@/lib/status';
 import { toast } from 'react-toastify';
-import Modal from 'react-modal';
+import FeedbackDeleteModal from '../feedback/FeedbackDeleteModal';
 
 type FeedbackDataForm = {
   curFeedback?: FeedbackFormData;
@@ -28,15 +28,6 @@ const FeedbackForm: React.FC<FeedbackDataForm> = ({ curFeedback }) => {
   const [hasProcessed, setHasProcessed] = useState<boolean>(false);
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const router = useRouter();
-
-  useEffect(() => {
-    const appElement = document.getElementById('feedback');
-    if (appElement) {
-      Modal.setAppElement('#feedback');
-    } else {
-      console.warn('Element with id="feedback" not found in the DOM');
-    }
-  }, []);
 
   const initialValues = {
     title: '',
@@ -233,33 +224,13 @@ const FeedbackForm: React.FC<FeedbackDataForm> = ({ curFeedback }) => {
           )}
         </div>
       </form>
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={() => setModalIsOpen(false)}
-        className="modal mx-auto w-full max-w-md rounded-lg bg-white p-6 shadow-lg"
-        overlayClassName="overlay fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
-        aria={{ labelledby: 'delete-confirmation' }}
-      >
-        <h3 className="text-center text-base text-dark-400 md:text-lg" id="delete-confirmation">
-          Are you sure you want to delete this feedback?
-        </h3>
-        <form
-          className="mt-6 flex flex-col justify-center gap-4 md:flex-row"
-          onSubmit={handleRemoveFeedback}
-        >
-          <Button type="button" size="xl" variant="dark-blue" onClick={() => setModalIsOpen(false)}>
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            size="xl"
-            variant="orange"
-            disabled={formik.isSubmitting || isDeleting}
-          >
-            {isDeleting ? 'Deleting...' : 'Delete'}
-          </Button>
-        </form>
-      </Modal>
+      <FeedbackDeleteModal
+        modalIsOpen={modalIsOpen}
+        setModalIsOpen={setModalIsOpen}
+        handleRemoveFeedback={handleRemoveFeedback}
+        isSubmitting={formik.isSubmitting}
+        isDeleting={isDeleting}
+      />
     </section>
   );
 };
