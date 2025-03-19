@@ -17,14 +17,11 @@ import {
 } from '@/types';
 import { revalidatePath, revalidateTag } from 'next/cache';
 
-export async function getAllFeedbacksAction() {
+export async function getAllFeedbacksAction(): Promise<Feedback[]> {
   try {
-    const feedbacks = await getAllFeedbacks();
-    if (!feedbacks) {
-      return [];
-    }
-    return feedbacks;
+    return await getAllFeedbacks();
   } catch (error) {
+    console.error('Error in getAllFeedbacksAction:', error);
     if (error instanceof Error) {
       throw new Error(`Failed to get all feedbacks: ${error.message}`);
     }
@@ -32,14 +29,11 @@ export async function getAllFeedbacksAction() {
   }
 }
 
-export async function getFeedbackByIdAction(id: string): Promise<Feedback | null> {
+export async function getFeedbackByIdAction(id: string): Promise<Feedback> {
   try {
-    const feedback = await getFeedbackById(id);
-    if (!feedback) {
-      return null;
-    }
-    return feedback;
+    return await getFeedbackById(id);
   } catch (error) {
+    console.error('Error in getFeedbackByIdAction:', error);
     if (error instanceof Error) {
       throw new Error(`Failed to get feedback by id: ${error.message}`);
     }
@@ -47,101 +41,83 @@ export async function getFeedbackByIdAction(id: string): Promise<Feedback | null
   }
 }
 
-export async function createFeedbackAction(feedback: Omit<FeedbackInsertData, 'user_id'>) {
+export async function createFeedbackAction(
+  feedback: Omit<FeedbackInsertData, 'user_id'>
+): Promise<void> {
   try {
     const feedbackData = {
       ...feedback,
       user_id: '21c40a49-b9f0-426f-b608-724afbc019f0', //implement auth
     } as FeedbackInsertData;
-
-    const result = await createFeedback(feedbackData);
-    if (!result) {
-      throw new Error('Feedback creation returned no result');
-    }
+    await createFeedback(feedbackData);
     revalidateTag('feedbacks');
     revalidatePath('/');
-    return result;
   } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(`Failed to create feedback: ${error.message}`);
-    }
-    throw new Error('An unexpected error occurred while processing feedback');
+    console.error('Error in createFeedbackAction:', error);
+    throw error instanceof Error
+      ? error
+      : new Error('An unexpected error occurred while creating feedback');
   }
 }
 
-export async function updateFeedbackAction(feedback: FeedbackFormData) {
+export async function updateFeedbackAction(feedback: FeedbackFormData): Promise<void> {
   try {
-    const result = await updateFeedback(feedback);
-    if (!result) {
-      throw new Error('Feedback updating returned no result');
-    }
+    await updateFeedback(feedback);
     revalidateTag('feedbacks');
     revalidatePath('/');
-    return result;
   } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(`Failed to update feedback: ${error.message}`);
-    }
-    throw new Error('An unexpected error occurred while processing feedback');
+    console.error('Error in updateFeedbackAction:', error);
+    throw error instanceof Error
+      ? error
+      : new Error('An unexpected error occurred while updating feedback');
   }
 }
 
 export async function deleteFeedbackAction(id: string): Promise<void> {
   try {
-    const feedback = await getFeedbackById(id);
-    if (!feedback) {
-      throw new Error('Feedback not found while deleting feedback');
-    }
-    const result = await deleteFeedback(id);
-    if (!result) {
-      throw new Error(`Feedback deleting returned no result`);
-    }
+    await deleteFeedback(id);
     revalidateTag('feedbacks');
     revalidatePath('/');
   } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(`Failed to delete feedback: ${error.message}`);
-    }
-    throw new Error('An unexpected error occurred while deleting feedback');
+    console.error('Error in deleteFeedbackAction:', error);
+    throw error instanceof Error
+      ? error
+      : new Error('An unexpected error occurred while deleting feedback');
   }
 }
 
-export async function createCommentAction(comment: Omit<CommentInsertData, 'user_id'>) {
+export async function createCommentAction(
+  comment: Omit<CommentInsertData, 'user_id'>
+): Promise<void> {
   try {
     const commentData = {
       ...comment,
       user_id: '21c40a49-b9f0-426f-b608-724afbc019f0',
     } as CommentInsertData;
-    const result = await createComment(commentData);
-    if (!result) {
-      throw new Error('Comment creation returned no result');
-    }
+    await createComment(commentData);
     revalidateTag('feedbacks');
     revalidatePath('/');
   } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(`Failed to create comment: ${error.message}`);
-    }
-    throw new Error('An unexpected error occurred while creating feedback');
+    console.error('Error in createCommentAction:', error);
+    throw error instanceof Error
+      ? error
+      : new Error('An unexpected error occurred while creating comment');
   }
 }
 
-export async function createReplyAction(reply: Omit<ReplyInsertData, 'user_id'>) {
+export async function createReplyAction(reply: Omit<ReplyInsertData, 'user_id'>): Promise<void> {
   try {
     const replyData = {
       ...reply,
       user_id: '21c40a49-b9f0-426f-b608-724afbc019f0',
     } as ReplyInsertData;
-    const result = await createReply(replyData);
-    if (!result) {
-      throw new Error('Reply creation returned no result');
-    }
+    await createReply(replyData);
     revalidateTag('feedbacks');
     revalidatePath('/');
   } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(`Failed to create reply: ${error.message}`);
-    }
-    throw new Error('An unexpected error occurred while creating reply');
+    console.error('Error in createReplyAction:', error);
+    throw error instanceof Error
+      ? error
+      : new Error('An unexpected error occurred while creating reply');
   }
 }
