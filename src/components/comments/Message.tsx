@@ -30,15 +30,14 @@ const Message: React.FC<MessageProps> = ({ item, isReply = false }) => {
   return (
     <li className={containerStyles} aria-label={`${isReply ? 'Reply' : 'Comment'} by ${user.name}`}>
       <div className="flex w-full items-center justify-between">
-        <div className="flex gap-x-4 md:gap-x-8">
+        <div className="flex items-center gap-x-4 md:gap-x-8">
           {user.image && (
             <Image
-              className="h-auto w-[40px] rounded-full"
+              className="rounded-full"
               src={user.image}
               alt={`${user.name}'s profile picture`}
               width={40}
               height={40}
-              sizes="40px"
             />
           )}
           <div className="flex flex-col text-sm md:text-[14px]">
