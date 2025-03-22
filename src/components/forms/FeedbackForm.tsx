@@ -12,7 +12,7 @@ import {
   createFeedbackAction,
   updateFeedbackAction,
   deleteFeedbackAction,
-} from '@/app/actions/feedback-actions';
+} from '@/app/actions/feedbackActions';
 import LoadingSpinner from '../LoadingSpinner';
 import { statusOptions } from '@/lib/status';
 import { toast } from 'react-toastify';

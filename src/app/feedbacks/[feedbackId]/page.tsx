@@ -1,4 +1,4 @@
-import { getFeedbackByIdAction } from '@/app/actions/feedback-actions';
+import { getFeedbackByIdAction } from '@/app/actions/feedbackActions';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { FeedbackItem } from '@/components/suggestions/index';
 import CommentList from '@/components/comments/CommentsList';

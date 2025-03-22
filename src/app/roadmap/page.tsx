@@ -1,4 +1,4 @@
-import { getAllFeedbacksAction } from '../actions/feedback-actions';
+import { getAllFeedbacksAction } from '../actions/feedbackActions';
 import RoadmapPageContent from '@/components/roadmap/RoadmapPageContent';
 
 export default async function RoadmapPage() {

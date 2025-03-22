@@ -1,5 +1,4 @@
 'use server';
-import { createComment } from '@/db/queries/comments';
 import {
   getAllFeedbacks,
   getFeedbackById,
@@ -7,14 +6,8 @@ import {
   deleteFeedback,
   updateFeedback,
 } from '@/db/queries/feedbacks';
-import { createReply } from '@/db/queries/replies';
-import {
-  CommentInsertData,
-  Feedback,
-  FeedbackFormData,
-  FeedbackInsertData,
-  ReplyInsertData,
-} from '@/types';
+
+import { Feedback, FeedbackFormData, FeedbackInsertData } from '@/types';
 import { revalidatePath, revalidateTag } from 'next/cache';
 
 export async function getAllFeedbacksAction(): Promise<Feedback[]> {
@@ -83,41 +76,5 @@ export async function deleteFeedbackAction(id: string): Promise<void> {
     throw error instanceof Error
       ? error
       : new Error('An unexpected error occurred while deleting feedback');
-  }
-}
-
-export async function createCommentAction(
-  comment: Omit<CommentInsertData, 'user_id'>
-): Promise<void> {
-  try {
-    const commentData = {
-      ...comment,
-      user_id: '21c40a49-b9f0-426f-b608-724afbc019f0',
-    } as CommentInsertData;
-    await createComment(commentData);
-    revalidateTag('feedbacks');
-    revalidatePath('/');
-  } catch (error) {
-    console.error('Error in createCommentAction:', error);
-    throw error instanceof Error
-      ? error
-      : new Error('An unexpected error occurred while creating comment');
-  }
-}
-
-export async function createReplyAction(reply: Omit<ReplyInsertData, 'user_id'>): Promise<void> {
-  try {
-    const replyData = {
-      ...reply,
-      user_id: '21c40a49-b9f0-426f-b608-724afbc019f0',
-    } as ReplyInsertData;
-    await createReply(replyData);
-    revalidateTag('feedbacks');
-    revalidatePath('/');
-  } catch (error) {
-    console.error('Error in createReplyAction:', error);
-    throw error instanceof Error
-      ? error
-      : new Error('An unexpected error occurred while creating reply');
   }
 }

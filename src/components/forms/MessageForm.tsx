@@ -4,7 +4,8 @@ import { useFormik } from 'formik';
 import Button from '../buttons/Button';
 import { commentSchema } from '@/validation';
 import { useParams } from 'next/navigation';
-import { createCommentAction, createReplyAction } from '@/app/actions/feedback-actions';
+import { createCommentAction } from '@/app/actions/commentActions';
+import { createReplyAction } from '@/app/actions/replyActions';
 import { toast } from 'react-toastify';
 
 type MessageFormProps = {
