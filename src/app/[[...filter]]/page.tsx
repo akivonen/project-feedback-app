@@ -20,12 +20,17 @@ import {
 } from '@/lib/filter';
 import { notFound } from 'next/navigation';
 import Dropdown from '@/components/Dropdown';
+import Link from 'next/link';
+import { auth } from '../auth';
+import SignOut from '@/components/SignOut';
 
 type HomePageProps = {
   params: Promise<{ filter?: string[] }>;
 };
 
 export default async function Home({ params }: HomePageProps) {
+  const session = await auth();
+  console.log(session);
   const { filter } = await params;
   const categoryParam = filter?.[0];
   const sortParam = filter?.[1];
@@ -57,7 +62,13 @@ export default async function Home({ params }: HomePageProps) {
                 <span className="text-sm text-white/75 md:text-[15px]">Feedback Board</span>
               </div>
               <div>
-                <h2 className="text-[15px] text-white md:text-[20px]">Sign In</h2>
+                {session ? (
+                  <SignOut />
+                ) : (
+                  <Link href="/auth/signin" className="text-[15px] text-white md:text-[20px]">
+                    Sign In
+                  </Link>
+                )}
               </div>
             </div>
 

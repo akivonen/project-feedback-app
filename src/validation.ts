@@ -5,15 +5,26 @@ export const commentSchema = Yup.object().shape({
 });
 
 export const feedbackSchema = Yup.object().shape({
-  title: Yup.string().min(1, "Can't be empty").required("Can't be empty"),
+  title: Yup.string().trim().min(1, "Can't be empty").required("Can't be empty"),
   category: Yup.string()
     .oneOf(['Feature', 'UI', 'UX', 'Enhancement', 'Bug'], 'Invalid category')
     .required('Category is required'),
   status: Yup.string().oneOf(['Suggestion', 'Planned', 'In-Progress', 'Live'], 'Invalid status'),
-  description: Yup.string().min(1, "Can't be empty").required("Can't be empty"),
+  description: Yup.string().trim().min(1, "Can't be empty").required("Can't be empty"),
 });
 
 export const signInSchema = Yup.object().shape({
-  username: Yup.string().min(1, 'At least 1 character').required('Username is required'),
-  password: Yup.string().min(4, 'At least 4 characters').required('Password is required'),
+  username: Yup.string().trim().min(3, 'At least 3 character').required('Username is required'),
+  password: Yup.string().trim().min(6, 'At least 6 characters').required('Password is required'),
+});
+
+export const signUpSchema = Yup.object().shape({
+  name: Yup.string().trim().min(3, 'At least 2 character').required('Name is required'),
+  username: Yup.string().trim().min(3, 'At least 3 character').required('Username is required'),
+  password: Yup.string().trim().min(6, 'At least 6 characters').required('Password is required'),
+  confirmPassword: Yup.string()
+    .trim()
+    .min(4, 'At least 6 characters')
+    .required('Confirm Password is required')
+    .oneOf([Yup.ref('password')], 'Passwords must match'),
 });

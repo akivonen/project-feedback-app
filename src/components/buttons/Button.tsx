@@ -23,7 +23,7 @@ const Button: React.FC<ButtonProps> = ({
   disabled,
   href,
 }) => {
-  const baseStyles = 'max-h-[44px] w-fit rounded-lg text-sm font-semibold';
+  const baseStyles = 'max-h-[44px] w-fit rounded-lg text-sm font-semibold text-center';
   const sizeStyles = {
     sm: 'px-[16px] py-[6px]',
     lg: 'px-6 py-3 md:text-[14px]',

@@ -55,7 +55,8 @@ const FeedbackForm: React.FC<FeedbackDataForm> = ({ curFeedback }) => {
         formik.resetForm();
         router.replace('/');
       } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'An unexpected error occured';
+        const errorMessage =
+          error instanceof Error ? error.message : 'An unexpected error occured in feedback form';
         toast.error(errorMessage);
         setServerError(errorMessage);
         console.error('Form submission error:', error);
