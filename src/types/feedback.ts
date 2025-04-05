@@ -11,7 +11,7 @@ export type Feedback = {
   description: string;
   comments: Comment[] | [];
   created_at: Date;
-  user?: User;
+  user: User;
 };
 
 export type FeedbackInsertData = {
@@ -27,4 +27,5 @@ export type FeedbackFormData = {
   category: Category;
   status: Status;
   description: string;
+  user_id: string;
 };

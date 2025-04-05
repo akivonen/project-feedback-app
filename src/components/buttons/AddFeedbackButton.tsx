@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 
-const AddFeedbackButton: React.FC = () => {
+export default function AddFeedbackButton (){
   return (
     <Link
       href="/feedbacks/add"
@@ -11,5 +11,3 @@ const AddFeedbackButton: React.FC = () => {
     </Link>
   );
 };
-
-export default AddFeedbackButton;

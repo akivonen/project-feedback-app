@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Jost } from 'next/font/google';
 import './globals.css';
 import { ToastContainer } from 'react-toastify';
+import ClientSessionWrapper from './ClientSessionWrapper';
 
 const jost = Jost({ subsets: ['latin'] });
 
@@ -10,7 +11,7 @@ export const metadata: Metadata = {
   description: 'Frontmentor.io project implementation',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -20,8 +21,10 @@ export default function RootLayout({
       <body
         className={`${jost.className} mx-auto min-h-svh max-w-[1440px] bg-light-200 text-white`}
       >
-        {children}
-        <ToastContainer position="top-right" />
+        <ClientSessionWrapper>
+          {children}
+          <ToastContainer position="top-right" />
+        </ClientSessionWrapper>
       </body>
     </html>
   );

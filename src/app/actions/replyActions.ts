@@ -3,13 +3,9 @@ import { ReplyInsertData } from '@/types';
 import { createReply } from '@/db/queries/replies';
 import { revalidateTag, revalidatePath } from 'next/cache';
 
-export async function createReplyAction(reply: Omit<ReplyInsertData, 'user_id'>): Promise<void> {
+export async function createReplyAction(reply: ReplyInsertData): Promise<void> {
   try {
-    const replyData = {
-      ...reply,
-      user_id: '21c40a49-b9f0-426f-b608-724afbc019f0',
-    } as ReplyInsertData;
-    await createReply(replyData);
+    await createReply(reply);
     revalidateTag('feedbacks');
     revalidatePath('/');
   } catch (error) {

@@ -6,7 +6,7 @@ type CommentsListProps = {
   comments: Comment[];
 };
 
-const CommentList: React.FC<CommentsListProps> = ({ comments }) => {
+const CommentList: React.FC<CommentsListProps> = async ({ comments }) => {
   return (
     <section
       className="flex w-full flex-col gap-y-4 rounded-lg bg-white p-6 md:px-8 md:py-7"

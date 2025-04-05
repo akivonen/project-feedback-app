@@ -6,7 +6,7 @@ import { useFormik } from 'formik';
 import { feedbackSchema } from '@/validation';
 import Dropdown from '../Dropdown';
 import { useRouter } from 'next/navigation';
-import { FeedbackInsertData, FeedbackFormData } from '@/types';
+import { FeedbackFormData, FeedbackInsertData } from '@/types';
 import { categoryNames } from '@/lib/filter';
 import {
   createFeedbackAction,
@@ -17,6 +17,7 @@ import LoadingSpinner from '../LoadingSpinner';
 import { statusOptions } from '@/lib/status';
 import { toast } from 'react-toastify';
 import FeedbackDeleteModal from '../feedback/FeedbackDeleteModal';
+import { useSession } from 'next-auth/react';
 
 type FeedbackDataForm = {
   curFeedback?: FeedbackFormData;
@@ -28,6 +29,15 @@ const FeedbackForm: React.FC<FeedbackDataForm> = ({ curFeedback }) => {
   const [hasProcessed, setHasProcessed] = useState<boolean>(false);
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const router = useRouter();
+
+  const { data: session, status } = useSession();
+
+  if (!session?.user && status !== 'loading') {
+    router.push('/auth/signin');
+  }
+  if (curFeedback && session?.user?.id !== curFeedback.user_id) {
+    router.push('/');
+  }
 
   const initialValues = {
     title: '',
@@ -48,7 +58,10 @@ const FeedbackForm: React.FC<FeedbackDataForm> = ({ curFeedback }) => {
           toast.success('Feedback updated successfully');
           setHasProcessed(true);
         } else {
-          await createFeedbackAction(feedback as Omit<FeedbackInsertData, 'user_id'>);
+          await createFeedbackAction({
+            ...feedback,
+            user_id: session?.user?.id,
+          } as FeedbackInsertData);
           toast.success('Feedback created successfully');
           setHasProcessed(true);
         }
@@ -136,6 +149,8 @@ const FeedbackForm: React.FC<FeedbackDataForm> = ({ curFeedback }) => {
           <input
             type="text"
             name="title"
+            id="title"
+            autoComplete="off"
             onChange={formik.handleChange}
             value={formik.values.title}
             className={`mt-4 w-full rounded-md border bg-light-200 p-4 text-sm text-dark-400 outline-none placeholder:text-sm placeholder:text-light-600 focus:border focus:border-blue-300 md:text-[15px] ${ErrorBorderStyles['title']}`}
@@ -195,6 +210,8 @@ const FeedbackForm: React.FC<FeedbackDataForm> = ({ curFeedback }) => {
           </label>
           <textarea
             name="description"
+            id="description"
+            autoComplete="off"
             onChange={formik.handleChange}
             value={formik.values.description}
             className={`mt-4 w-full rounded-md border bg-light-200 p-4 text-sm text-dark-400 outline-none placeholder:text-sm placeholder:text-light-600 focus:border focus:border-blue-300 md:text-[15px] ${ErrorBorderStyles['description']}`}

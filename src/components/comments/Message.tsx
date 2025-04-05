@@ -3,6 +3,7 @@ import React, { useState, memo } from 'react';
 import { Comment, Reply } from '@/types';
 import Image from 'next/image';
 import MessageForm from '../forms/MessageForm';
+import { useSession } from 'next-auth/react';
 
 type MessageProps = {
   item: Comment | Reply;
@@ -12,6 +13,9 @@ type MessageProps = {
 const isReplyItem = (item: Comment | Reply): item is Reply => 'replying_to' in item;
 
 const Message: React.FC<MessageProps> = ({ item, isReply = false }) => {
+  const { data: session } = useSession();
+  const userId = session?.user?.id;
+
   const { user, content } = item;
   const replying_to = isReplyItem(item) ? item.replying_to : user.username;
   const replies = 'replies' in item ? item.replies : [];
@@ -31,7 +35,7 @@ const Message: React.FC<MessageProps> = ({ item, isReply = false }) => {
     <li className={containerStyles} aria-label={`${isReply ? 'Reply' : 'Comment'} by ${user.name}`}>
       <div className="flex w-full items-center justify-between">
         <div className="flex items-center gap-x-4 md:gap-x-8">
-          {user.image && (
+          {user.image ? (
             <Image
               className="rounded-full"
               src={user.image}
@@ -39,29 +43,43 @@ const Message: React.FC<MessageProps> = ({ item, isReply = false }) => {
               width={40}
               height={40}
             />
+          ) : (
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-light-200">
+              <span className="text-2xl font-semibold text-blue-300">
+                {user.username[0].toUpperCase()}
+              </span>
+            </div>
           )}
           <div className="flex flex-col text-sm md:text-[14px]">
             <span className="font-bold -tracking-[0.18px] text-dark-400">{user.name}</span>
             <span className="text-dark-200">{`@${user.username}`}</span>
           </div>
         </div>
-        <button
-          onClick={() => setShowReplyForm(!showReplyForm)}
-          type="button"
-          className="text-sm font-semibold text-blue-300 hover:underline hover:decoration-solid"
-          aria-expanded={showReplyForm}
-          aria-controls={`reply-form-${item.id}`}
-        >
-          Reply
-        </button>
+        {userId && (
+          <button
+            onClick={() => setShowReplyForm(!showReplyForm)}
+            type="button"
+            className="text-sm font-semibold text-blue-300 hover:underline hover:decoration-solid"
+            aria-expanded={showReplyForm}
+            aria-controls={`reply-form-${item.id}`}
+          >
+            Reply
+          </button>
+        )}
       </div>
       <div className={`${contentStyles} ${borderStyles}`}>
         <p className="text-dark-200">
           {isReply && <span className="font-bold text-purple-200">{`@${replying_to}`}</span>}
           {isReply ? `  ${content}` : content}
         </p>
-        {showReplyForm && (
-          <MessageForm isReplyForm id={item.id} replyingTo={replying_to} commentId={commentId} />
+        {showReplyForm && userId && (
+          <MessageForm
+            isReplyForm
+            id={item.id}
+            replyingTo={replying_to}
+            commentId={commentId}
+            user_id={userId}
+          />
         )}
       </div>
       {!isReply && replies.length > 0 && (

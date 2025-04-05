@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { signUpAction } from '@/app/actions/authActions';
 import { toast } from 'react-toastify';
 
-const SignUpForm = () => {
+export default function SignUpForm() {
   const [serverError, setServerError] = useState<string | null>(null);
   const router = useRouter();
   const initialValues = {
@@ -83,6 +83,8 @@ const SignUpForm = () => {
           <input
             type="text"
             name="name"
+            id="name"
+            autoComplete="name"
             onChange={formik.handleChange}
             value={formik.values.name}
             className={`mt-4 w-full rounded-md border bg-light-200 p-4 text-sm text-dark-400 outline-none placeholder:text-sm placeholder:text-light-600 focus:border focus:border-blue-300 md:text-[15px] ${ErrorBorderStyles['title']}`}
@@ -102,6 +104,8 @@ const SignUpForm = () => {
           <input
             type="text"
             name="username"
+            id="username"
+            autoComplete="username"
             onChange={formik.handleChange}
             value={formik.values.username}
             className={`mt-4 w-full rounded-md border bg-light-200 p-4 text-sm text-dark-400 outline-none placeholder:text-sm placeholder:text-light-600 focus:border focus:border-blue-300 md:text-[15px] ${ErrorBorderStyles['title']}`}
@@ -121,6 +125,8 @@ const SignUpForm = () => {
           <input
             type="password"
             name="password"
+            id="password"
+            autoComplete="new-password"
             onChange={formik.handleChange}
             value={formik.values.password}
             className={`mt-4 w-full rounded-md border bg-light-200 p-4 text-sm text-dark-400 outline-none placeholder:text-sm placeholder:text-light-600 focus:border focus:border-blue-300 md:text-[15px] ${ErrorBorderStyles['title']}`}
@@ -140,6 +146,8 @@ const SignUpForm = () => {
           <input
             type="password"
             name="confirmPassword"
+            id="confirmPassword"
+            autoComplete="new-password"
             onChange={formik.handleChange}
             value={formik.values.confirmPassword}
             className={`mt-4 w-full rounded-md border bg-light-200 p-4 text-sm text-dark-400 outline-none placeholder:text-sm placeholder:text-light-600 focus:border focus:border-blue-300 md:text-[15px] ${ErrorBorderStyles['title']}`}
@@ -166,4 +174,3 @@ const SignUpForm = () => {
   );
 };
 
-export default SignUpForm;

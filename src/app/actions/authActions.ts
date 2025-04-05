@@ -1,7 +1,7 @@
 'use server';
 
 import { createUser } from '@/db/queries/users';
-import { UserSignUpData } from '@/types/user';
+import { UserSignUpData } from '@/types';
 import bcrypt from 'bcryptjs';
 
 export async function signUpAction(user: UserSignUpData) {

@@ -15,3 +15,10 @@ export type UserSignInData = {
 export type UserSignUpData = UserSignInData & {
   name: string;
 };
+
+export type UserSessionProps = {
+  id: string;
+  username: string;
+  name: string;
+  image: string | null;
+};

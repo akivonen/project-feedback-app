@@ -35,15 +35,9 @@ export async function getFeedbackByIdAction(id: string): Promise<Feedback> {
   }
 }
 
-export async function createFeedbackAction(
-  feedback: Omit<FeedbackInsertData, 'user_id'>
-): Promise<void> {
+export async function createFeedbackAction(feedback: FeedbackInsertData): Promise<void> {
   try {
-    const feedbackData = {
-      ...feedback,
-      user_id: '21c40a49-b9f0-426f-b608-724afbc019f0', //implement auth
-    } as FeedbackInsertData;
-    await createFeedback(feedbackData);
+    await createFeedback(feedback);
     revalidateTag('feedbacks');
     revalidatePath('/');
   } catch (error) {

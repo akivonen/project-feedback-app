@@ -9,7 +9,7 @@ import {
 } from './roadmap';
 import { Comment, CommentInsertData } from './comment';
 import { Reply, ReplyInsertData } from './reply';
-import { User } from './user';
+import { User, UserSignInData, UserSignUpData, UserSessionProps } from './user';
 
 export type {
   Feedback,
@@ -26,4 +26,7 @@ export type {
   Reply,
   ReplyInsertData,
   User,
+  UserSignInData,
+  UserSignUpData,
+  UserSessionProps,
 };

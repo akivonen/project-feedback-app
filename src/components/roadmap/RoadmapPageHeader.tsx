@@ -2,7 +2,7 @@ import React from 'react';
 import GoBack from '../buttons/GoBack';
 import Button from '../buttons/Button';
 
-const RoadmapPageHeader: React.FC = () => {
+export default function RoadmapPageHeader() {
   return (
     <header className="flex min-w-[100px] items-center justify-between bg-dark-300 px-6 py-[26px] md:rounded-lg md:px-8 md:py-[27px]">
       <div className="flex flex-col items-start text-white">
@@ -17,5 +17,3 @@ const RoadmapPageHeader: React.FC = () => {
     </header>
   );
 };
-
-export default RoadmapPageHeader;

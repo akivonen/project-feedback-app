@@ -5,6 +5,7 @@ import CommentList from '@/components/comments/CommentsList';
 import AddComment from '@/components/comments/AddComment';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
+import FeedbackHeader from '@/components/feedback/FeedbackHeader';
 
 type FeedbackDetailsPageProps = {
   params: Promise<{ feedbackId: string }>;
@@ -19,12 +20,15 @@ export default async function FeedbackDetailsPage({ params }: FeedbackDetailsPag
   }
 
   return (
-    <Suspense fallback={<LoadingSpinner />}>
-      <main className="flex flex-col gap-y-6">
-        <FeedbackItem feedback={feedback} />
-        {feedback.comments && <CommentList comments={feedback.comments} />}
-        <AddComment />
-      </main>
-    </Suspense>
+    <>
+      <FeedbackHeader feedback={feedback} />
+      <Suspense fallback={<LoadingSpinner />}>
+        <main className="flex flex-col gap-y-6">
+          <FeedbackItem feedback={feedback} />
+          {feedback.comments && <CommentList comments={feedback.comments} />}
+          <AddComment />
+        </main>
+      </Suspense>
+    </>
   );
 }

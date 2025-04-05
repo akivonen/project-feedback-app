@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import { toast } from 'react-toastify';
 
-const SignInForm = () => {
+export default function SignInForm() {
   const [serverError, setServerError] = useState<string | null>(null);
 
   const router = useRouter();
@@ -40,7 +40,7 @@ const SignInForm = () => {
           return;
         }
         toast.success('You`ve successfully logged in');
-        router.push('/');
+        router.back();
       } catch (error) {
         formik.values.password = '';
         const errorMessage =
@@ -94,6 +94,8 @@ const SignInForm = () => {
           <input
             type="text"
             name="username"
+            id="username"
+            autoComplete="username"
             onChange={formik.handleChange}
             value={formik.values.username}
             className={`mt-4 w-full rounded-md border bg-light-200 p-4 text-sm text-dark-400 outline-none placeholder:text-sm placeholder:text-light-600 focus:border focus:border-blue-300 md:text-[15px] ${ErrorBorderStyles['title']}`}
@@ -113,6 +115,8 @@ const SignInForm = () => {
           <input
             type="password"
             name="password"
+            id="password"
+            autoComplete="current-password"
             onChange={formik.handleChange}
             value={formik.values.password}
             className={`mt-4 w-full rounded-md border bg-light-200 p-4 text-sm text-dark-400 outline-none placeholder:text-sm placeholder:text-light-600 focus:border focus:border-blue-300 md:text-[15px] ${ErrorBorderStyles['title']}`}
@@ -139,4 +143,3 @@ const SignInForm = () => {
   );
 };
 
-export default SignInForm;

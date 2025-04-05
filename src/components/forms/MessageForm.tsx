@@ -13,6 +13,7 @@ type MessageFormProps = {
   isReplyForm?: boolean;
   commentId?: string;
   replyingTo?: string;
+  user_id: string;
 };
 
 const MessageForm: React.FC<MessageFormProps> = ({
@@ -20,6 +21,7 @@ const MessageForm: React.FC<MessageFormProps> = ({
   isReplyForm = false,
   replyingTo,
   commentId,
+  user_id,
 }) => {
   const { feedbackId } = useParams();
   const formik = useFormik({
@@ -35,11 +37,12 @@ const MessageForm: React.FC<MessageFormProps> = ({
             comment_id: commentId,
             replying_to: replyingTo,
             content: body,
+            user_id,
           });
           formik.resetForm();
           toast.success('Reply posted');
         } else if (typeof feedbackId === 'string') {
-          await createCommentAction({ feedback_id: feedbackId, content: body });
+          await createCommentAction({ feedback_id: feedbackId, content: body, user_id });
           formik.resetForm();
           toast.success('Comment posted');
         }
@@ -68,7 +71,9 @@ const MessageForm: React.FC<MessageFormProps> = ({
         {isReplyForm ? 'reply' : 'comment'}
       </label>
       <textarea
+        name="body"
         id="body"
+        autoComplete="off"
         className={`w-full rounded-md border bg-light-200 p-4 text-sm text-dark-400 outline-none placeholder:text-sm placeholder:text-light-600 focus:border-blue-300 md:text-[15px] ${textareaStyles} ${textareaErrorStyles}`}
         onChange={formik.handleChange}
         value={formik.values.body}

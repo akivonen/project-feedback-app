@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import MainHeader from '../../components/MainHeader';
+import MainHeader from '../../components/header/MainHeader';
 import {
   SuggestionsPanel,
   SuggestionsList,
@@ -7,7 +7,7 @@ import {
 } from '@/components/suggestions/index';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import RoadmapHomeWidget from '@/components/roadmap/RoadmapHomeWidget';
-import Burger from '@/components/Burger';
+import Burger from '@/components/header/Burger';
 import FeedbackCategories from '@/components/feedback/FeedbackCategories';
 import { getAllFeedbacksAction } from '../actions/feedbackActions';
 import {
@@ -19,18 +19,28 @@ import {
   SortOption,
 } from '@/lib/filter';
 import { notFound } from 'next/navigation';
-import Dropdown from '@/components/Dropdown';
 import Link from 'next/link';
-import { auth } from '../auth';
-import SignOut from '@/components/SignOut';
+import Dropdown from '@/components/Dropdown';
+import MainHeaderAuth from '@/components/header/MainHeaderAuth';
 
 type HomePageProps = {
   params: Promise<{ filter?: string[] }>;
 };
 
+export const revalidate = 3600;
+
+export async function generateStaticParams() {
+  const categories = categoryOptions;
+  const sorts = sortOptions;
+
+  return categories.flatMap((category) =>
+    sorts.map((sort) => ({
+      filter: [category, sort],
+    }))
+  );
+}
+
 export default async function Home({ params }: HomePageProps) {
-  const session = await auth();
-  console.log(session);
   const { filter } = await params;
   const categoryParam = filter?.[0];
   const sortParam = filter?.[1];
@@ -50,28 +60,18 @@ export default async function Home({ params }: HomePageProps) {
       ? suggestions
       : suggestions?.filter((s) => s.category === categoryNamesMap[currCategory]);
   const sortedSuggestions = suggestionsByCategories?.sort(sortFunctionsMap[currSort]);
-
   return (
     <div className="flex flex-col gap-x-[30px] md:gap-y-10 md:px-10 md:pt-[56px] lg:flex-row lg:px-[min(165px,8%)] xl:pt-[94px]">
       <MainHeader>
         <div className="md:flex md:flex-1">
           <div className="flex w-full bg-[url('/images/header/mobile/background-header.png')] bg-[length:100%_100%] bg-no-repeat px-6 py-4 md:min-w-[223px] md:rounded-lg md:bg-[url('/images/header/tablet/background-header.png')] md:pb-6 lg:min-h-[137px] xl:max-w-[255px] xl:bg-[url('/images/header/desktop/background-header.png')]">
             <div className="flex w-full items-center justify-between pr-4 md:items-end md:p-0">
-              <div className="flex flex-col md:justify-end">
+              <Link href="/" className="flex flex-col md:justify-end">
                 <h1 className="text-[15px] text-white md:text-[20px]">Frontend Mentor</h1>
                 <span className="text-sm text-white/75 md:text-[15px]">Feedback Board</span>
-              </div>
-              <div>
-                {session ? (
-                  <SignOut />
-                ) : (
-                  <Link href="/auth/signin" className="text-[15px] text-white md:text-[20px]">
-                    Sign In
-                  </Link>
-                )}
-              </div>
+              </Link>
+              <MainHeaderAuth />
             </div>
-
             <Burger>
               <div className="absolute right-0 top-[74px] flex h-[calc(100vh-74px)] max-w-[271] flex-col gap-y-6 bg-light-200 p-6 md:hidden">
                 <FeedbackCategories sortFilterParam={currSort} categoryFilterParam={currCategory} />
@@ -97,7 +97,7 @@ export default async function Home({ params }: HomePageProps) {
               categoryFilterParam={currCategory}
             />
           </SuggestionsPanel>
-          {suggestions?.length > 0 ? (
+          {sortedSuggestions.length > 0 ? (
             <Suspense fallback={<LoadingSpinner />}>
               <SuggestionsList suggestions={sortedSuggestions} />
             </Suspense>

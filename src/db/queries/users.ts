@@ -2,7 +2,7 @@ import db from '..';
 import { User } from '@/types';
 import { users } from '../schema';
 import { eq } from 'drizzle-orm';
-import { UserSignUpData } from '@/types/user';
+import { UserSignUpData } from '@/types';
 
 export const getUserByUsername = (username: string): Promise<User | undefined> => {
   const user = db.query.users.findFirst({
