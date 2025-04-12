@@ -8,9 +8,10 @@ import { Feedback, FeedbackInsertData, FeedbackFormData } from '@/types';
 export const getAllFeedbacks = unstable_cache(
   cache(async (): Promise<Feedback[]> => {
     try {
-      const result = await db.query.feedbacks.findMany({
+      return await db.query.feedbacks.findMany({
         with: {
           user: true,
+          upvotes: true,
           comments: {
             with: {
               user: true,
@@ -23,7 +24,6 @@ export const getAllFeedbacks = unstable_cache(
           },
         },
       });
-      return result;
     } catch (error) {
       console.error('Database error in getAllFeedbacks:', error);
       if (error instanceof Error) {
@@ -40,6 +40,8 @@ export const getFeedbackById = async (feedbackId: string): Promise<Feedback> => 
   try {
     const [feedback] = await db.query.feedbacks.findMany({
       with: {
+        user: true,
+        upvotes: true,
         comments: {
           with: {
             user: true,

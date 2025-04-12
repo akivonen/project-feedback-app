@@ -53,7 +53,6 @@ export default async function Home({ params }: HomePageProps) {
   const currCategory: CategoryOption = (categoryParam as CategoryOption) || 'all';
   const currSort: SortOption = (sortParam as SortOption) || 'most-upvotes';
   const feedbacks = await getAllFeedbacksAction();
-
   const suggestions = feedbacks?.filter((f) => f.status === 'Suggestion');
   const suggestionsByCategories =
     currCategory === 'all'

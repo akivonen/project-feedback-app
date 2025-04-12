@@ -10,6 +10,7 @@ import {
 import { Comment, CommentInsertData } from './comment';
 import { Reply, ReplyInsertData } from './reply';
 import { User, UserSignInData, UserSignUpData, UserSessionProps } from './user';
+import { Upvote } from './upvotes';
 
 export type {
   Feedback,
@@ -29,4 +30,5 @@ export type {
   UserSignInData,
   UserSignUpData,
   UserSessionProps,
+  Upvote,
 };

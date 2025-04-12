@@ -20,8 +20,9 @@ export const filterCategoryNames: FilterCategory[] = Object.values(
 export const categoryNames: Category[] = filterCategoryNames.filter((c) => c !== 'All');
 
 export const sortFunctionsMap = {
-  'most-upvotes': (first: Feedback, second: Feedback) => second.upvotes - first.upvotes,
-  'least-upvotes': (first: Feedback, second: Feedback) => first.upvotes - second.upvotes,
+  'most-upvotes': (first: Feedback, second: Feedback) => second.upvotes_count - first.upvotes_count,
+  'least-upvotes': (first: Feedback, second: Feedback) =>
+    first.upvotes_count - second.upvotes_count,
   'most-comments': (first: Feedback, second: Feedback) =>
     (first.comments?.length || 0) - (second.comments?.length || 0),
   'least-comments': (first: Feedback, second: Feedback) =>
