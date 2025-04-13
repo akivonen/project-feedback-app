@@ -1,4 +1,5 @@
 'use server';
+import { handleError } from '@/lib/utils';
 import db from '../index';
 import { comments } from '../schema';
 import { CommentInsertData } from '@/types';
@@ -11,10 +12,6 @@ export const createComment = async (comment: CommentInsertData) => {
     }
     return result;
   } catch (error) {
-    console.error('Database error in createComment:', error);
-    if (error instanceof Error) {
-      throw new Error(`Database operation failed: ${error.message}`);
-    }
-    throw new Error('An unexpected error occured while creating comment');
+    handleError(error, 'createComment', 'Database');
   }
 };

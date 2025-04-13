@@ -10,7 +10,6 @@ import { toast } from 'react-toastify';
 
 export default function SignInForm() {
   const [serverError, setServerError] = useState<string | null>(null);
-
   const router = useRouter();
   const initialValues = {
     username: '',
@@ -141,5 +140,4 @@ export default function SignInForm() {
       </form>
     </section>
   );
-};
-
+}

@@ -3,13 +3,7 @@ import { User } from '@/types';
 import { users } from '../schema';
 import { eq } from 'drizzle-orm';
 import { UserSignUpData } from '@/types';
-
-export const getUserByUsername = (username: string): Promise<User | undefined> => {
-  const user = db.query.users.findFirst({
-    where: eq(users.username, username),
-  });
-  return user;
-};
+import { handleError } from '@/lib/utils';
 
 export const createUser = (user: UserSignUpData) => {
   try {
@@ -19,10 +13,17 @@ export const createUser = (user: UserSignUpData) => {
     }
     return result;
   } catch (error) {
-    console.error('Database error in createUser:', error);
-    if (error instanceof Error) {
-      throw new Error(`Database operation failed: ${error.message}`);
-    }
-    throw new Error('An unexpected error occured while creating user');
+    handleError(error, 'createUser', 'Database');
+  }
+};
+
+export const getUserByUsername = (username: string): Promise<User | undefined> => {
+  try {
+    const user = db.query.users.findFirst({
+      where: eq(users.username, username),
+    });
+    return user;
+  } catch (error) {
+    handleError(error, 'getUserByUsername', 'Database');
   }
 };

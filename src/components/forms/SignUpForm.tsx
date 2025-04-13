@@ -36,7 +36,7 @@ export default function SignUpForm() {
           error instanceof Error
             ? error.message
             : 'An unexpected error occured in registration form';
-        if (errorMessage !== 'Username already taken. Please choose other username.') {
+        if (errorMessage !== 'Username is already taken. Please choose other username.') {
           console.error(errorMessage);
         }
         toast.error(errorMessage);
@@ -172,5 +172,4 @@ export default function SignUpForm() {
       </form>
     </section>
   );
-};
-
+}

@@ -1,6 +1,6 @@
 'use server';
-
 import { createUser } from '@/db/queries/users';
+import { handleError } from '@/lib/utils';
 import { UserSignUpData } from '@/types';
 import bcrypt from 'bcryptjs';
 
@@ -16,9 +16,6 @@ export async function signUpAction(user: UserSignUpData) {
     ) {
       throw new Error('Username already taken. Please choose other username.');
     }
-    console.error('Error in signUpAction:', error);
-    throw error instanceof Error
-      ? error
-      : new Error('An unexpected error occurred while creating user');
+    handleError(error, 'signUpAction');
   }
 }

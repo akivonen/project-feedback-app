@@ -3,6 +3,7 @@
 import { ReplyInsertData } from '@/types';
 import { createReply } from '@/db/queries/replies';
 import { revalidateTag, revalidatePath } from 'next/cache';
+import { handleError } from '@/lib/utils';
 
 export async function createReplyAction(reply: ReplyInsertData): Promise<void> {
   try {
@@ -10,9 +11,6 @@ export async function createReplyAction(reply: ReplyInsertData): Promise<void> {
     revalidateTag('feedbacks');
     revalidatePath('/');
   } catch (error) {
-    console.error('Error in createReplyAction:', error);
-    throw error instanceof Error
-      ? error
-      : new Error('An unexpected error occurred while creating reply');
+    handleError(error, 'createReplyAction');
   }
 }

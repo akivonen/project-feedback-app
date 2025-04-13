@@ -1,5 +1,4 @@
 'use server';
-
 import {
   getAllFeedbacks,
   getFeedbackById,
@@ -7,6 +6,7 @@ import {
   deleteFeedback,
   updateFeedback,
 } from '@/db/queries/feedbacks';
+import { handleError } from '@/lib/utils';
 
 import { Feedback, FeedbackFormData, FeedbackInsertData } from '@/types';
 import { revalidatePath, revalidateTag } from 'next/cache';
@@ -15,11 +15,7 @@ export async function getAllFeedbacksAction(): Promise<Feedback[]> {
   try {
     return await getAllFeedbacks();
   } catch (error) {
-    console.error('Error in getAllFeedbacksAction:', error);
-    if (error instanceof Error) {
-      throw new Error(`Failed to get all feedbacks: ${error.message}`);
-    }
-    throw new Error('An unexpected error occurred while getting all feedbacks');
+    handleError(error, 'getAllFeedbackAction');
   }
 }
 
@@ -27,11 +23,7 @@ export async function getFeedbackByIdAction(id: string): Promise<Feedback> {
   try {
     return await getFeedbackById(id);
   } catch (error) {
-    console.error('Error in getFeedbackByIdAction:', error);
-    if (error instanceof Error) {
-      throw new Error(`Failed to get feedback by id: ${error.message}`);
-    }
-    throw new Error(`An unexpected error occurred while getting feedback by id`);
+    handleError(error, 'getFeedbackById');
   }
 }
 
@@ -41,10 +33,7 @@ export async function createFeedbackAction(feedback: FeedbackInsertData): Promis
     revalidateTag('feedbacks');
     revalidatePath('/');
   } catch (error) {
-    console.error('Error in createFeedbackAction:', error);
-    throw error instanceof Error
-      ? error
-      : new Error('An unexpected error occurred while creating feedback');
+    handleError(error, 'createFeedbackAction');
   }
 }
 
@@ -54,10 +43,7 @@ export async function updateFeedbackAction(feedback: FeedbackFormData): Promise<
     revalidateTag('feedbacks');
     revalidatePath('/');
   } catch (error) {
-    console.error('Error in updateFeedbackAction:', error);
-    throw error instanceof Error
-      ? error
-      : new Error('An unexpected error occurred while updating feedback');
+    handleError(error, 'updateFeedbackAction');
   }
 }
 
@@ -67,9 +53,6 @@ export async function deleteFeedbackAction(id: string): Promise<void> {
     revalidateTag('feedbacks');
     revalidatePath('/');
   } catch (error) {
-    console.error('Error in deleteFeedbackAction:', error);
-    throw error instanceof Error
-      ? error
-      : new Error('An unexpected error occurred while deleting feedback');
+    handleError(error, 'deleteFeedbackAction');
   }
 }

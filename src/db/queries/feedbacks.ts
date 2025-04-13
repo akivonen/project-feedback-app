@@ -5,6 +5,8 @@ import { eq } from 'drizzle-orm';
 import { unstable_cache } from 'next/cache';
 import { cache } from 'react';
 import { Feedback, FeedbackInsertData, FeedbackFormData } from '@/types';
+import { handleError } from '@/lib/utils';
+
 export const getAllFeedbacks = unstable_cache(
   cache(async (): Promise<Feedback[]> => {
     try {
@@ -25,11 +27,7 @@ export const getAllFeedbacks = unstable_cache(
         },
       });
     } catch (error) {
-      console.error('Database error in getAllFeedbacks:', error);
-      if (error instanceof Error) {
-        throw new Error(`Failed to fetch feedbacks: ${error.message}`);
-      }
-      throw new Error('An unexpected error occurred while fetching feedbacks');
+      handleError(error, 'getAllFeedbacks', 'Database');
     }
   }),
   ['feedbacks'],
@@ -57,11 +55,7 @@ export const getFeedbackById = async (feedbackId: string): Promise<Feedback> => 
     });
     return feedback;
   } catch (error) {
-    console.error('Database error in getFeedbackById:', error);
-    if (error instanceof Error) {
-      throw new Error(`Failed to fetch feedback: ${error.message}`);
-    }
-    throw new Error('An unexpected error occurred while fetching feedback');
+    handleError(error, 'getFeedbackById', 'Database');
   }
 };
 
@@ -73,11 +67,7 @@ export const createFeedback = async (feedback: FeedbackInsertData) => {
     }
     return result;
   } catch (error) {
-    console.error('Database error in createFeedback:', error);
-    if (error instanceof Error) {
-      throw new Error(`Database operation failed: ${error.message}`);
-    }
-    throw new Error('An unexpected error occured while creating feedback');
+    handleError(error, 'createFeedback', 'Database');
   }
 };
 
@@ -95,11 +85,7 @@ export const updateFeedback = async (feedback: FeedbackFormData) => {
     }
     return result;
   } catch (error) {
-    console.error('Database error in updateFeedback:', error);
-    if (error instanceof Error) {
-      throw new Error(`Database operation failed ${error.message}`);
-    }
-    throw new Error('An unexpected error occured while updating feedback');
+    handleError(error, 'updateFeedback', 'Database');
   }
 };
 
@@ -111,10 +97,6 @@ export const deleteFeedback = async (id: string) => {
     }
     return result;
   } catch (error) {
-    console.error('Database error in deleteFeedback:', error);
-    if (error instanceof Error) {
-      throw new Error(`Database operation failed ${error.message}`);
-    }
-    throw new Error('An unexpected error occured while deleting feedback');
+    handleError(error, 'deleteFeedback', 'Database');
   }
 };
