@@ -14,6 +14,14 @@ const RoadmapPageContent: React.FC<RoadmapPageContentProps> = ({ feedbacks }) =>
   const [activeStat, setActiveStat] = useState<RoadmapStatus>('Planned');
   const { isMobile } = useScreenDetector();
 
+  if (!roadmapStats || roadmapStats.length < 1) {
+    return (
+      <h3 className="mt-10 text-lg font-bold text-dark-400 md:mt-[54px] md:text-2xl">
+        There is no roadmap items available.
+      </h3>
+    );
+  }
+
   return (
     <section className="">
       <ul className="flex border border-b-light-600/25 md:hidden">

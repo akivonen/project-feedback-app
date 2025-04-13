@@ -3,12 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { Icons } from '../Icons';
 import { useRouter } from 'next/navigation';
 
-type GoBackProps = {
+type GoBackButtonButtonProps = {
   textColorStyle?: string;
   arrowColorStyle?: string;
 };
 
-const GoBack: React.FC<GoBackProps> = ({
+const GoBackButtonButton: React.FC<GoBackButtonButtonProps> = ({
   textColorStyle = 'text-dark-200',
   arrowColorStyle = 'text-blue-300',
 }) => {
@@ -35,4 +35,4 @@ const GoBack: React.FC<GoBackProps> = ({
   );
 };
 
-export default GoBack;
+export default GoBackButtonButton;

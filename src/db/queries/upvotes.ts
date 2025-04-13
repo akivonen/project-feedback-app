@@ -1,29 +1,37 @@
+'use server';
 import db from '../index';
 import { upvotes, feedbacks } from '../schema';
 import { eq, and, sql } from 'drizzle-orm';
+import { Upvote } from '@/types';
+import { isValidUUID, handleError } from '@/lib/utils';
 
-export const getUpvoters = async (feedbackId: string) => {
+export const getUpvoters = async (feedbackId: string): Promise<Upvote[]> => {
+  if (!isValidUUID(feedbackId)) {
+    throw new Error('Invalid feedbackId');
+  }
+
   try {
     return await db.query.upvotes.findMany({
       where: eq(upvotes.feedback_id, feedbackId),
+      columns: { user_id: true, feedback_id: true, created_at: true },
     });
   } catch (error) {
-    console.error('Database error in getUpvoters:', error);
-    if (error instanceof Error) {
-      throw new Error(`Failed to get upvoters: ${error.message}`);
-    }
-    throw new Error('An unexpected error occurred while getting upvoters');
+    handleError(error, 'getUpvoters', 'Database');
   }
 };
 
-export const createUpvote = async (feedbackId: string, userId: string) => {
+export const createUpvote = async (feedbackId: string, userId: string): Promise<void> => {
+  if (!isValidUUID(feedbackId) || !isValidUUID(userId)) {
+    throw new Error('Invalid feedbackId or userId');
+  }
+
   try {
     await db.transaction(async (tx) => {
-      const existingUpvote = await tx.query.upvotes.findMany({
+      const existingUpvote = await tx.query.upvotes.findFirst({
         where: and(eq(upvotes.feedback_id, feedbackId), eq(upvotes.user_id, userId)),
       });
 
-      if (existingUpvote.length > 0) {
+      if (existingUpvote) {
         throw new Error(`Failed to insert upvote, already upvoted`);
       }
 
@@ -38,22 +46,22 @@ export const createUpvote = async (feedbackId: string, userId: string) => {
         .where(eq(feedbacks.id, feedbackId));
     });
   } catch (error) {
-    console.error('Database error in createUpvote:', error);
-    if (error instanceof Error) {
-      throw new Error(`Database operation failed: ${error.message}`);
-    }
-    throw new Error('An unexpected error occured while creating upvote');
+    handleError(error, 'createUpvote', 'Database');
   }
 };
 
-export const deleteUpvote = async (feedbackId: string, userId: string) => {
+export const deleteUpvote = async (feedbackId: string, userId: string): Promise<void> => {
+  if (!isValidUUID(feedbackId) || !isValidUUID(userId)) {
+    throw new Error('Invalid feedbackId or userId');
+  }
+
   try {
     await db.transaction(async (tx) => {
-      const existingUpvote = await tx.query.upvotes.findMany({
+      const existingUpvote = await tx.query.upvotes.findFirst({
         where: and(eq(upvotes.feedback_id, feedbackId), eq(upvotes.user_id, userId)),
       });
 
-      if (existingUpvote.length < 1) {
+      if (!existingUpvote) {
         throw new Error(`Failed to delete upvote, not upvoted yet`);
       }
 
@@ -67,10 +75,6 @@ export const deleteUpvote = async (feedbackId: string, userId: string) => {
         .where(eq(feedbacks.id, feedbackId));
     });
   } catch (error) {
-    console.error('Database error in deleteUpvote:', error);
-    if (error instanceof Error) {
-      throw new Error(`Database operation failed: ${error.message}`);
-    }
-    throw new Error('An unexpected error occured while deleting upvote');
+    handleError(error, 'deleteUpvote', 'Database');
   }
 };

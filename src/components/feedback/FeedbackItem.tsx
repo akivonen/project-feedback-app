@@ -3,7 +3,7 @@ import { Icons } from '../Icons';
 import { Feedback, Comment } from '@/types';
 import Link from 'next/link';
 import RoadmapHomeWidgetItem from '../roadmap/RoadmapHomeWidgetItem';
-import UpvoteButton from '../UpvoteButton';
+import UpvoteButton from '../buttons/UpvoteButton';
 
 type FeedbackItemProps = {
   feedback: Feedback;
@@ -38,7 +38,12 @@ const FeedbackItem: React.FC<FeedbackItemProps> = ({
   const details = (
     <>
       <h3 className={`text-sm font-bold text-dark-400 ${titleStyles}`}>{title}</h3>
-      <p className={`mt-2 text-sm text-dark-200 md:mt-1 ${descriptionStyles}`}>{description}</p>
+      <p
+        className={`mt-2 text-sm text-dark-200 md:mt-1 ${descriptionStyles}`}
+        aria-describedby={`feedback-${feedback.id}`}
+      >
+        {description}
+      </p>
       <span className="mt-2 block w-fit rounded-lg bg-light-200 px-4 py-1.5 text-sm font-semibold text-blue-300 md:mt-3">
         {category}
       </span>
@@ -58,11 +63,7 @@ const FeedbackItem: React.FC<FeedbackItemProps> = ({
         <div className={detailsStyles}>{details}</div>
       )}
 
-      <UpvoteButton
-        feedbackId={feedback.id}
-        initialUpvoters={feedback.upvotes}
-        isRoadmap={isRoadmap}
-      />
+      <UpvoteButton feedbackId={feedback.id} upvoters={feedback.upvotes} isRoadmap={isRoadmap} />
       <span
         className="flex items-center gap-x-1 md:gap-x-2"
         aria-label={`Comments: ${totalCommentsCount}`}
