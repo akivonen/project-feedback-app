@@ -1,13 +1,20 @@
 'use client';
 import React from 'react';
-import Button from '../buttons/Button';
-import GoBackButton from '../buttons/GoBackButton';
+import { Button, GoBackButton } from '../buttons/';
 import { useParams, usePathname } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { Feedback } from '@/types';
 
 type FeedbackHeaderProps = {
   feedback?: Feedback;
+};
+
+export const FeedbackHeaderSkeleton = () => {
+  return (
+    <header className="flex justify-between">
+      <GoBackButton />
+    </header>
+  );
 };
 
 const FeedbackHeader: React.FC<FeedbackHeaderProps> = ({ feedback }) => {

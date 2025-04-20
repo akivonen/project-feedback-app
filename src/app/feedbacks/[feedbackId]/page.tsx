@@ -1,14 +1,27 @@
 import { getFeedbackByIdAction } from '@/app/actions/feedbackActions';
-import LoadingSpinner from '@/components/LoadingSpinner';
 import { FeedbackItem } from '@/components/suggestions/index';
-import CommentList from '@/components/comments/CommentsList';
-import AddComment from '@/components/comments/AddComment';
+import { CommentList, CommentListSkeleton, AddComment } from '@/components/comments/';
 import { notFound } from 'next/navigation';
-import { Suspense } from 'react';
-import FeedbackHeader from '@/components/feedback/FeedbackHeader';
+import {
+  FeedbackHeader,
+  FeedbackHeaderSkeleton,
+  FeedbackItemSkeleton,
+} from '@/components/feedback/';
 
 type FeedbackDetailsPageProps = {
   params: Promise<{ feedbackId: string }>;
+};
+
+export const FeedbackDetailsPageSkeleton = () => {
+  return (
+    <>
+      <FeedbackHeaderSkeleton />
+      <main className="flex flex-col gap-y-6">
+        <FeedbackItemSkeleton />
+        <CommentListSkeleton />
+      </main>
+    </>
+  );
 };
 
 export default async function FeedbackDetailsPage({ params }: FeedbackDetailsPageProps) {
@@ -22,13 +35,12 @@ export default async function FeedbackDetailsPage({ params }: FeedbackDetailsPag
   return (
     <>
       <FeedbackHeader feedback={feedback} />
-      <Suspense fallback={<LoadingSpinner />}>
-        <main className="flex flex-col gap-y-6">
-          <FeedbackItem feedback={feedback} />
-          {feedback.comments && <CommentList comments={feedback.comments} />}
-          <AddComment />
-        </main>
-      </Suspense>
+      <main className="flex flex-col gap-y-6">
+        <FeedbackItem feedback={feedback} />
+
+        {feedback.comments && <CommentList comments={feedback.comments} />}
+        <AddComment />
+      </main>
     </>
   );
 }

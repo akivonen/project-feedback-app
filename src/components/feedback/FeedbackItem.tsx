@@ -1,15 +1,47 @@
 import React, { memo } from 'react';
-import { Icons } from '../Icons';
+import { Icons } from '../common';
 import { Feedback, Comment } from '@/types';
 import Link from 'next/link';
-import RoadmapHomeWidgetItem from '../roadmap/RoadmapHomeWidgetItem';
-import UpvoteButton from '../buttons/UpvoteButton';
+import { RoadmapHomeWidgetItem } from '../roadmap/';
+import { UpvoteButton } from '../buttons/';
+import 'react-loading-skeleton/dist/skeleton.css';
+
+type FeedbackItemSkeletonProps = {
+  isRoadmap?: boolean;
+  roadmapColor?: string;
+};
 
 type FeedbackItemProps = {
   feedback: Feedback;
   isLink?: boolean;
   isRoadmap?: boolean;
   roadmapColor?: string;
+};
+
+export const FeedbackItemSkeleton: React.FC<FeedbackItemSkeletonProps> = ({
+  isRoadmap,
+  roadmapColor,
+}) => {
+  return (
+    <div
+      className={`flex w-full animate-pulse flex-wrap justify-between gap-y-4 rounded-lg bg-white p-6 md:items-center md:gap-x-10 ${
+        isRoadmap ? 'md:h-[250px] md:p-5' : 'md:flex-nowrap md:px-8 md:py-7'
+      } ${isRoadmap ? `border-t-[6px] md:h-[250px] md:p-5 border-t-${roadmapColor}` : 'md:flex-nowrap md:px-8 md:py-7'}`}
+    >
+      <div className="w-full gap-y-2 md:mb-1">
+        <div className="mt-2 h-5 w-3/4 rounded bg-light-200 md:mt-3"></div>
+        <div className="mt-2 h-5 w-full rounded bg-light-200 md:mt-3"></div>
+        <div className="mt-2 h-5 w-1/4 rounded-lg bg-light-200 md:mt-3"></div>
+      </div>
+      <div
+        className={`h-8 w-16 rounded-lg bg-light-200 md:order-first md:self-start ${isRoadmap ? '' : 'md:h-14 md:w-14'}`}
+      ></div>
+      <div className="flex items-center gap-x-2">
+        <div className="h-5 w-5 rounded-full bg-light-200"></div>
+        <div className="h-4 w-6 rounded bg-light-200"></div>
+      </div>
+    </div>
+  );
 };
 
 const FeedbackItem: React.FC<FeedbackItemProps> = ({

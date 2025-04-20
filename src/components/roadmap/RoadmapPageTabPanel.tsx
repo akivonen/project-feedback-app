@@ -1,15 +1,31 @@
 import { RoadmapStatus, RoadmapDetails, Feedback } from '@/types';
-import { FeedbackItem } from '../suggestions';
+import { FeedbackItem, FeedbackItemSkeleton } from '../feedback';
 import { memo } from 'react';
 
 type RoadmapPageTabPanelProps = { status: RoadmapStatus; props: RoadmapDetails; isActive: boolean };
+
+export function RoadmapPageTabPanelSkeleton() {
+  return (
+    <div className="w-full animate-pulse sm:flex sm:flex-1 sm:flex-col">
+      <div className="h-5 w-1/3 bg-dark-100/25"></div>
+      <div className="mt-1 h-4 w-1/2 bg-dark-100/25"></div>
+      <ul className="mt-6 flex flex-col gap-4">
+        {[...Array(3)].map((_, i) => (
+          <li key={i}>
+            <FeedbackItemSkeleton isRoadmap />
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 
 const RoadmapPageTabPanel: React.FC<RoadmapPageTabPanelProps> = memo(
   ({ status, props, isActive }) => {
     return (
       <li
         key={status}
-        className={`w-full sm:flex sm:max-w-[] sm:flex-1 sm:flex-col ${isActive ? '' : 'hidden'}`}
+        className={`w-full sm:flex sm:flex-1 sm:flex-col ${isActive ? '' : 'hidden'}`}
         role="tabpanel"
         id={`tabpanel-${status}`}
         aria-labelledby={`tab-${status}`}

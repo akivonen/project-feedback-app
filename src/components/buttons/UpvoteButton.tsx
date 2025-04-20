@@ -1,20 +1,18 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { Icons } from '../Icons';
+import { Icons } from '../common';
 import { Upvote } from '@/types';
 import { useSession } from 'next-auth/react';
 import { createUpvoteAction, deleteUpvoteAction } from '@/app/actions/upvoteActions';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
+import { isInUpvotedList } from '@/lib/utils';
 
 type UpvoteProps = {
   feedbackId: string;
   upvoters: Upvote[];
   isRoadmap?: boolean;
 };
-
-const isInUpvotedList = (upvoters: Upvote[], userId: string | undefined): boolean =>
-  !!userId && upvoters.some((vote: Upvote) => vote.user_id === userId);
 
 const UpvoteButton: React.FC<UpvoteProps> = ({ feedbackId, upvoters, isRoadmap = false }) => {
   const { data: session, status } = useSession();

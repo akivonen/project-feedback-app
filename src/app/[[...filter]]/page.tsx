@@ -1,14 +1,13 @@
-import React, { Suspense } from 'react';
-import MainHeader from '../../components/header/MainHeader';
+import React from 'react';
+import { MainHeader, MainHeaderAuth } from '../../components/header/';
 import {
   SuggestionsPanel,
   SuggestionsList,
   SuggestionsNoFeedback,
-} from '@/components/suggestions/index';
-import LoadingSpinner from '@/components/LoadingSpinner';
-import RoadmapHomeWidget from '@/components/roadmap/RoadmapHomeWidget';
-import Burger from '@/components/header/Burger';
-import FeedbackCategories from '@/components/feedback/FeedbackCategories';
+} from '@/components/suggestions/';
+import { RoadmapHomeWidget } from '@/components/roadmap/';
+import { Burger, Dropdown } from '@/components/common';
+import { FeedbackCategories } from '@/components/feedback/';
 import { getAllFeedbacksAction } from '../actions/feedbackActions';
 import {
   CategoryOption,
@@ -20,8 +19,6 @@ import {
 } from '@/lib/filter';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import Dropdown from '@/components/Dropdown';
-import MainHeaderAuth from '@/components/header/MainHeaderAuth';
 
 type HomePageProps = {
   params: Promise<{ filter?: string[] }>;
@@ -97,9 +94,7 @@ export default async function Home({ params }: HomePageProps) {
             />
           </SuggestionsPanel>
           {sortedSuggestions.length > 0 ? (
-            <Suspense fallback={<LoadingSpinner />}>
-              <SuggestionsList suggestions={sortedSuggestions} />
-            </Suspense>
+            <SuggestionsList suggestions={sortedSuggestions} />
           ) : (
             <SuggestionsNoFeedback />
           )}

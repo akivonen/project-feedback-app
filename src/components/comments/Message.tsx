@@ -10,6 +10,25 @@ type MessageProps = {
   isReply?: boolean;
 };
 
+export function MessageSkeleton() {
+  return (
+    <div className="flex animate-pulse flex-col">
+      <div className="flex w-full items-center justify-between">
+        <div className="flex items-center gap-x-4 md:gap-x-8">
+          <div className="h-10 w-10 rounded-full bg-light-200"></div>
+          <div className="flex flex-col gap-y-1">
+            <div className="h-5 w-40 bg-light-200"></div>
+            <div className="h-5 w-40 bg-light-200"></div>
+          </div>
+        </div>
+      </div>
+      <div className="md:ml-5 md:pl-[52px]">
+        <div className="mt-4 h-20 w-full bg-light-200"></div>
+      </div>
+    </div>
+  );
+}
+
 const isReplyItem = (item: Comment | Reply): item is Reply => 'replying_to' in item;
 
 const Message: React.FC<MessageProps> = ({ item, isReply = false }) => {

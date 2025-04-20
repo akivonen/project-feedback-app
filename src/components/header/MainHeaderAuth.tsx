@@ -1,20 +1,22 @@
 'use client';
 import React from 'react';
 import Link from 'next/link';
-import { Icons } from '@/components/Icons';
-import SignOut from '@/components/header/SignOut';
+import { Icons } from '../common';
+import { signOut } from 'next-auth/react';
 import { useSession } from 'next-auth/react';
-import LoadingSpinner from '../LoadingSpinner';
+import { LoadingSpinner } from '../common';
 
 export default function MainHeaderAuth() {
   const { data: session, status } = useSession();
 
   return (
-    <div className='flex items-end'>
+    <div className="flex items-end">
       {status === 'loading' ? (
         <LoadingSpinner />
       ) : session ? (
-        <SignOut />
+        <button onClick={() => signOut()}>
+          <Icons.Logout />
+        </button>
       ) : (
         <Link href="/auth/signin">
           <Icons.Login />

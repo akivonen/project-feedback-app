@@ -3,11 +3,35 @@ import React, { useMemo, useState } from 'react';
 import { Feedback, RoadmapStatus } from '@/types';
 import { getRoadmapStats } from '@/lib/status';
 import useScreenDetector from '@/hooks/useScreenDetector';
-import RoadmapPageTabPanel from './RoadmapPageTabPanel';
+import { RoadmapPageTabPanel, RoadmapPageTabPanelSkeleton } from './';
 
 type RoadmapPageContentProps = {
   feedbacks: Feedback[];
 };
+
+export function RoadmapPageContentSkeleton() {
+  const { isMobile } = useScreenDetector();
+  return (
+    <section>
+      <div className="flex animate-pulse gap-x-4 border border-b-light-600/25 md:hidden">
+        <div className="mb-4 mt-5 h-5 w-1/3 bg-dark-100/25"></div>
+        <div className="mb-4 mt-5 h-5 w-1/3 bg-dark-100/25"></div>
+        <div className="mb-4 mt-5 h-5 w-1/3 bg-dark-100/25"></div>
+      </div>
+      <ul className="mx-6 mt-6 flex gap-2.5 pb-[100px] md:mx-0 lg:mt-12 lg:gap-[30px]">
+        {isMobile ? (
+          <RoadmapPageTabPanelSkeleton />
+        ) : (
+          [...Array(3)].map((_, i) => (
+            <li key={i} className="w-full">
+              <RoadmapPageTabPanelSkeleton />
+            </li>
+          ))
+        )}
+      </ul>
+    </section>
+  );
+}
 
 const RoadmapPageContent: React.FC<RoadmapPageContentProps> = ({ feedbacks }) => {
   const roadmapStats = useMemo(() => getRoadmapStats(feedbacks), [feedbacks]);
@@ -23,7 +47,7 @@ const RoadmapPageContent: React.FC<RoadmapPageContentProps> = ({ feedbacks }) =>
   }
 
   return (
-    <section className="">
+    <section>
       <ul className="flex border border-b-light-600/25 md:hidden">
         {roadmapStats &&
           roadmapStats.map(([status, props]) => {

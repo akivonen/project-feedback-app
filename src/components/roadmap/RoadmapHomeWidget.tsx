@@ -1,11 +1,14 @@
 import React from 'react';
 import Link from 'next/link';
-import RoadmapHomeWidgetItem from './RoadmapHomeWidgetItem';
+import { RoadmapHomeWidgetItem, RoadmapHomeWidgetItemSkeleton } from './';
 import { getRoadmapStats } from '@/lib/status';
-import LoadingSpinner from '../LoadingSpinner';
 import { Feedback } from '@/types';
 
-export const RoadmapHomeWidgetSkeleton = () => {
+type RoadmapHomeWidgetProps = {
+  feedbacks: Feedback[];
+};
+
+export function RoadmapHomeWidgetSkeleton() {
   return (
     <div className="w-full min-w-[223px] rounded-lg bg-white p-6">
       <div className="flex items-center justify-between">
@@ -14,14 +17,16 @@ export const RoadmapHomeWidgetSkeleton = () => {
           View
         </Link>
       </div>
-      <LoadingSpinner />
+      <ul className="mt-6 flex flex-col gap-4">
+        {[...Array(3)].map((_, i) => (
+          <li key={i}>
+            <RoadmapHomeWidgetItemSkeleton />
+          </li>
+        ))}
+      </ul>
     </div>
   );
-};
-
-type RoadmapHomeWidgetProps = {
-  feedbacks: Feedback[];
-};
+}
 
 const RoadmapHomeWidget: React.FC<RoadmapHomeWidgetProps> = ({ feedbacks }) => {
   const roadmapStats = getRoadmapStats(feedbacks);

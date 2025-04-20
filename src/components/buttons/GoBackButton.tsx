@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { Icons } from '../Icons';
+import { Icons } from '../common';
 import { useRouter } from 'next/navigation';
 
 type GoBackButtonButtonProps = {
@@ -8,7 +8,7 @@ type GoBackButtonButtonProps = {
   arrowColorStyle?: string;
 };
 
-const GoBackButtonButton: React.FC<GoBackButtonButtonProps> = ({
+const GoBackButton: React.FC<GoBackButtonButtonProps> = ({
   textColorStyle = 'text-dark-200',
   arrowColorStyle = 'text-blue-300',
 }) => {
@@ -35,4 +35,4 @@ const GoBackButtonButton: React.FC<GoBackButtonButtonProps> = ({
   );
 };
 
-export default GoBackButtonButton;
+export default GoBackButton;

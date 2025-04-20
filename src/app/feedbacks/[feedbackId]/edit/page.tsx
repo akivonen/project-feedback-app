@@ -1,10 +1,10 @@
 import { Suspense } from 'react';
-import FeedbackForm from '@/components/forms/FeedbackForm';
+import { FeedbackForm } from '@/components/forms/';
 import { getFeedbackByIdAction } from '@/app/actions/feedbackActions';
 import { Feedback, FeedbackFormData } from '@/types';
 import { notFound, redirect } from 'next/navigation';
-import LoadingSpinner from '@/components/LoadingSpinner';
-import FeedbackHeader from '@/components/feedback/FeedbackHeader';
+import { LoadingSpinner } from '@/components/common';
+import { FeedbackHeader } from '@/components/feedback/';
 import { auth } from '@/app/auth';
 
 type FeedbackEditPage = {

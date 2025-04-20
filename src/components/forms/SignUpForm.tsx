@@ -2,8 +2,8 @@
 import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import { signUpSchema } from '@/validation';
-import LoadingSpinner from '../LoadingSpinner';
-import Button from '../buttons/Button';
+import { LoadingSpinner } from '../common';
+import { Button } from '../buttons';
 import { useRouter } from 'next/navigation';
 import { signUpAction } from '@/app/actions/authActions';
 import { toast } from 'react-toastify';

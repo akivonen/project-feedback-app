@@ -1,6 +1,5 @@
 import React from 'react';
-import GoBackButton from '../buttons/GoBackButton';
-import Button from '../buttons/Button';
+import { Button, GoBackButton } from '../buttons';
 
 export default function RoadmapPageHeader() {
   return (

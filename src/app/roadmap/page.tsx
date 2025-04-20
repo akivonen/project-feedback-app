@@ -1,5 +1,5 @@
 import { getAllFeedbacksAction } from '../actions/feedbackActions';
-import RoadmapPageContent from '@/components/roadmap/RoadmapPageContent';
+import { RoadmapPageContent } from '@/components/roadmap/';
 
 export default async function RoadmapPage() {
   const feedbacks = await getAllFeedbacksAction();

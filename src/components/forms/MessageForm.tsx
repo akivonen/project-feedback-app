@@ -1,7 +1,7 @@
 'use client';
 import React, { memo } from 'react';
 import { useFormik } from 'formik';
-import Button from '../buttons/Button';
+import { Button } from '../buttons';
 import { commentSchema } from '@/validation';
 import { useParams } from 'next/navigation';
 import { createCommentAction } from '@/app/actions/commentActions';

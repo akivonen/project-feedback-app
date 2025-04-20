@@ -1,10 +1,10 @@
 'use client';
 import React, { useState } from 'react';
-import Button from '../buttons/Button';
+import { Button } from '../buttons/';
 import Image from 'next/image';
 import { useFormik } from 'formik';
 import { feedbackSchema } from '@/validation';
-import Dropdown from '../Dropdown';
+import { Dropdown, LoadingSpinner } from '../common';
 import { useRouter } from 'next/navigation';
 import { FeedbackFormData, FeedbackInsertData } from '@/types';
 import { categoryNames } from '@/lib/filter';
@@ -13,10 +13,9 @@ import {
   updateFeedbackAction,
   deleteFeedbackAction,
 } from '@/app/actions/feedbackActions';
-import LoadingSpinner from '../LoadingSpinner';
 import { statusOptions } from '@/lib/status';
 import { toast } from 'react-toastify';
-import FeedbackDeleteModal from '../feedback/FeedbackDeleteModal';
+import { FeedbackDeleteModal } from '../feedback/';
 import { useSession } from 'next-auth/react';
 
 type FeedbackDataForm = {
