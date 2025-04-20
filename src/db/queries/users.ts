@@ -1,3 +1,4 @@
+'server-only';
 import db from '..';
 import { User } from '@/types';
 import { users } from '../schema';

@@ -1,4 +1,4 @@
-'use server';
+'server-only';
 import db from '../index';
 import { upvotes, feedbacks } from '../schema';
 import { eq, and, sql } from 'drizzle-orm';

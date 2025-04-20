@@ -1,4 +1,4 @@
-'use server';
+'server-only';
 import { handleError } from '@/lib/utils';
 import db from '../index';
 import { comments } from '../schema';
