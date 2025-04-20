@@ -4,7 +4,6 @@ import { Feedback, Comment } from '@/types';
 import Link from 'next/link';
 import { RoadmapHomeWidgetItem } from '../roadmap/';
 import { UpvoteButton } from '../buttons/';
-import 'react-loading-skeleton/dist/skeleton.css';
 
 type FeedbackItemSkeletonProps = {
   isRoadmap?: boolean;

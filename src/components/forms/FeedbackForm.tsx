@@ -84,7 +84,7 @@ const FeedbackForm: React.FC<FeedbackDataForm> = ({ curFeedback }) => {
 
     setIsDeleting(true);
     try {
-      await deleteFeedbackAction(curFeedback.id);
+      await deleteFeedbackAction(curFeedback.id, curFeedback.user_id);
       toast.success('Feedback deleted successfully');
       setHasProcessed(true);
       setModalIsOpen(false);

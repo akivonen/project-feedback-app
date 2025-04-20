@@ -8,7 +8,6 @@ export async function signUpAction(user: UserSignUpData) {
   try {
     const hashedPassword = bcrypt.hashSync(user.password, 10);
     await createUser({ ...user, password: hashedPassword });
-    // revalidatePath('/');
   } catch (error) {
     if (
       error instanceof Error &&

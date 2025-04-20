@@ -4,6 +4,7 @@ import { createUpvote, deleteUpvote, getUpvoters } from '@/db/queries/upvotes';
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { Upvote } from '@/types';
 import { isValidUUID } from '@/lib/utils';
+import { auth } from '../auth';
 
 export async function getUpvotersAction(feedbackId: string): Promise<Upvote[]> {
   if (!isValidUUID(feedbackId)) {
@@ -24,6 +25,10 @@ export async function getUpvotersAction(feedbackId: string): Promise<Upvote[]> {
 export async function createUpvoteAction(feedbackId: string, userId: string): Promise<void> {
   if (!isValidUUID(feedbackId) || !isValidUUID(userId)) {
     throw new Error('Invalid feedbackId or userId');
+  }
+  const session = await auth();
+  if (!session) {
+    throw new Error('Not authorized in createCommentAction');
   }
   try {
     await createUpvote(feedbackId, userId);

@@ -1,4 +1,5 @@
 'use server';
+
 import {
   getAllFeedbacks,
   getFeedbackById,
@@ -9,6 +10,7 @@ import {
 import { handleError, isValidUUID } from '@/lib/utils';
 import { Feedback, FeedbackFormData, FeedbackInsertData } from '@/types';
 import { revalidatePath, revalidateTag } from 'next/cache';
+import { auth } from '../auth';
 
 export async function getAllFeedbacksAction(): Promise<Feedback[]> {
   try {
@@ -31,6 +33,10 @@ export async function getFeedbackByIdAction(id: string): Promise<Feedback | null
 }
 
 export async function createFeedbackAction(feedback: FeedbackInsertData): Promise<void> {
+  const session = await auth();
+  if (!session) {
+    throw new Error('Not authorized in createFeedbackAction');
+  }
   try {
     await createFeedback(feedback);
     revalidateTag('feedbacks');
@@ -41,6 +47,10 @@ export async function createFeedbackAction(feedback: FeedbackInsertData): Promis
 }
 
 export async function updateFeedbackAction(feedback: FeedbackFormData): Promise<void> {
+  const session = await auth();
+  if (!session || session?.user?.id !== feedback.user_id) {
+    throw new Error('Not authorized in updateFeedbackAction');
+  }
   try {
     await updateFeedback(feedback);
     revalidateTag('feedbacks');
@@ -50,7 +60,11 @@ export async function updateFeedbackAction(feedback: FeedbackFormData): Promise<
   }
 }
 
-export async function deleteFeedbackAction(id: string): Promise<void> {
+export async function deleteFeedbackAction(id: string, userId: string): Promise<void> {
+  const session = await auth();
+  if (!session || session?.user?.id !== userId) {
+    throw new Error('Not authorized in deleteFeedbackAction');
+  }
   try {
     await deleteFeedback(id);
     revalidateTag('feedbacks');
