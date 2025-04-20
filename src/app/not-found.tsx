@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { Button } from '@/components/buttons';
+import { Button, GoBackButton } from '@/components/buttons';
 
 export default function NotFoundPage() {
   return (
@@ -19,8 +19,11 @@ export default function NotFoundPage() {
           Unfortunately, we could not find the requested page.
         </p>
         <div className="mt-6 md:mt-12">
+          <GoBackButton />
+        </div>
+        <div className="mt-6 md:mt-12">
           <Button size="lg" variant="purple" href="/">
-            Back to Homepage
+            To Homepage
           </Button>
         </div>
       </div>

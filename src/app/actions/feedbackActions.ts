@@ -6,7 +6,7 @@ import {
   deleteFeedback,
   updateFeedback,
 } from '@/db/queries/feedbacks';
-import { handleError } from '@/lib/utils';
+import { handleError, isValidUUID } from '@/lib/utils';
 import { Feedback, FeedbackFormData, FeedbackInsertData } from '@/types';
 import { revalidatePath, revalidateTag } from 'next/cache';
 
@@ -18,7 +18,11 @@ export async function getAllFeedbacksAction(): Promise<Feedback[]> {
   }
 }
 
-export async function getFeedbackByIdAction(id: string): Promise<Feedback> {
+export async function getFeedbackByIdAction(id: string): Promise<Feedback | null> {
+  if (!isValidUUID(id)) {
+    console.error('Invalid feedbackId');
+    return null;
+  }
   try {
     return await getFeedbackById(id);
   } catch (error) {
