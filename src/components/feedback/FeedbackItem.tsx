@@ -23,6 +23,7 @@ export const FeedbackItemSkeleton: React.FC<FeedbackItemSkeletonProps> = ({
 }) => {
   return (
     <div
+      data-testid="feedback-item-skeleton"
       className={`flex w-full animate-pulse flex-wrap justify-between gap-y-4 rounded-lg bg-white p-6 md:items-center md:gap-x-10 ${
         isRoadmap ? 'md:h-[250px] md:p-5' : 'md:flex-nowrap md:px-8 md:py-7'
       } ${isRoadmap ? `border-t-[6px] md:h-[250px] md:p-5 border-t-${roadmapColor}` : 'md:flex-nowrap md:px-8 md:py-7'}`}

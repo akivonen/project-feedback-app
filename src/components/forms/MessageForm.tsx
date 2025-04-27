@@ -1,7 +1,7 @@
 'use client';
 import React, { memo } from 'react';
 import { useFormik } from 'formik';
-import { Button } from '../buttons';
+import Button from '../buttons/Button';
 import { commentSchema } from '@/validation';
 import { useParams } from 'next/navigation';
 import { createCommentAction } from '@/app/actions/commentActions';
@@ -29,7 +29,9 @@ const MessageForm: React.FC<MessageFormProps> = ({
       body: '',
     },
     validationSchema: commentSchema,
-    onSubmit: async ({ body }, { setSubmitting }) => {
+    validateOnBlur: true,
+    validateOnChange: true,
+    onSubmit: async ({ body }, { setSubmitting, resetForm }) => {
       setSubmitting(true);
       try {
         if (isReplyForm && commentId && replyingTo) {
@@ -39,11 +41,11 @@ const MessageForm: React.FC<MessageFormProps> = ({
             content: body,
             user_id,
           });
-          formik.resetForm();
+          resetForm();
           toast.success('Reply posted');
         } else if (typeof feedbackId === 'string') {
           await createCommentAction({ feedback_id: feedbackId, content: body, user_id });
-          formik.resetForm();
+          resetForm();
           toast.success('Comment posted');
         }
       } catch (error) {
@@ -66,7 +68,12 @@ const MessageForm: React.FC<MessageFormProps> = ({
     formik.touched.body && formik.errors.body ? 'border-orange-200' : 'border-transparent';
 
   return (
-    <form onSubmit={formik.handleSubmit} className={replyFormStyles} id={id}>
+    <form
+      onSubmit={formik.handleSubmit}
+      className={replyFormStyles}
+      id={id}
+      aria-label={isReplyForm ? 'Reply form' : 'Comment form'}
+    >
       <label htmlFor="body" className="sr-only">
         {isReplyForm ? 'reply' : 'comment'}
       </label>

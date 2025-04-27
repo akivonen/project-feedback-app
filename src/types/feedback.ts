@@ -1,5 +1,5 @@
 import { Category, Status } from './roadmap';
-import { User } from './user';
+import { UserSessionProps } from './user';
 import { Comment } from './comment';
 import { Upvote } from './upvotes';
 export type Feedback = {
@@ -12,7 +12,7 @@ export type Feedback = {
   description: string;
   comments: Comment[] | [];
   created_at: Date;
-  user: User;
+  user: UserSessionProps;
   upvotes: Upvote[];
 };
 

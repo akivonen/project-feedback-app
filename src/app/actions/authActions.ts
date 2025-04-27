@@ -1,4 +1,5 @@
 'use server';
+
 import { createUser } from '@/db/queries/users';
 import { handleError } from '@/lib/utils';
 import { UserSignUpData } from '@/types';

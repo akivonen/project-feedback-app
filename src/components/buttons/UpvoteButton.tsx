@@ -14,7 +14,7 @@ type UpvoteProps = {
   isRoadmap?: boolean;
 };
 
-const UpvoteButton: React.FC<UpvoteProps> = ({ feedbackId, upvoters, isRoadmap = false }) => {
+const UpvoteButton = ({ feedbackId, upvoters, isRoadmap = false }: UpvoteProps) => {
   const { data: session, status } = useSession();
   const userId = session?.user?.id;
   const router = useRouter();

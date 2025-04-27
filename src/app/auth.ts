@@ -1,10 +1,11 @@
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
+import type { NextAuthConfig } from 'next-auth';
 import { getUserByUsername } from '@/db/queries/users';
 import { UserSessionProps } from '@/types';
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
+export const authOptions: NextAuthConfig = {
   providers: [
     CredentialsProvider({
       credentials: {
@@ -48,4 +49,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return session;
     },
   },
-});
+};
+
+export const { handlers, signIn, signOut, auth } = NextAuth(authOptions);
