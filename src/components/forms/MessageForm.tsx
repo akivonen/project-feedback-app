@@ -43,7 +43,9 @@ const MessageForm: React.FC<MessageFormProps> = ({
           });
           resetForm();
           toast.success('Reply posted');
-        } else if (typeof feedbackId === 'string') {
+        } else if (typeof feedbackId !== 'string') {
+          throw new Error('Invalid feedback_id');
+        } else {
           await createCommentAction({ feedback_id: feedbackId, content: body, user_id });
           resetForm();
           toast.success('Comment posted');
@@ -52,7 +54,7 @@ const MessageForm: React.FC<MessageFormProps> = ({
         if (error instanceof Error) {
           toast.error(error.message);
         } else {
-          toast.error('Unknown error occured');
+          toast.error('Unknown error occurred');
           console.error(error);
         }
       } finally {
@@ -91,7 +93,9 @@ const MessageForm: React.FC<MessageFormProps> = ({
         aria-label={`Type your ${isReplyForm ? 'reply' : 'comment'} here`}
         aria-describedby={formik.touched.body && formik.errors.body ? 'body-error' : undefined}
       />
-      <div className="text-[14px] text-orange-200">{formik.touched.body && formik.errors.body}</div>
+      <div id="body-error" className="text-[14px] text-orange-200">
+        {formik.touched.body && formik.errors.body}
+      </div>
       <div className={`flex items-center justify-between ${isReplyForm ? '' : 'mt-4'}`}>
         {!isReplyForm && (
           <span className="text-sm text-dark-200">

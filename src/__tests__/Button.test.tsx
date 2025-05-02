@@ -1,23 +1,39 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import Button from '@/components/buttons/Button'; // Adjust path as needed
+import Button from '@/components/buttons/Button';
 
-jest.mock('next/link', () => {
-  const MockedLink = ({ children, href, className }: any) => (
+vi.mock('next/link', () => {
+  const MockedLink = ({
+    children,
+    href,
+    className,
+  }: {
+    children: React.ReactNode;
+    href: string;
+    className: string;
+  }) => (
     <a href={href} className={className}>
       {children}
     </a>
   );
   MockedLink.displayName = 'Link';
-  return MockedLink;
+  return { default: MockedLink };
 });
 
 describe('Button', () => {
   it('renders button with text and default styles', () => {
     render(<Button variant="grey">Click Me</Button>);
     const button = screen.getByRole('button', { name: /click me/i });
+    expect(button).toBeInTheDocument();
     expect(button).toHaveTextContent('Click Me');
-    expect(button).toHaveClass('bg-light-300 text-blue-300');
-    expect(button).toHaveClass('px-[16px] py-[6px]'); // size: sm
+    expect(button).toHaveClass(
+      'bg-light-300',
+      'text-blue-300',
+      'px-[16px]',
+      'py-[6px]',
+      'rounded-lg',
+      'text-sm',
+      'font-semibold'
+    );
     expect(button).toHaveAttribute('type', 'button');
   });
 
@@ -28,16 +44,22 @@ describe('Button', () => {
       </Button>
     );
     const link = screen.getByRole('link', { name: /go to test/i });
+    expect(link).toBeInTheDocument();
     expect(link).toHaveTextContent('Go to Test');
     expect(link).toHaveAttribute('href', '/test');
-    expect(link).toHaveClass('bg-blue-300 text-light-100');
+    expect(link).toHaveClass(
+      'bg-blue-300',
+      'text-light-100',
+      'rounded-lg',
+      'text-sm',
+      'font-semibold'
+    );
   });
 
   it('applies correct variant styles', () => {
     render(<Button variant="purple">Purple Button</Button>);
     const button = screen.getByRole('button', { name: /purple button/i });
-    expect(button).toHaveClass('bg-purple-200 text-light-100');
-    expect(button).toHaveClass('hover:bg-purple-100');
+    expect(button).toHaveClass('bg-purple-200', 'text-light-100', 'hover:bg-purple-100');
   });
 
   it('applies correct size styles', () => {
@@ -47,7 +69,7 @@ describe('Button', () => {
       </Button>
     );
     const button = screen.getByRole('button', { name: /large button/i });
-    expect(button).toHaveClass('px-6 py-3');
+    expect(button).toHaveClass('px-6', 'py-3');
   });
 
   it('applies active styles when isActive is true', () => {
@@ -57,11 +79,11 @@ describe('Button', () => {
       </Button>
     );
     const button = screen.getByRole('button', { name: /active button/i });
-    expect(button).toHaveClass('bg-blue-300 text-white');
+    expect(button).toHaveClass('bg-blue-300', 'text-white');
   });
 
   it('calls onClick when clicked', () => {
-    const handleClick = jest.fn();
+    const handleClick = vi.fn();
     render(
       <Button variant="grey" onClick={handleClick}>
         Click Me

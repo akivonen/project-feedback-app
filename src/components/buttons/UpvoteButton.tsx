@@ -75,7 +75,7 @@ const UpvoteButton = ({ feedbackId, upvoters, isRoadmap = false }: UpvoteProps) 
       className={`w-fit rounded-lg px-4 py-1.5 font-semibold ${buttonDisabledStyles} ${buttonDefaultStyles} ${buttonUpvotedStyles}`}
     >
       <span className={`flex items-center gap-x-2.5 gap-y-2 ${isRoadmap ? '' : 'md:flex-col'}`}>
-        <Icons.ArrowUp />
+        <Icons.ArrowUp aria-hidden data-testid="arrow-up" />
         <strong className="text-sm md:ml-0">{upvotesCount}</strong>
       </span>
     </button>
