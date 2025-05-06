@@ -70,9 +70,9 @@ const Dropdown: React.FC<DropdownProps> = ({
         </span>
         <span className={`pl-[6px] ${isFeedbackFormField && 'text-blue-300'}`}>
           {isOpen ? (
-            <Icons.ArrowUp width="8" height="4" />
+            <Icons.ArrowUp data-testid="arrow-up" width="8" height="4" />
           ) : (
-            <Icons.ArrowDown width="8" height="4" />
+            <Icons.ArrowDown data-testid="arrow-down" width="8" height="4" />
           )}
         </span>
       </button>
@@ -93,7 +93,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                     aria-selected={option === selectedOption}
                   >
                     {categoryFilterParam ? sortNamesMap[option] : option}
-                    {option === selectedOption && <Icons.Check />}
+                    {option === selectedOption && <Icons.Check data-testid="check" />}
                   </button>
                 ) : (
                   <Link
@@ -103,7 +103,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                     aria-selected={option === selectedOption}
                   >
                     {categoryFilterParam ? sortNamesMap[option] : option}
-                    {option === selectedOption && <Icons.Check />}
+                    {option === selectedOption && <Icons.Check data-testid="check" />}
                   </Link>
                 )}
               </li>

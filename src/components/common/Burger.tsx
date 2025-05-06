@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 
 type BurgerProps = {
-  children: React.ReactNode;
+  children?: React.ReactNode;
 };
 
 const Burger: React.FC<BurgerProps> = ({ children }) => {
@@ -12,8 +12,9 @@ const Burger: React.FC<BurgerProps> = ({ children }) => {
     <>
       <button
         onClick={() => toggleMobileMenu(!isOpen)}
-        id="mobile-menu-button"
         className="my-auto ml-auto block cursor-pointer md:hidden"
+        aria-label="Toggle mobile menu"
+        aria-expanded={isOpen}
       >
         <span
           className={`relative block h-[3px] w-[20px] rounded-full bg-white transition-all ${isOpen && 'top-[7px] rotate-45'}`}
