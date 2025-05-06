@@ -47,12 +47,12 @@ describe('Burger', () => {
     await userEvent.click(button);
     await userEvent.click(button);
 
-    waitFor(() => {
+    await waitFor(() => {
       const spans = button.querySelectorAll('span');
       expect(spans[0]).not.toHaveClass('top-[7px]', 'rotate-45');
       expect(spans[1]).toHaveClass('opacity-100');
       expect(spans[2]).not.toHaveClass('-top-[7px]', '-rotate-45');
-      expect(screen.getByText('Test Burger Menu')).not.toBeInTheDocument();
+      expect(screen.queryByText('Test Burger Menu')).not.toBeInTheDocument();
     });
   });
 

@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { cleanup } from '@testing-library/react';
@@ -78,8 +78,10 @@ describe('Dropdown', () => {
 
     await userEvent.click(button);
     expect(screen.getByRole('listbox')).toBeInTheDocument();
-    const clickOutside = new MouseEvent('mousedown', { bubbles: true });
-    document.dispatchEvent(clickOutside);
+    await act(() => {
+      const clickOutside = new MouseEvent('mousedown', { bubbles: true });
+      document.dispatchEvent(clickOutside);
+    });
 
     await waitFor(() => {
       expect(screen.queryByRole('listbox')).not.toBeInTheDocument();

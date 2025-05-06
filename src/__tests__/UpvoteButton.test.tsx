@@ -159,6 +159,7 @@ describe('UpvoteButton', () => {
   });
 
   it('reverts state and shows error on upvote failure', async () => {
+    const consoleErrorMock = vi.spyOn(console, 'error').mockImplementation(() => {});
     vi.mocked(createUpvoteAction).mockRejectedValue(new Error('Upvote failed'));
     render(<UpvoteButton feedbackId="1" upvoters={[]} />);
     const button = screen.getByRole('button', { name: /Upvote \(0\)/i });
@@ -170,9 +171,11 @@ describe('UpvoteButton', () => {
       expect(button).toHaveTextContent('0');
       expect(button).toHaveClass('bg-light-300', 'text-blue-300');
     });
+    consoleErrorMock.mockRestore();
   });
 
   it('reverts state and shows error on downvote failure', async () => {
+    const consoleErrorMock = vi.spyOn(console, 'error').mockImplementation(() => {});
     vi.mocked(deleteUpvoteAction).mockRejectedValue(new Error('Downvote failed'));
     render(<UpvoteButton feedbackId="1" upvoters={mockUpvoters} />);
     const button = screen.getByRole('button', { name: /Remove upvote \(1\)/i });
@@ -184,6 +187,7 @@ describe('UpvoteButton', () => {
       expect(button).toHaveTextContent('1');
       expect(button).toHaveClass('bg-blue-300', 'text-white');
     });
+    consoleErrorMock.mockRestore();
   });
 
   it('has correct accessibility attributes', () => {

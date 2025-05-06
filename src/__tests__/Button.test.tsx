@@ -1,22 +1,15 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import Button from '@/components/buttons/Button';
 
+const mockLink = vi.fn(({ children, ...props }: React.ComponentProps<'a'>) => (
+  <a {...props}>{children}</a>
+));
+
 vi.mock('next/link', () => {
-  const MockedLink = ({
-    children,
-    href,
-    className,
-  }: {
-    children: React.ReactNode;
-    href: string;
-    className: string;
-  }) => (
-    <a href={href} className={className}>
-      {children}
-    </a>
-  );
-  MockedLink.displayName = 'Link';
-  return { default: MockedLink };
+  return {
+    default: ({ children, ...props }: React.ComponentProps<'a'>) =>
+      mockLink({ children, ...props }),
+  };
 });
 
 describe('Button', () => {
