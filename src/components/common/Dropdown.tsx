@@ -42,6 +42,8 @@ const Dropdown: React.FC<DropdownProps> = ({
     }
   };
 
+  //add keyboard navigation
+
   const fieldDefaultStyles =
     'outline-none rounded-md p-4 w-full border justify-between bg-light-200 md:text-[15px]';
   const fieldIsOpenBorderStyles = isOpen ? 'border-blue-300' : 'border-transparent';

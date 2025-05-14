@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { createUpvoteAction, deleteUpvoteAction } from '@/app/actions/upvoteActions';
 import UpvoteButton from '@/components/buttons/UpvoteButton';
-import { NextRouter } from 'next/router';
 import { Upvote } from '@/types';
 
 const mockSessionAuthenticated = {
@@ -18,10 +17,8 @@ const mockSessionAuthenticated = {
 } as const;
 
 const mockSessionUnauthenticated = {
-  data: {
-    user: null,
-  },
-  status: 'authenticated',
+  data: null,
+  status: 'unauthenticated',
 } as const;
 
 const mockSessionLoading = {
@@ -33,16 +30,17 @@ const mockUpvoters: Upvote[] = [
   { user_id: '1', feedback_id: '1', created_at: new Date(Date.now()) },
 ];
 
-const mockRouter: Partial<NextRouter> = {
+const mockRouter = {
   push: vi.fn(),
-};
+  refresh: vi.fn(),
+} as unknown as ReturnType<typeof useRouter>;
 
 vi.mock('next-auth/react', () => ({
   useSession: vi.fn(() => mockSessionAuthenticated),
 }));
 
 vi.mock('next/navigation', () => ({
-  useRouter: vi.fn(() => mockRouter as NextRouter),
+  useRouter: vi.fn(() => mockRouter as ReturnType<typeof useRouter>),
 }));
 
 vi.mock('react-toastify', () => ({
@@ -61,8 +59,10 @@ vi.mock('@/app/actions/upvoteActions', () => ({
 describe('UpvoteButton', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(useSession).mockReturnValue(mockSessionAuthenticated as any);
-    vi.mocked(useRouter).mockReturnValue(mockRouter as any);
+    vi.mocked(useSession).mockReturnValue(
+      mockSessionAuthenticated as ReturnType<typeof useSession>
+    );
+    vi.mocked(useRouter).mockReturnValue(mockRouter as ReturnType<typeof useRouter>);
     vi.mocked(toast.success).mockClear();
     vi.mocked(toast.error).mockClear();
     vi.mocked(toast.warn).mockClear();
@@ -126,7 +126,9 @@ describe('UpvoteButton', () => {
   });
 
   it('redirects and shows toast when clicked and unauthenticated', async () => {
-    vi.mocked(useSession).mockReturnValue(mockSessionUnauthenticated as any);
+    vi.mocked(useSession).mockReturnValue(
+      mockSessionUnauthenticated as unknown as ReturnType<typeof useSession>
+    );
     render(<UpvoteButton feedbackId="1" upvoters={[]} />);
     const button = screen.getByRole('button', { name: /Upvote \(0\)/i });
 
@@ -138,7 +140,9 @@ describe('UpvoteButton', () => {
   });
 
   it('disables button when status is loading', () => {
-    vi.mocked(useSession).mockReturnValue(mockSessionLoading as any);
+    vi.mocked(useSession).mockReturnValue(
+      mockSessionLoading as unknown as ReturnType<typeof useSession>
+    );
     render(<UpvoteButton feedbackId="1" upvoters={[]} />);
     const button = screen.getByRole('button', { name: /Upvote \(0\)/i });
     expect(button).toBeDisabled();

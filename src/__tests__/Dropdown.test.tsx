@@ -148,4 +148,6 @@ describe('Dropdown', () => {
     expect(button).toHaveClass('border-blue-300');
     expect(screen.getByRole('listbox')).toHaveClass('w-full');
   });
+
+  //add keyboard navigation test
 });

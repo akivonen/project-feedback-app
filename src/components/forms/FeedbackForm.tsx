@@ -1,10 +1,11 @@
 'use client';
 import React, { useState } from 'react';
-import { Button } from '../buttons/';
+import Button from '../buttons/Button';
 import Image from 'next/image';
 import { useFormik } from 'formik';
 import { feedbackSchema } from '@/validation';
-import { Dropdown, LoadingSpinner } from '../common';
+import LoadingSpinner from '../common/LoadingSpinner';
+import Dropdown from '../common/Dropdown';
 import { useRouter } from 'next/navigation';
 import { FeedbackFormData, FeedbackInsertData } from '@/types';
 import { categoryNames } from '@/lib/filter';
@@ -15,7 +16,7 @@ import {
 } from '@/app/actions/feedbackActions';
 import { statusOptions } from '@/lib/status';
 import { toast } from 'react-toastify';
-import { FeedbackDeleteModal } from '../feedback/';
+import FeedbackDeleteModal from '../feedback/FeedbackDeleteModal';
 import { useSession } from 'next-auth/react';
 
 type FeedbackDataForm = {
@@ -112,7 +113,7 @@ const FeedbackForm: React.FC<FeedbackDataForm> = ({ curFeedback }) => {
         : 'border-transparent',
   };
 
-  if (formik.isSubmitting || isDeleting || hasProcessed) {
+  if (formik.isSubmitting || isDeleting || hasProcessed || status === 'loading') {
     return <LoadingSpinner />;
   }
 
@@ -153,7 +154,7 @@ const FeedbackForm: React.FC<FeedbackDataForm> = ({ curFeedback }) => {
             onChange={formik.handleChange}
             value={formik.values.title}
             className={`mt-4 w-full rounded-md border bg-light-200 p-4 text-sm text-dark-400 outline-none placeholder:text-sm placeholder:text-light-600 focus:border focus:border-blue-300 md:text-[15px] ${ErrorBorderStyles['title']}`}
-            aria-invalid={formik.touched.title && !!formik.errors.title}
+            aria-invalid={formik.touched.title && formik.errors.title ? 'true' : 'false'}
             aria-describedby={formik.errors.title ? 'title-error' : undefined}
           />
           {formik.touched.title && formik.errors.title && (

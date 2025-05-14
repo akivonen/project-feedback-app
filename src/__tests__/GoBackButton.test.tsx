@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 const mockRouter = {
   back: vi.fn(),
   push: vi.fn(),
-};
+} as unknown as ReturnType<typeof useRouter>;
 
 vi.mock('next/navigation', () => ({
   useRouter: vi.fn(() => mockRouter),
@@ -18,7 +18,7 @@ describe('GoBackButton', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.spyOn(window, 'history', 'get').mockReturnValue({ length: 2 } as History);
-    vi.mocked(useRouter).mockReturnValue(mockRouter as any);
+    vi.mocked(useRouter).mockReturnValue(mockRouter as ReturnType<typeof useRouter>);
   });
 
   afterEach(() => {
@@ -129,7 +129,7 @@ describe('GoBackButton', () => {
   });
 
   it('disables button and does not call router when router is null', async () => {
-    vi.mocked(useRouter).mockReturnValue(null as any);
+    vi.mocked(useRouter).mockReturnValue(null as unknown as ReturnType<typeof useRouter>);
     render(<GoBackButton />);
     const button = screen.getByRole('button', { name: /go back to the previous page/i });
 
