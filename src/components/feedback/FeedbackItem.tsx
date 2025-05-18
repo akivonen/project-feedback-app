@@ -1,9 +1,9 @@
 import React, { memo } from 'react';
-import { Icons } from '../common';
+import { Icons } from '../common/Icons';
 import { Feedback, Comment } from '@/types';
 import Link from 'next/link';
-import { RoadmapHomeWidgetItem } from '../roadmap/';
-import { UpvoteButton } from '../buttons/';
+import RoadmapHomeWidgetItem from '../roadmap/RoadmapHomeWidgetItem';
+import UpvoteButton from '../buttons/UpvoteButton';
 
 type FeedbackItemSkeletonProps = {
   isRoadmap?: boolean;
@@ -100,7 +100,7 @@ const FeedbackItem: React.FC<FeedbackItemProps> = ({
         className="flex items-center gap-x-1 md:gap-x-2"
         aria-label={`Comments: ${totalCommentsCount}`}
       >
-        <Icons.Comments />
+        <Icons.Comments data-testid="comments-icon" />
         <strong className={`text-sm ${commentsStyles} ${commentsCountColor}`}>
           {totalCommentsCount}
         </strong>

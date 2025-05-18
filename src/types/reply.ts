@@ -1,5 +1,3 @@
-import { User } from './user';
-
 export type Reply = {
   id: string;
   content: string;
@@ -7,7 +5,6 @@ export type Reply = {
   comment_id: string;
   user_id: string;
   created_at: Date;
-  user: User;
 };
 
 export type ReplyInsertData = {

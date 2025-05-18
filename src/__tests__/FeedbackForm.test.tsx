@@ -148,8 +148,6 @@ vi.mock('@/components/feedback/FeedbackDeleteModal', () => ({
     ) : null,
 }));
 
-const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-
 describe('FeedbackForm', () => {
   const defaultProps = {};
   const mockFeedback: FeedbackFormData = {
@@ -296,6 +294,7 @@ describe('FeedbackForm', () => {
   });
 
   it('displays server error on new feedback submission failure', async () => {
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     vi.mocked(createFeedbackAction).mockRejectedValue(new Error('Error creating feedback'));
     render(<FeedbackForm {...defaultProps} />);
     await userEvent.type(screen.getByLabelText(/feedback title/i), 'New feedback');
@@ -307,6 +306,7 @@ describe('FeedbackForm', () => {
       expect(screen.getByText('Error creating feedback'));
       expect(consoleErrorSpy).toHaveBeenCalledWith('Form submission error:', expect.any(Error));
     });
+    consoleErrorSpy.mockRestore();
   });
 
   it('navigates back on cancel', async () => {
@@ -336,6 +336,7 @@ describe('FeedbackForm', () => {
   });
 
   it('displays server error on feedback deleting failure', async () => {
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     vi.mocked(deleteFeedbackAction).mockRejectedValue(new Error('Error deleting feedback'));
     render(<FeedbackForm curFeedback={mockFeedback} />);
     await userEvent.click(screen.getByTestId('button-delete'));
@@ -346,6 +347,7 @@ describe('FeedbackForm', () => {
       expect(screen.getByText('Error deleting feedback'));
       expect(consoleErrorSpy).toHaveBeenCalledWith('Delete error:', expect.any(Error));
     });
+    consoleErrorSpy.mockRestore();
   });
 
   it('renders form fields with correct accessibility attrs', async () => {
