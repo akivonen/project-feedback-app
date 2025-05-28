@@ -3,6 +3,7 @@ import { Jost } from 'next/font/google';
 import './globals.css';
 import { ToastContainer } from 'react-toastify';
 import ClientSessionWrapper from './ClientSessionWrapper';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 const jost = Jost({ subsets: ['latin'] });
 
@@ -28,6 +29,7 @@ export default async function RootLayout({
           {children}
           <ToastContainer position="top-right" />
         </ClientSessionWrapper>
+        <SpeedInsights />
       </body>
     </html>
   );
