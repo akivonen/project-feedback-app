@@ -23,7 +23,7 @@ export async function getAllFeedbacksAction(): Promise<Feedback[]> {
 export async function getFeedbackByIdAction(id: string): Promise<Feedback | null> {
   if (!isValidUUID(id)) {
     console.error('Invalid feedbackId');
-    return null;
+    throw new Error('Invalid feedbackId');
   }
   try {
     return await getFeedbackById(id);

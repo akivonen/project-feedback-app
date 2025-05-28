@@ -1,9 +1,9 @@
 import { relations } from 'drizzle-orm';
 import { pgEnum, pgTable, uuid, text, integer, timestamp, primaryKey } from 'drizzle-orm/pg-core';
 
-export const categoryType = pgEnum('category', ['Feature', 'UI', 'UX', 'Enhancement', 'Bug']);
+export const category = pgEnum('category', ['Feature', 'UI', 'UX', 'Enhancement', 'Bug']);
 
-export const statusType = pgEnum('status', ['Suggestion', 'Planned', 'In-Progress', 'Live']);
+export const status = pgEnum('status', ['Suggestion', 'Planned', 'In-Progress', 'Live']);
 
 export const users = pgTable('users', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -16,10 +16,10 @@ export const users = pgTable('users', {
 
 export const feedbacks = pgTable('feedbacks', {
   id: uuid('id').primaryKey().defaultRandom(),
-  category: categoryType('category').notNull(),
+  category: category('category').notNull(),
   title: text('title').notNull(),
   upvotes_count: integer('upvotes_count').notNull().default(0),
-  status: statusType('status').notNull().default('Suggestion'),
+  status: status('status').notNull().default('Suggestion'),
   description: text('description').notNull(),
   user_id: uuid('user_id').notNull(),
   created_at: timestamp('created_at').notNull().defaultNow(),

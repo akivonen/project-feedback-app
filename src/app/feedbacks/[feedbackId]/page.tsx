@@ -26,6 +26,7 @@ export const FeedbackDetailsPageSkeleton = () => {
 
 export default async function FeedbackDetailsPage({ params }: FeedbackDetailsPageProps) {
   const { feedbackId } = await params;
+
   const feedback = await getFeedbackByIdAction(feedbackId);
 
   if (!feedback) {
@@ -37,7 +38,6 @@ export default async function FeedbackDetailsPage({ params }: FeedbackDetailsPag
       <FeedbackHeader feedback={feedback} />
       <main className="flex flex-col gap-y-6">
         <FeedbackItem feedback={feedback} />
-
         {feedback.comments && <CommentList comments={feedback.comments} />}
         <AddComment />
       </main>

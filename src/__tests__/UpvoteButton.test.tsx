@@ -63,11 +63,6 @@ describe('UpvoteButton', () => {
       mockSessionAuthenticated as ReturnType<typeof useSession>
     );
     vi.mocked(useRouter).mockReturnValue(mockRouter as ReturnType<typeof useRouter>);
-    vi.mocked(toast.success).mockClear();
-    vi.mocked(toast.error).mockClear();
-    vi.mocked(toast.warn).mockClear();
-    vi.mocked(createUpvoteAction).mockResolvedValue(undefined);
-    vi.mocked(deleteUpvoteAction).mockResolvedValue(undefined);
   });
 
   afterEach(() => {

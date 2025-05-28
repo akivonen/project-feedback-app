@@ -21,12 +21,13 @@ export const FeedbackItemSkeleton: React.FC<FeedbackItemSkeletonProps> = ({
   isRoadmap,
   roadmapColor,
 }) => {
+  const containerStyles = isRoadmap
+    ? `border-t-[6px] md:h-[250px] md:p-5 border-t-${roadmapColor}`
+    : 'md:flex-nowrap md:px-8 md:py-7';
   return (
     <div
       data-testid="feedback-item-skeleton"
-      className={`flex w-full animate-pulse flex-wrap justify-between gap-y-4 rounded-lg bg-white p-6 md:items-center md:gap-x-10 ${
-        isRoadmap ? 'md:h-[250px] md:p-5' : 'md:flex-nowrap md:px-8 md:py-7'
-      } ${isRoadmap ? `border-t-[6px] md:h-[250px] md:p-5 border-t-${roadmapColor}` : 'md:flex-nowrap md:px-8 md:py-7'}`}
+      className={`flex w-full animate-pulse flex-wrap justify-between gap-y-4 rounded-lg bg-white p-6 md:items-center md:gap-x-10 ${containerStyles}`}
     >
       <div className="w-full gap-y-2 md:mb-1">
         <div className="mt-2 h-5 w-3/4 rounded bg-light-200 md:mt-3"></div>

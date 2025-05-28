@@ -9,6 +9,9 @@ const jost = Jost({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: 'Product Feedback App',
   description: 'Frontmentor.io project implementation',
+  icons: {
+    icon: '/favicon.png',
+  },
 };
 
 export default async function RootLayout({

@@ -1,7 +1,7 @@
 import { cleanup, render, screen } from '@testing-library/react';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { Feedback } from '@/types/feedback';
-import FeedbackItem from '@/components/feedback/FeedbackItem';
+import FeedbackItem, { FeedbackItemSkeleton } from '@/components/feedback/FeedbackItem';
+import { defaultFeedback } from '@/__fixtures__/feedback';
 
 const mockLink = vi.fn(({ children, ...props }: React.ComponentProps<'a'>) => (
   <a {...props}>{children}</a>
@@ -31,64 +31,6 @@ vi.mock('@/components/roadmap/RoadmapHomeWidgetItem', () => ({
 }));
 
 describe('FeedbackItem', () => {
-  const date = new Date(Date.now());
-  const defaultFeedback: Feedback = {
-    id: '1',
-    title: 'Test feedback',
-    category: 'Feature',
-    description: 'Test description',
-    comments: [
-      {
-        id: 'c1',
-        content: 'Comment 1',
-        user_id: 'u1',
-        replies: [],
-        feedback_id: '1',
-        created_at: date,
-        user: {
-          id: 'u1',
-          username: 'user',
-          name: 'user',
-          image: null,
-        },
-      },
-      {
-        id: 'c2',
-        content: 'Comment 2',
-        user_id: 'u2',
-        feedback_id: '1',
-        created_at: date,
-        replies: [
-          {
-            id: 'r1',
-            content: 'Reply 1',
-            user_id: 'u3',
-            comment_id: 'c2',
-            created_at: date,
-            replying_to: 'u2,',
-          },
-        ],
-        user: {
-          id: 'u1',
-          username: 'user',
-          name: 'user',
-          image: null,
-        },
-      },
-    ],
-    upvotes: [{ user_id: 'u1', feedback_id: '1', created_at: date }],
-    status: 'Suggestion',
-    user_id: 'u1',
-    user: {
-      id: 'u1',
-      username: 'user',
-      name: 'user',
-      image: null,
-    },
-    created_at: date,
-    upvotes_count: 1,
-  };
-
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -102,7 +44,10 @@ describe('FeedbackItem', () => {
     render(<FeedbackItem feedback={defaultFeedback} />);
 
     expect(screen.getByText('Test feedback')).toBeInTheDocument();
-    expect(screen.getByText('Test description')).toHaveAttribute('aria-describedby', 'feedback-1');
+    expect(screen.getByText('Test description')).toHaveAttribute(
+      'aria-describedby',
+      'feedback-feedback1'
+    );
     expect(screen.getByText('Feature')).toHaveClass('bg-light-200', 'text-blue-300');
     expect(screen.getByTestId('upvote-button')).toHaveTextContent('1 upvotes');
     expect(screen.getByTestId('comments-icon')).toBeInTheDocument();
@@ -113,7 +58,7 @@ describe('FeedbackItem', () => {
     render(<FeedbackItem feedback={defaultFeedback} isLink />);
     expect(screen.getByRole('link', { name: /Test feedback/ })).toHaveAttribute(
       'href',
-      '/feedbacks/1'
+      '/feedbacks/feedback1'
     );
   });
 
@@ -166,5 +111,21 @@ describe('FeedbackItem', () => {
     const initialContainer = screen.getByText('Test feedback').parentElement?.parentElement;
     rerender(<FeedbackItem feedback={defaultFeedback} />);
     expect(screen.getByText('Test feedback').parentElement?.parentElement).toBe(initialContainer);
+  });
+});
+
+describe('FeedbackItemSkeleton', () => {
+  it('renders skeleton with default styles', () => {
+    render(<FeedbackItemSkeleton />);
+    const skeleton = screen.getByTestId('feedback-item-skeleton');
+    expect(skeleton).toHaveClass('animate-pulse', 'bg-white', 'p-6');
+    expect(skeleton).not.toHaveClass('border-t-[6px]', 'border-t-orange-200');
+  });
+
+  it('renders skeleton with roadmap styles', () => {
+    render(<FeedbackItemSkeleton isRoadmap roadmapColor="purple-200" />);
+    const skeleton = screen.getByTestId('feedback-item-skeleton');
+    expect(skeleton).toHaveClass('animate-pulse', 'border-t-purple-200', 'md:h-[250px]', 'md:p-5');
+    expect(skeleton).not.toHaveClass('md:flex-nowrap', 'md:px-8', 'md:py-7');
   });
 });

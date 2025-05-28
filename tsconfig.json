@@ -29,7 +29,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/services/pglite.js"
+    "src/services/pglite.js",
+    "drizzle.config.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "migrations"]
 }
