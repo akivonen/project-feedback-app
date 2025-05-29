@@ -1,5 +1,5 @@
 'use client';
-import React, { Dispatch, SetStateAction, useState, useRef, useEffect } from 'react';
+import React, { Dispatch, SetStateAction, useState, useRef, useEffect, useCallback } from 'react';
 import { Icons } from './Icons';
 import { CategoryOption, sortNamesMap } from '@/lib/filter';
 import Link from 'next/link';
@@ -19,30 +19,89 @@ const Dropdown: React.FC<DropdownProps> = ({
   isFeedbackFormField = false,
   categoryFilterParam,
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [focusedOption, setFocusedOption] = useState<string>(selectedOption);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
+  const optionsRef = useRef<HTMLUListElement>(null);
+  const handleSelectSorting = useCallback(
+    (optionName: string) => {
+      if (handleChange) {
+        handleChange(optionName);
       }
-    };
+    },
+    [handleChange]
+  );
+
+  const handleClick = useCallback(
+    (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as HTMLElement)) {
+        setIsOpen(false);
+        return;
+      }
+      if (optionsRef.current && optionsRef.current.contains(event.target as HTMLElement)) {
+        const target = event.target as HTMLElement;
+        const optionElement = target.closest('button');
+        if (optionElement) {
+          const optionValue = optionElement.getAttribute('data-option');
+          if (optionValue && isFeedbackFormField) {
+            handleSelectSorting(optionValue);
+            setIsOpen(false);
+          }
+        }
+      }
+    },
+    [handleSelectSorting, isFeedbackFormField]
+  );
+
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent) => {
+      if (!isOpen) return;
+      const options = dropdownOptions;
+      const currentIndex = options.indexOf(selectedOption);
+      const optionsLength = options.length;
+      switch (event.key) {
+        case 'ArrowDown':
+          event.preventDefault();
+          const nextIndex = currentIndex < optionsLength - 1 ? currentIndex + 1 : 0;
+          setFocusedOption(options[nextIndex]);
+          if (isFeedbackFormField) handleSelectSorting(options[nextIndex]);
+          break;
+        case 'ArrowUp':
+          event.preventDefault();
+          const prevIndex = currentIndex > 0 ? currentIndex - 1 : optionsLength - 1;
+          setFocusedOption(options[prevIndex]);
+          if (isFeedbackFormField) handleSelectSorting(options[prevIndex]);
+          break;
+        case 'Enter':
+          event.preventDefault();
+          setIsOpen(false);
+          break;
+        case 'Escape':
+          setIsOpen(false);
+          setFocusedOption(selectedOption);
+          break;
+        default:
+          return;
+      }
+    },
+    [dropdownOptions, isOpen, handleSelectSorting, selectedOption, isFeedbackFormField]
+  );
+
+  useEffect(() => {
     if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('keydown', handleKeyDown);
+    }
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, selectedOption, dropdownOptions, handleSelectSorting, handleKeyDown]);
+
+  useEffect(() => {
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClick);
     }
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('mousedown', handleClick);
     };
-  }, [isOpen]);
-
-  const handleSelectSorting = (optionName: string) => {
-    setIsOpen(false);
-    if (handleChange) {
-      handleChange(optionName);
-    }
-  };
-
-  //add keyboard navigation
+  }, [isOpen, dropdownOptions, handleSelectSorting, isFeedbackFormField, handleClick]);
 
   const fieldDefaultStyles =
     'outline-none rounded-md p-4 w-full border justify-between bg-light-200 md:text-[15px]';
@@ -59,12 +118,20 @@ const Dropdown: React.FC<DropdownProps> = ({
 
   return (
     <div ref={dropdownRef} className="relative">
+      {isFeedbackFormField && (
+        <label id="dropdown-label" className="sr-only">
+          Select an option
+        </label>
+      )}
       <button
+        tabIndex={0}
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center gap-1 text-sm ${dropDownBaseStyles}`}
+        className={`flex items-center gap-1 text-sm focus:border focus:border-blue-300 ${dropDownBaseStyles}`}
         aria-expanded={isOpen}
         aria-haspopup="listbox"
         type="button"
+        aria-labelledby={isFeedbackFormField ? 'dropdown-label' : undefined}
+        aria-label={isFeedbackFormField ? 'Select an option' : 'Sort options'}
       >
         {!isFeedbackFormField && 'Sort by'}
         <span className={`flex ${!isFeedbackFormField && 'font-bold'}`}>
@@ -82,6 +149,8 @@ const Dropdown: React.FC<DropdownProps> = ({
         <ul
           className={`text absolute top-[calc(100%+18px)] z-30 flex min-w-[255px] flex-col rounded-lg bg-white shadow-dropShadow ${dropdownOptionsStyles}`}
           role="listbox"
+          ref={optionsRef}
+          aria-activedescendant={focusedOption ? `option-${focusedOption}` : undefined}
         >
           {dropdownOptions &&
             dropdownOptions.map((option) => (
@@ -89,10 +158,12 @@ const Dropdown: React.FC<DropdownProps> = ({
                 {isFeedbackFormField ? (
                   <button
                     onClick={() => handleSelectSorting(option)}
-                    className={dropdownItemStyles}
+                    className={`${dropdownItemStyles} ${option === focusedOption ? 'text-purple-200' : ''}`}
                     type="button"
                     role="option"
                     aria-selected={option === selectedOption}
+                    data-option={option}
+                    id={`option-${option}`}
                   >
                     {categoryFilterParam ? sortNamesMap[option] : option}
                     {option === selectedOption && <Icons.Check data-testid="check" />}
@@ -103,6 +174,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                     className={dropdownItemStyles}
                     role="option"
                     aria-selected={option === selectedOption}
+                    id={`option-${option}`}
                   >
                     {categoryFilterParam ? sortNamesMap[option] : option}
                     {option === selectedOption && <Icons.Check data-testid="check" />}
