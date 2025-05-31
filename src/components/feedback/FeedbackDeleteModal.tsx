@@ -11,13 +11,13 @@ type FeedbackDeleteModalProps = {
   isDeleting: boolean;
 };
 
-const FeedbackDeleteModal: React.FC<FeedbackDeleteModalProps> = ({
+export default function FeedbackDeleteModal({
   modalIsOpen,
   setModalIsOpen,
   handleRemoveFeedback,
   isSubmitting,
   isDeleting,
-}) => {
+}: FeedbackDeleteModalProps) {
   useEffect(() => {
     const appElement = document.getElementById('feedback');
     if (appElement) {
@@ -51,6 +51,4 @@ const FeedbackDeleteModal: React.FC<FeedbackDeleteModalProps> = ({
       </form>
     </Modal>
   );
-};
-
-export default FeedbackDeleteModal;
+}

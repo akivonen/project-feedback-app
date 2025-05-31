@@ -2,10 +2,6 @@ import React from 'react';
 import { Comment } from '@/types';
 import Message, { MessageSkeleton } from './Message';
 
-type CommentsListProps = {
-  comments: Comment[];
-};
-
 export function CommentListSkeleton() {
   return (
     <section className="flex w-full animate-pulse flex-col gap-y-4 rounded-lg bg-white p-6 md:px-8 md:py-7">
@@ -19,7 +15,7 @@ export function CommentListSkeleton() {
   );
 }
 
-const CommentList: React.FC<CommentsListProps> = async ({ comments }) => {
+export default async function CommentList({ comments }: { comments: Comment[] }) {
   return (
     <section
       className="flex w-full flex-col gap-y-4 rounded-lg bg-white p-6 md:px-8 md:py-7"
@@ -38,6 +34,4 @@ const CommentList: React.FC<CommentsListProps> = async ({ comments }) => {
       </ul>
     </section>
   );
-};
-
-export default CommentList;
+}

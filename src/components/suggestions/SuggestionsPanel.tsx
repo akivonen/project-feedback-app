@@ -6,11 +6,7 @@ import Dropdown from '../common/Dropdown';
 import { CategoryOption, SortOption, sortOptions } from '@/lib/filter';
 import useFilter from '@/hooks/useFilters';
 
-type SuggestionsProps = {
-  suggestionsCount: number;
-};
-
-const SuggestionsPanel: React.FC<SuggestionsProps> = ({ suggestionsCount }) => {
+export default function SuggestionsPanel({ suggestionsCount }: { suggestionsCount: number }) {
   const { category, sort } = useFilter();
 
   return (
@@ -40,6 +36,4 @@ const SuggestionsPanel: React.FC<SuggestionsProps> = ({ suggestionsCount }) => {
       </Button>
     </div>
   );
-};
-
-export default SuggestionsPanel;
+}

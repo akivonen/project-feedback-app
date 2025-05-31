@@ -1,11 +1,8 @@
 'use client';
 import React, { useState } from 'react';
+import { ReactNode } from 'react';
 
-type BurgerProps = {
-  children?: React.ReactNode;
-};
-
-const Burger: React.FC<BurgerProps> = ({ children }) => {
+export default function Burger({ children }: { children: ReactNode }) {
   const [isOpen, toggleMobileMenu] = useState(false);
 
   return (
@@ -29,6 +26,4 @@ const Burger: React.FC<BurgerProps> = ({ children }) => {
       {isOpen && children}
     </>
   );
-};
-
-export default Burger;
+}

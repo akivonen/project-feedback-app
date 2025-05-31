@@ -14,7 +14,7 @@ type UpvoteProps = {
   isRoadmap?: boolean;
 };
 
-const UpvoteButton = ({ feedbackId, upvoters, isRoadmap = false }: UpvoteProps) => {
+export default function UpvoteButton({ feedbackId, upvoters, isRoadmap = false }: UpvoteProps) {
   const { data: session, status } = useSession();
   const userId = session?.user?.id;
   const router = useRouter();
@@ -80,6 +80,4 @@ const UpvoteButton = ({ feedbackId, upvoters, isRoadmap = false }: UpvoteProps) 
       </span>
     </button>
   );
-};
-
-export default UpvoteButton;
+}

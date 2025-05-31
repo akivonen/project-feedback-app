@@ -12,13 +12,13 @@ type DropdownProps = {
   categoryFilterParam?: CategoryOption;
 };
 
-const Dropdown: React.FC<DropdownProps> = ({
+export default function Dropdown({
   dropdownOptions,
   selectedOption,
   handleChange,
   isFeedbackFormField = false,
   categoryFilterParam,
-}) => {
+}: DropdownProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [focusedOption, setFocusedOption] = useState<string>(selectedOption);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -186,6 +186,4 @@ const Dropdown: React.FC<DropdownProps> = ({
       )}
     </div>
   );
-};
-
-export default Dropdown;
+}

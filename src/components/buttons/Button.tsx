@@ -13,7 +13,7 @@ type ButtonProps = {
   href?: string;
 };
 
-const Button: React.FC<ButtonProps> = ({
+export default function Button({
   children,
   variant,
   size = 'sm',
@@ -22,7 +22,7 @@ const Button: React.FC<ButtonProps> = ({
   onClick,
   disabled,
   href,
-}) => {
+}: ButtonProps) {
   const baseStyles = 'max-h-[44px] w-fit rounded-lg text-sm font-semibold text-center';
   const sizeStyles = {
     sm: 'px-[16px] py-[6px]',
@@ -64,6 +64,4 @@ const Button: React.FC<ButtonProps> = ({
       {children}
     </button>
   );
-};
-
-export default Button;
+}

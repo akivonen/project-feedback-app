@@ -5,10 +5,6 @@ import { getRoadmapStats } from '@/lib/status';
 import useScreenDetector from '@/hooks/useScreenDetector';
 import { RoadmapPageTabPanel, RoadmapPageTabPanelSkeleton } from './';
 
-type RoadmapPageContentProps = {
-  feedbacks: Feedback[];
-};
-
 export function RoadmapPageContentSkeleton() {
   const { isMobile } = useScreenDetector();
   return (
@@ -33,7 +29,7 @@ export function RoadmapPageContentSkeleton() {
   );
 }
 
-const RoadmapPageContent: React.FC<RoadmapPageContentProps> = ({ feedbacks }) => {
+export default function RoadmapPageContent({ feedbacks }: { feedbacks: Feedback[] }) {
   const roadmapStats = useMemo(() => getRoadmapStats(feedbacks), [feedbacks]);
   const [activeStat, setActiveStat] = useState<RoadmapStatus>('Planned');
   const { isMobile } = useScreenDetector();
@@ -86,6 +82,4 @@ const RoadmapPageContent: React.FC<RoadmapPageContentProps> = ({ feedbacks }) =>
       </ul>
     </section>
   );
-};
-
-export default RoadmapPageContent;
+}

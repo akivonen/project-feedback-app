@@ -6,10 +6,6 @@ import { useParams, usePathname } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { Feedback } from '@/types';
 
-type FeedbackHeaderProps = {
-  feedback?: Feedback;
-};
-
 export const FeedbackHeaderSkeleton = () => {
   return (
     <header role="banner" className="flex justify-between">
@@ -22,7 +18,7 @@ export const FeedbackHeaderSkeleton = () => {
   );
 };
 
-const FeedbackHeader: React.FC<FeedbackHeaderProps> = ({ feedback }) => {
+export default function FeedbackHeader({ feedback }: { feedback?: Feedback }) {
   const { data: session, status } = useSession();
   const pathname = usePathname();
   const isFeedbackDetailsPage =
@@ -42,6 +38,4 @@ const FeedbackHeader: React.FC<FeedbackHeaderProps> = ({ feedback }) => {
       )}
     </header>
   );
-};
-
-export default FeedbackHeader;
+}

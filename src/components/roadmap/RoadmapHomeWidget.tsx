@@ -26,7 +26,7 @@ export function RoadmapHomeWidgetSkeleton() {
   );
 }
 
-const RoadmapHomeWidget = () => {
+export default function RoadmapHomeWidget() {
   const feedbacksPromise = useFeedbacksContext();
   const feedbacks = use(feedbacksPromise);
 
@@ -58,6 +58,4 @@ const RoadmapHomeWidget = () => {
       </ul>
     </div>
   );
-};
-
-export default RoadmapHomeWidget;
+}

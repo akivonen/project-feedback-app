@@ -31,7 +31,7 @@ export function MessageSkeleton() {
 
 const isReplyItem = (item: Comment | Reply): item is Reply => 'replying_to' in item;
 
-const Message: React.FC<MessageProps> = ({ item, isReply = false }) => {
+function Message({ item, isReply = false }: MessageProps) {
   const { data: session } = useSession();
   const userId = session?.user?.id;
 
@@ -110,6 +110,6 @@ const Message: React.FC<MessageProps> = ({ item, isReply = false }) => {
       )}
     </li>
   );
-};
+}
 
 export default memo(Message);

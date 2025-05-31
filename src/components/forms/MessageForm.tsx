@@ -16,13 +16,13 @@ type MessageFormProps = {
   user_id: string;
 };
 
-const MessageForm: React.FC<MessageFormProps> = ({
+function MessageForm({
   id,
   isReplyForm = false,
   replyingTo,
   commentId,
   user_id,
-}) => {
+}: MessageFormProps) {
   const { feedbackId } = useParams();
   const formik = useFormik({
     initialValues: {
@@ -108,6 +108,6 @@ const MessageForm: React.FC<MessageFormProps> = ({
       </div>
     </form>
   );
-};
+}
 
 export default memo(MessageForm);

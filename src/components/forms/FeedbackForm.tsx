@@ -19,11 +19,7 @@ import { toast } from 'react-toastify';
 import FeedbackDeleteModal from '../feedback/FeedbackDeleteModal';
 import { useSession } from 'next-auth/react';
 
-type FeedbackDataForm = {
-  curFeedback?: FeedbackFormData;
-};
-
-const FeedbackForm: React.FC<FeedbackDataForm> = ({ curFeedback }) => {
+export default function FeedbackForm({ curFeedback }: { curFeedback?: FeedbackFormData }) {
   const [serverError, setServerError] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const [hasProcessed, setHasProcessed] = useState<boolean>(false);
@@ -251,6 +247,4 @@ const FeedbackForm: React.FC<FeedbackDataForm> = ({ curFeedback }) => {
       />
     </section>
   );
-};
-
-export default FeedbackForm;
+}

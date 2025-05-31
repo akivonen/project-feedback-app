@@ -17,10 +17,7 @@ type FeedbackItemProps = {
   roadmapColor?: string;
 };
 
-export const FeedbackItemSkeleton: React.FC<FeedbackItemSkeletonProps> = ({
-  isRoadmap,
-  roadmapColor,
-}) => {
+export function FeedbackItemSkeleton({ isRoadmap, roadmapColor }: FeedbackItemSkeletonProps) {
   const containerStyles = isRoadmap
     ? `border-t-[6px] md:h-[250px] md:p-5 border-t-${roadmapColor}`
     : 'md:flex-nowrap md:px-8 md:py-7';
@@ -43,14 +40,14 @@ export const FeedbackItemSkeleton: React.FC<FeedbackItemSkeletonProps> = ({
       </div>
     </div>
   );
-};
+}
 
-const FeedbackItem: React.FC<FeedbackItemProps> = ({
+function FeedbackItem({
   feedback,
   isLink = false,
   isRoadmap = false,
   roadmapColor = 'orange-200',
-}) => {
+}: FeedbackItemProps) {
   const { title, category, description, comments } = feedback;
   const repliesCount = comments.reduce(
     (total: number, comment: Comment) => total + comment.replies.length,
@@ -108,6 +105,6 @@ const FeedbackItem: React.FC<FeedbackItemProps> = ({
       </span>
     </div>
   );
-};
+}
 
 export default memo(FeedbackItem);

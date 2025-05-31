@@ -3,15 +3,15 @@ import React, { useEffect, useState, memo } from 'react';
 import { Icons } from '../common';
 import { useRouter } from 'next/navigation';
 
-type GoBackButtonButtonProps = {
+type GoBackButtonProps = {
   textColorStyle?: string;
   arrowColorStyle?: string;
 };
 
-const GoBackButton: React.FC<GoBackButtonButtonProps> = ({
+function GoBackButton({
   textColorStyle = 'text-dark-200',
   arrowColorStyle = 'text-blue-300',
-}) => {
+}: GoBackButtonProps) {
   const router = useRouter();
   const [hasHistory, setHasHistory] = useState(false);
 
@@ -45,6 +45,6 @@ const GoBackButton: React.FC<GoBackButtonButtonProps> = ({
       <span>Go Back</span>
     </button>
   );
-};
+}
 
 export default memo(GoBackButton);

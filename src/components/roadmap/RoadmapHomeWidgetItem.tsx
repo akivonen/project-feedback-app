@@ -19,11 +19,11 @@ export function RoadmapHomeWidgetItemSkeleton() {
   );
 }
 
-const RoadmapHomeWidgetItem: React.FC<RoadmapHomeWidgetItemProps> = ({
+export default function RoadmapHomeWidgetItem({
   state,
   color,
   tasksCount,
-}) => {
+}: RoadmapHomeWidgetItemProps) {
   const colorStyles = `text-${color}`;
   return (
     <div className="flex justify-between text-dark-200">
@@ -34,6 +34,4 @@ const RoadmapHomeWidgetItem: React.FC<RoadmapHomeWidgetItemProps> = ({
       {tasksCount && <strong>{tasksCount}</strong>}
     </div>
   );
-};
-
-export default RoadmapHomeWidgetItem;
+}
