@@ -1,12 +1,10 @@
-import React from 'react';
+'use client';
+
+import React, { use } from 'react';
 import Link from 'next/link';
 import { RoadmapHomeWidgetItem, RoadmapHomeWidgetItemSkeleton } from './';
 import { getRoadmapStats } from '@/lib/status';
-import { Feedback } from '@/types';
-
-type RoadmapHomeWidgetProps = {
-  feedbacks: Feedback[];
-};
+import useFeedbacksContext from '@/hooks/useFeedbacksContext';
 
 export function RoadmapHomeWidgetSkeleton() {
   return (
@@ -28,7 +26,14 @@ export function RoadmapHomeWidgetSkeleton() {
   );
 }
 
-const RoadmapHomeWidget: React.FC<RoadmapHomeWidgetProps> = ({ feedbacks }) => {
+const RoadmapHomeWidget = () => {
+  const feedbacksPromise = useFeedbacksContext();
+  const feedbacks = use(feedbacksPromise);
+
+  if (!feedbacksPromise) {
+    return <RoadmapHomeWidgetSkeleton />;
+  }
+
   const roadmapStats = getRoadmapStats(feedbacks);
 
   return (

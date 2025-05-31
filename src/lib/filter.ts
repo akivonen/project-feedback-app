@@ -1,4 +1,5 @@
 import { Feedback, FilterCategory, Category } from '@/types';
+import { notFound } from 'next/navigation';
 
 export const categoryNamesMap = {
   all: 'All',
@@ -39,3 +40,33 @@ export const sortNamesMap: Record<string, string> = {
 };
 
 export const sortOptions: SortOption[] = Object.keys(sortNamesMap) as SortOption[];
+
+export const parseFilterParams = (filter: string[] | undefined) => {
+  const categoryParam = filter?.[0];
+  const sortParam = filter?.[1];
+  if (
+    (categoryParam && !categoryOptions.includes(categoryParam as CategoryOption)) ||
+    (sortParam && !sortOptions.includes(sortParam as SortOption))
+  ) {
+    notFound();
+  }
+  const category: CategoryOption = (categoryParam as CategoryOption) || 'all';
+  const sort: SortOption = (sortParam as SortOption) || 'most-upvotes';
+  return { category, sort };
+};
+
+export const getSortedSuggestionsByCategories = (
+  suggestions: Feedback[],
+  category: CategoryOption,
+  sort: SortOption
+) => {
+  if (!suggestions) {
+    return [];
+  }
+
+  const suggestionsByCategories =
+    category === 'all'
+      ? suggestions
+      : suggestions?.filter((s) => s.category === categoryNamesMap[category]);
+  return suggestionsByCategories.sort(sortFunctionsMap[sort]);
+};
