@@ -1,30 +1,67 @@
-import * as Yup from 'yup';
+import { z } from 'zod';
 
-export const commentSchema = Yup.object().shape({
-  body: Yup.string().trim().required('Can`t be empty').min(1, 'Can`t be empty').max(250),
-});
-
-export const feedbackSchema = Yup.object().shape({
-  title: Yup.string().trim().min(1, "Can't be empty").required("Can't be empty"),
-  category: Yup.string()
-    .oneOf(['Feature', 'UI', 'UX', 'Enhancement', 'Bug'], 'Invalid category')
-    .required('Category is required'),
-  status: Yup.string().oneOf(['Suggestion', 'Planned', 'In-Progress', 'Live'], 'Invalid status'),
-  description: Yup.string().trim().min(1, "Can't be empty").required("Can't be empty"),
-});
-
-export const signInSchema = Yup.object().shape({
-  username: Yup.string().trim().min(3, 'At least 3 character').required('Username is required'),
-  password: Yup.string().trim().min(6, 'At least 6 characters').required('Password is required'),
-});
-
-export const signUpSchema = Yup.object().shape({
-  name: Yup.string().trim().min(3, 'At least 2 character').required('Name is required'),
-  username: Yup.string().trim().min(3, 'At least 3 character').required('Username is required'),
-  password: Yup.string().trim().min(6, 'At least 6 characters').required('Password is required'),
-  confirmPassword: Yup.string()
+export const feedbackSchema = z.object({
+  title: z.string({ required_error: "Can't be empty" }).trim().min(1, {
+    message: "Can't be empty",
+  }),
+  category: z.enum(['Feature', 'UI', 'UX', 'Enhancement', 'Bug'], {
+    invalid_type_error: 'Category is required',
+    required_error: 'Category is required',
+  }),
+  status: z.enum(['Suggestion', 'Planned', 'In-Progress', 'Live'], {
+    invalid_type_error: 'Invalid status',
+  }),
+  description: z
+    .string({ required_error: "Can't be empty" })
     .trim()
-    .min(4, 'At least 6 characters')
-    .required('Confirm Password is required')
-    .oneOf([Yup.ref('password')], 'Passwords must match'),
+    .min(1, { message: "Can't be empty" }),
 });
+
+export const commentSchema = z.object({
+  body: z
+    .string({ required_error: 'Can`t be empty' })
+    .trim()
+    .min(1, { message: 'Can`t be empty' })
+    .max(250, { message: 'Can`t be empty longer than 100 chars' }),
+});
+
+export const signInSchema = z.object({
+  username: z
+    .string({ required_error: 'Username is required' })
+    .trim()
+    .min(3, { message: 'At least 3 characters' })
+    .max(30, { message: 'At most 30 characters' }),
+  password: z
+    .string({ required_error: 'Password is required' })
+    .trim()
+    .min(6, { message: 'At least 6 characters' })
+    .max(30, { message: 'At most 30 characters' }),
+});
+
+export const signUpSchema = z
+  .object({
+    name: z
+      .string({ required_error: 'Name is required' })
+      .trim()
+      .min(3, 'At least 1 character')
+      .max(30, { message: 'At most 30 characters' }),
+    username: z
+      .string({ required_error: 'Username is required' })
+      .trim()
+      .min(3, 'At least 1 character')
+      .max(30, { message: 'At most 30 characters' }),
+    password: z
+      .string({ required_error: 'Password is required' })
+      .trim()
+      .min(3, 'At least 6 character')
+      .max(30, { message: 'At most 30 characters' }),
+    confirmPassword: z
+      .string({ required_error: 'Confirm Password is required' })
+      .trim()
+      .min(3, 'At least 6 character')
+      .max(30, { message: 'At most 30 characters' }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    path: ['confirmPassword'],
+    message: 'Passwords must match',
+  });

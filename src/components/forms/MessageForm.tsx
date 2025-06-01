@@ -3,6 +3,7 @@ import React, { memo } from 'react';
 import { useFormik } from 'formik';
 import Button from '../buttons/Button';
 import { commentSchema } from '@/validation';
+import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { useParams } from 'next/navigation';
 import { createCommentAction } from '@/app/actions/commentActions';
 import { createReplyAction } from '@/app/actions/replyActions';
@@ -28,7 +29,7 @@ function MessageForm({
     initialValues: {
       body: '',
     },
-    validationSchema: commentSchema,
+    validationSchema: toFormikValidationSchema(commentSchema),
     validateOnBlur: true,
     validateOnChange: true,
     onSubmit: async ({ body }, { setSubmitting, resetForm }) => {

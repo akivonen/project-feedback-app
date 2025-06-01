@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import { signInSchema } from '@/validation';
+import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { LoadingSpinner } from '../common';
 import { Button } from '../buttons';
 import { useRouter } from 'next/navigation';
@@ -18,7 +19,7 @@ export default function SignInForm() {
 
   const formik = useFormik({
     initialValues,
-    validationSchema: signInSchema,
+    validationSchema: toFormikValidationSchema(signInSchema),
     onSubmit: async ({ username, password }) => {
       formik.setSubmitting(true);
       setServerError(null);
