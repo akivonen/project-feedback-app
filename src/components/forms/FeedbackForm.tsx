@@ -31,9 +31,6 @@ export default function FeedbackForm({ curFeedback }: { curFeedback?: FeedbackFo
   if (!session?.user && status !== 'loading') {
     router.push('/auth/signin');
   }
-  if (curFeedback && session?.user?.id !== curFeedback.user_id) {
-    router.push('/');
-  }
 
   const initialValues = {
     title: '',
@@ -52,15 +49,14 @@ export default function FeedbackForm({ curFeedback }: { curFeedback?: FeedbackFo
         if (curFeedback) {
           await updateFeedbackAction({ id: curFeedback.id, ...feedback } as FeedbackFormData);
           toast.success('Feedback updated successfully');
-          setHasProcessed(true);
         } else {
           await createFeedbackAction({
             ...feedback,
             user_id: session?.user?.id,
           } as FeedbackInsertData);
           toast.success('Feedback created successfully');
-          setHasProcessed(true);
         }
+        setHasProcessed(true);
         formik.resetForm();
         router.replace('/');
       } catch (error) {
@@ -111,6 +107,9 @@ export default function FeedbackForm({ curFeedback }: { curFeedback?: FeedbackFo
 
   if (formik.isSubmitting || isDeleting || hasProcessed || status === 'loading') {
     return <LoadingSpinner />;
+  }
+  if (curFeedback && session?.user?.id !== curFeedback.user_id) {
+    router.push('/');
   }
 
   return (
