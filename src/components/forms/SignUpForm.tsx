@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { useFormik } from 'formik';
-import { signUpSchema } from '@/validation';
+import { signUpSchema } from '@/app/validation';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { LoadingSpinner } from '../common';
 import { Button } from '../buttons';

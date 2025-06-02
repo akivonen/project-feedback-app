@@ -4,19 +4,14 @@ import { CommentInsertData } from '@/types';
 import { createComment } from '@/db/queries/comments';
 import { revalidateTag, revalidatePath } from 'next/cache';
 import { handleError } from '@/lib/utils';
-import { auth } from '../auth';
-import { isValidUUID } from '@/lib/utils';
+import { validateAuthorization } from '../auth';
+import { commentSchema, validateFormData } from '../validation';
 
 export async function createCommentAction(comment: CommentInsertData): Promise<void> {
-  if (!isValidUUID(comment.feedback_id)) {
-    throw new Error('Invalid feedback_id');
-  }
-  const session = await auth();
-  if (!session) {
-    throw new Error('Not authorized in createCommentAction');
-  }
+  await validateAuthorization('createCommentAction', comment.user_id);
   try {
-    await createComment(comment);
+    const validatedComment = validateFormData(comment, commentSchema, 'createCommentAction');
+    await createComment(validatedComment);
     revalidateTag('feedbacks');
     revalidatePath('/');
   } catch (error) {

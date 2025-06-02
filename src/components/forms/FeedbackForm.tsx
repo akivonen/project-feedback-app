@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Button from '../buttons/Button';
 import Image from 'next/image';
 import { useFormik } from 'formik';
-import { feedbackSchema } from '@/validation';
+import { feedbackClientSchema } from '@/app/validation';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import LoadingSpinner from '../common/LoadingSpinner';
 import Dropdown from '../common/Dropdown';
@@ -42,7 +42,7 @@ export default function FeedbackForm({ curFeedback }: { curFeedback?: FeedbackFo
 
   const formik = useFormik({
     initialValues: curFeedback ? curFeedback : initialValues,
-    validationSchema: toFormikValidationSchema(feedbackSchema),
+    validationSchema: toFormikValidationSchema(feedbackClientSchema),
     onSubmit: async (feedback) => {
       setServerError(null);
       formik.setSubmitting(true);

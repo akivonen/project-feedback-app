@@ -279,7 +279,7 @@ describe('FeedbackForm', () => {
     await userEvent.type(screen.getByLabelText(/feedback title/i), 'New feedback');
     await userEvent.click(screen.getByTestId('button-add-feedback'));
     await waitFor(() => {
-      expect(screen.getByText("Can't be empty"));
+      expect(screen.getByText('Can`t be empty'));
       expect(createFeedbackAction).not.toHaveBeenCalled();
     });
   });
@@ -288,7 +288,7 @@ describe('FeedbackForm', () => {
     await userEvent.type(screen.getByLabelText(/feedback detail/i), 'New feedback test details');
     await userEvent.click(screen.getByTestId('button-add-feedback'));
     await waitFor(() => {
-      expect(screen.getByText("Can't be empty"));
+      expect(screen.getByText('Can`t be empty'));
       expect(createFeedbackAction).not.toHaveBeenCalled();
     });
   });

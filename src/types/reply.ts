@@ -11,8 +11,8 @@ export type Reply = {
 };
 
 export type ReplyInsertData = {
+  content: string;
   replying_to: string;
   comment_id: string;
-  content: string;
   user_id: string;
 };

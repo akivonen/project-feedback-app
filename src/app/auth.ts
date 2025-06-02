@@ -52,3 +52,13 @@ export const authOptions: NextAuthConfig = {
 };
 
 export const { handlers, signIn, signOut, auth } = NextAuth(authOptions);
+
+export const validateAuthorization = async (
+  serverActionName: string,
+  userId?: string
+): Promise<void | never> => {
+  const session = await auth();
+  if (!session || (userId && session?.user?.id !== userId)) {
+    throw new Error(`Not authorized in ${serverActionName}`);
+  }
+};

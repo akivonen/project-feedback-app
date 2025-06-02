@@ -10,7 +10,12 @@ import {
 import { handleError, isValidUUID } from '@/lib/utils';
 import { Feedback, FeedbackFormData, FeedbackInsertData } from '@/types';
 import { revalidatePath, revalidateTag } from 'next/cache';
-import { auth } from '../auth';
+import { validateAuthorization } from '../auth';
+import {
+  feedbackInsertServerSchema,
+  feedbackUpdateServerSchema,
+  validateFormData,
+} from '../validation';
 
 export async function getAllFeedbacksAction(): Promise<Feedback[]> {
   try {
@@ -33,12 +38,14 @@ export async function getFeedbackByIdAction(id: string): Promise<Feedback | null
 }
 
 export async function createFeedbackAction(feedback: FeedbackInsertData): Promise<void> {
-  const session = await auth();
-  if (!session) {
-    throw new Error('Not authorized in createFeedbackAction');
-  }
+  await validateAuthorization('createFeedbackAction');
   try {
-    await createFeedback(feedback);
+    const validatedFeedback = validateFormData(
+      feedback,
+      feedbackInsertServerSchema,
+      'createFeedbackAction'
+    );
+    await createFeedback(validatedFeedback);
     revalidateTag('feedbacks');
     revalidatePath('/');
   } catch (error) {
@@ -47,12 +54,14 @@ export async function createFeedbackAction(feedback: FeedbackInsertData): Promis
 }
 
 export async function updateFeedbackAction(feedback: FeedbackFormData): Promise<void> {
-  const session = await auth();
-  if (!session || session?.user?.id !== feedback.user_id) {
-    throw new Error('Not authorized in updateFeedbackAction');
-  }
+  await validateAuthorization('updateFeedbackAction', feedback.user_id);
   try {
-    await updateFeedback(feedback);
+    const validatedFeedback = validateFormData(
+      feedback,
+      feedbackUpdateServerSchema,
+      'updateFeedbackAction'
+    );
+    await updateFeedback(validatedFeedback);
     revalidateTag('feedbacks');
     revalidatePath('/');
   } catch (error) {
@@ -61,10 +70,10 @@ export async function updateFeedbackAction(feedback: FeedbackFormData): Promise<
 }
 
 export async function deleteFeedbackAction(id: string, userId: string): Promise<void> {
-  const session = await auth();
-  if (!session || session?.user?.id !== userId) {
-    throw new Error('Not authorized in deleteFeedbackAction');
+  if (!isValidUUID(id) || !isValidUUID(userId)) {
+    throw new Error('Invalid feedbackId or userId');
   }
+  await validateAuthorization('deleteFeedbackAction', userId);
   try {
     await deleteFeedback(id);
     revalidateTag('feedbacks');
