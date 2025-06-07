@@ -59,11 +59,11 @@ export default function SignInForm() {
   });
 
   const ErrorBorderStyles: Record<string, string> = {
-    title:
+    username:
       formik.touched.username && formik.errors.username
         ? 'border-orange-200'
         : 'border-transparent',
-    description:
+    password:
       formik.touched.password && formik.errors.password
         ? 'border-orange-200'
         : 'border-transparent',
@@ -98,7 +98,7 @@ export default function SignInForm() {
             autoComplete="username"
             onChange={formik.handleChange}
             value={formik.values.username}
-            className={`mt-4 w-full rounded-md border bg-light-200 p-4 text-sm text-dark-400 outline-none placeholder:text-sm placeholder:text-light-600 focus:border focus:border-blue-300 md:text-[15px] ${ErrorBorderStyles['title']}`}
+            className={`mt-4 w-full rounded-md border bg-light-200 p-4 text-sm text-dark-400 outline-none placeholder:text-sm placeholder:text-light-600 focus:border focus:border-blue-300 md:text-[15px] ${ErrorBorderStyles['username']}`}
             aria-invalid={formik.touched.username && !!formik.errors.username}
             aria-describedby={formik.errors.username ? 'username-error' : undefined}
           />
@@ -119,7 +119,7 @@ export default function SignInForm() {
             autoComplete="current-password"
             onChange={formik.handleChange}
             value={formik.values.password}
-            className={`mt-4 w-full rounded-md border bg-light-200 p-4 text-sm text-dark-400 outline-none placeholder:text-sm placeholder:text-light-600 focus:border focus:border-blue-300 md:text-[15px] ${ErrorBorderStyles['title']}`}
+            className={`mt-4 w-full rounded-md border bg-light-200 p-4 text-sm text-dark-400 outline-none placeholder:text-sm placeholder:text-light-600 focus:border focus:border-blue-300 md:text-[15px] ${ErrorBorderStyles['password']}`}
             aria-invalid={formik.touched.password && !!formik.errors.password}
             aria-describedby={formik.errors.password ? 'password-error' : undefined}
           />

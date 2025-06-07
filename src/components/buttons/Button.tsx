@@ -8,7 +8,7 @@ type ButtonProps = {
   size?: 'sm' | 'lg' | 'xl';
   type?: 'submit' | 'button' | 'reset';
   isActive?: boolean;
-  onClick?: () => void;
+  onClick?: (event?: React.ChangeEvent<HTMLInputElement>) => void;
   disabled?: boolean;
   href?: string;
 };

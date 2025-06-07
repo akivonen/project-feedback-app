@@ -9,7 +9,7 @@ import {
 } from './roadmap';
 import { Comment, CommentInsertData } from './comment';
 import { Reply, ReplyInsertData } from './reply';
-import { User, UserSignInData, UserSignUpData, UserSessionProps } from './user';
+import { User, UserSignInData, UserSignUpData, UserInsertData, UserSessionProps } from './user';
 import { Upvote } from './upvotes';
 
 export type {
@@ -29,6 +29,7 @@ export type {
   User,
   UserSignInData,
   UserSignUpData,
+  UserInsertData,
   UserSessionProps,
   Upvote,
 };

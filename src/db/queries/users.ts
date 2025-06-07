@@ -3,10 +3,10 @@ import db from '..';
 import { User } from '@/types';
 import { users } from '../schema';
 import { eq } from 'drizzle-orm';
-import { UserSignUpData } from '@/types';
+import { UserInsertData } from '@/types';
 import { handleError } from '@/lib/utils';
 
-export const createUser = (user: UserSignUpData) => {
+export const createUser = (user: UserInsertData) => {
   try {
     const result = db.insert(users).values(user).returning();
     if (!result) {
