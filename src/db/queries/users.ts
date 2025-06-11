@@ -6,7 +6,7 @@ import { eq } from 'drizzle-orm';
 import { UserInsertData } from '@/types';
 import { handleError } from '@/lib/utils';
 
-export const createUser = (user: UserInsertData) => {
+export const createUser = async (user: UserInsertData) => {
   try {
     const result = db.insert(users).values(user).returning();
     if (!result) {
@@ -18,9 +18,9 @@ export const createUser = (user: UserInsertData) => {
   }
 };
 
-export const getUserByUsername = (username: string): Promise<User | undefined> => {
+export const getUserByUsername = async (username: string): Promise<User | undefined> => {
   try {
-    const user = db.query.users.findFirst({
+    const user = await db.query.users.findFirst({
       where: eq(users.username, username),
     });
     return user;

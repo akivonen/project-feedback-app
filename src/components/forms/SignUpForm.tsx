@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import { signUpSchema } from '@/app/validation';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
@@ -8,35 +8,14 @@ import { Button } from '../buttons';
 import { useRouter } from 'next/navigation';
 import { signUpAction } from '@/app/actions/authActions';
 import { toast } from 'react-toastify';
-import Image from 'next/image';
+import { signIn } from 'next-auth/react';
+import ImagePicker from '../common/ImagePicker';
 
 export default function SignUpForm() {
   const [serverError, setServerError] = useState<string | null>(null);
+  const [hasProcessed, setHasProcessed] = useState<boolean>(false);
   const router = useRouter();
-  const [pickedImage, setPickedImage] = useState<ArrayBuffer | string | null>(null);
-  const imageInput = useRef<HTMLInputElement | null>(null);
-  const handlePickImageClick = () => {
-    if (imageInput.current) {
-      imageInput.current.click();
-    }
-  };
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(event);
-    const file = event.target.files?.[0];
 
-    if (!file) {
-      setPickedImage(null);
-      return;
-    }
-
-    const fileReader = new FileReader();
-    fileReader.onload = () => {
-      setPickedImage(fileReader.result);
-    };
-    fileReader.readAsDataURL(file);
-
-    formik.setFieldValue('image', file);
-  };
   const initialValues = {
     name: '',
     username: '',
@@ -55,7 +34,13 @@ export default function SignUpForm() {
         await signUpAction(user);
         toast.success('Registration completed successfully.');
         formik.resetForm();
-        router.replace('/');
+        setHasProcessed(true);
+        await signIn('credentials', {
+          username: user.username,
+          password: user.password,
+          redirect: true,
+          callbackUrl: '/',
+        });
       } catch (error) {
         formik.values.password = '';
         formik.values.confirmPassword = '';
@@ -75,10 +60,7 @@ export default function SignUpForm() {
   });
 
   const ErrorBorderStyles: Record<string, string> = {
-    name:
-      formik.touched.username && formik.errors.username
-        ? 'border-orange-200'
-        : 'border-transparent',
+    name: formik.touched.name && formik.errors.name ? 'border-orange-200' : 'border-transparent',
     username:
       formik.touched.username && formik.errors.username
         ? 'border-orange-200'
@@ -87,17 +69,14 @@ export default function SignUpForm() {
       formik.touched.password && formik.errors.password
         ? 'border-orange-200'
         : 'border-transparent',
-    confirmPassWord:
-      formik.touched.password && formik.errors.password
+    confirmPassword:
+      formik.touched.confirmPassword && formik.errors.confirmPassword
         ? 'border-orange-200'
         : 'border-transparent',
-    image:
-      formik.touched.password && formik.errors.password
-        ? 'border-orange-200'
-        : 'border-transparent',
+    image: formik.touched.image && formik.errors.image ? 'border-orange-200' : 'border-transparent',
   };
 
-  if (formik.isSubmitting) {
+  if (formik.isSubmitting || hasProcessed) {
     return <LoadingSpinner />;
   }
 
@@ -197,38 +176,13 @@ export default function SignUpForm() {
             <div className="text-[14px] text-orange-200">{formik.errors.confirmPassword}</div>
           )}
         </div>
-        <div className="mt-6 md:mt-10">
-          <label htmlFor="image">
-            <h3 className="text-sm font-bold -tracking-[0.18px] text-dark-400 md:text-[14px] md:-tracking-[0.19px]">
-              Add image (optional)
-            </h3>
-          </label>
-          <div className="flex flex-col items-center sm:flex-row sm:items-start">
-            <div className="relative mt-4 flex h-40 w-40 items-center justify-center rounded-sm border bg-light-200 p-4 text-sm text-dark-400 outline-none">
-              {!pickedImage && <p>No image picked yet.</p>}
-              {typeof pickedImage === 'string' && pickedImage.startsWith('data:') && (
-                <Image src={pickedImage} alt="The image selected by the user." fill />
-              )}
-            </div>
-            <input
-              type="file"
-              name="image"
-              id="image"
-              accept="image/png, image/jpeg, image/jpg"
-              ref={imageInput}
-              onChange={handleImageChange}
-              className="hidden"
-            />
-            <div className="mt-4 sm:ml-4">
-              <Button type="button" size="xl" variant="blue" onClick={handlePickImageClick}>
-                Pick an Image
-              </Button>
-              {formik.touched.image && formik.errors.image && (
-                <div className="text-[14px] text-orange-200">{formik.errors.image}</div>
-              )}
-            </div>
-          </div>
-        </div>
+        <ImagePicker
+          name="image"
+          label="Add image (optional)"
+          setFieldValue={formik.setFieldValue}
+          isTouched={formik.touched.image}
+          errors={formik.errors.image}
+        />
         <div className="mt-10 flex flex-col gap-4 md:mt-8 md:flex-row-reverse">
           <Button type="submit" size="xl" variant="purple" disabled={formik.isSubmitting}>
             Register

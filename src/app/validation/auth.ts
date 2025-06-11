@@ -20,7 +20,8 @@ export const signUpSchema = signInSchema
         (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
         'Only .jpg, .jpeg, .png are allowed.'
       )
-      .optional(),
+      .optional()
+      .nullable(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     path: ['confirmPassword'],

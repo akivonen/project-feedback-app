@@ -8,7 +8,7 @@ export const status = pgEnum('status', ['Suggestion', 'Planned', 'In-Progress', 
 export const users = pgTable('users', {
   id: uuid('id').primaryKey().defaultRandom(),
   name: text('name').notNull(),
-  username: text('username').notNull(),
+  username: text('username').unique().notNull(),
   password: text('password').notNull(),
   image: text('image'),
   created_at: timestamp('created_at').notNull().defaultNow(),
