@@ -14,7 +14,9 @@ export async function signUpAction(user: UserSignUpData) {
     const { image } = user;
     let imagePath = null;
     if (image) {
-      const extension = image.name.split('').pop();
+      const extension = image.name.split('.').pop();
+      console.log(`extension: ${extension}`);
+      console.log(`path: ${imagePath}`);
       imagePath = `/images/user-images/${user.username}.${extension}`;
       const stream = fs.createWriteStream(`public/${imagePath}`);
       const bufferedImage = await image.arrayBuffer();

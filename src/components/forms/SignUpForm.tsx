@@ -1,4 +1,5 @@
 'use client';
+
 import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import { signUpSchema } from '@/app/validation';
