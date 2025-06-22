@@ -1,10 +1,10 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useTransition } from 'react';
 import Button from '../buttons/Button';
-import Image from 'next/image';
 import { useFormik } from 'formik';
 import { feedbackClientSchema } from '@/app/validation';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
+import FormInput from '../common/FormInput';
 import LoadingSpinner from '../common/LoadingSpinner';
 import Dropdown from '../common/Dropdown';
 import { useRouter } from 'next/navigation';
@@ -19,11 +19,11 @@ import { statusOptions } from '@/lib/status';
 import { toast } from 'react-toastify';
 import FeedbackDeleteModal from '../feedback/FeedbackDeleteModal';
 import { useSession } from 'next-auth/react';
+import FormWrapper from '../common/FormWrapper';
 
 export default function FeedbackForm({ curFeedback }: { curFeedback?: FeedbackFormData }) {
   const [serverError, setServerError] = useState<string | null>(null);
-  const [isDeleting, setIsDeleting] = useState<boolean>(false);
-  const [hasProcessed, setHasProcessed] = useState<boolean>(false);
+  const [isPending, startTransition] = useTransition();
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const router = useRouter();
 
@@ -31,6 +31,10 @@ export default function FeedbackForm({ curFeedback }: { curFeedback?: FeedbackFo
 
   if (!session?.user && status !== 'loading') {
     router.push('/auth/signin');
+  }
+
+  if (curFeedback && session?.user?.id !== curFeedback.user_id) {
+    router.push('/');
   }
 
   const initialValues = {
@@ -45,127 +49,91 @@ export default function FeedbackForm({ curFeedback }: { curFeedback?: FeedbackFo
     validationSchema: toFormikValidationSchema(feedbackClientSchema),
     onSubmit: async (feedback) => {
       setServerError(null);
-      formik.setSubmitting(true);
-      try {
-        if (curFeedback) {
-          await updateFeedbackAction({ id: curFeedback.id, ...feedback } as FeedbackFormData);
-          toast.success('Feedback updated successfully');
-        } else {
-          await createFeedbackAction({
-            ...feedback,
-            user_id: session?.user?.id,
-          } as FeedbackInsertData);
-          toast.success('Feedback created successfully');
+      startTransition(async () => {
+        try {
+          if (curFeedback) {
+            await updateFeedbackAction({ id: curFeedback.id, ...feedback } as FeedbackFormData);
+            toast.success('Feedback updated successfully');
+            router.refresh();
+          } else {
+            const newFeedbackId = await createFeedbackAction({
+              ...feedback,
+              user_id: session?.user?.id,
+            } as FeedbackInsertData);
+            if (!newFeedbackId) {
+              toast.error('Failed to create feedback');
+              return;
+            }
+            toast.success('Feedback created successfully');
+            router.push(`/feedbacks/${newFeedbackId}/`);
+          }
+        } catch (error) {
+          const errorMessage =
+            error instanceof Error ? error.message : 'An unexpected error occured in feedback form';
+          toast.error(errorMessage);
+          setServerError(errorMessage);
+          console.error('FeedbackForm submission error:', error);
         }
-        setHasProcessed(true);
-        formik.resetForm();
-        router.replace('/');
-      } catch (error) {
-        const errorMessage =
-          error instanceof Error ? error.message : 'An unexpected error occured in feedback form';
-        toast.error(errorMessage);
-        setServerError(errorMessage);
-        console.error('Form submission error:', error);
-      } finally {
-        formik.setSubmitting(false);
-      }
+      });
     },
   });
 
   const handleRemoveFeedback = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!curFeedback) return;
-
-    setIsDeleting(true);
-    try {
-      await deleteFeedbackAction(curFeedback.id, curFeedback.user_id);
-      toast.success('Feedback deleted successfully');
-      setHasProcessed(true);
-      setModalIsOpen(false);
-      router.replace('/');
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to delete feedback';
-      toast.error(errorMessage);
-      setServerError(errorMessage);
-      console.error('Delete error:', error);
-      setModalIsOpen(false);
-    } finally {
-      setIsDeleting(false);
-    }
+    startTransition(async () => {
+      try {
+        await deleteFeedbackAction(curFeedback.id, curFeedback.user_id);
+        toast.success('Feedback deleted successfully');
+        setModalIsOpen(false);
+        router.replace('/');
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Failed to delete feedback';
+        toast.error(errorMessage);
+        setServerError(errorMessage);
+        console.error('Delete error:', error);
+        setModalIsOpen(false);
+      }
+    });
   };
 
   const categoryOptions = [
     categoryNames[categoryNames.length - 1],
     ...categoryNames.slice(0, categoryNames.length - 1),
   ];
-  const ErrorBorderStyles: Record<string, string> = {
-    title: formik.touched.title && formik.errors.title ? 'border-orange-200' : 'border-transparent',
-    description:
-      formik.touched.description && formik.errors.description
-        ? 'border-orange-200'
-        : 'border-transparent',
-  };
 
-  if (formik.isSubmitting || isDeleting || hasProcessed || status === 'loading') {
+  if (isPending || status === 'loading') {
     return <LoadingSpinner />;
-  }
-  if (curFeedback && session?.user?.id !== curFeedback.user_id) {
-    router.push('/');
   }
 
   return (
-    <section className="relative mx-auto mb-[77px] mt-[30px] flex w-full flex-col justify-between rounded-lg bg-white p-6 text-dark-400 md:mb-[224px] md:mt-[144px] md:max-w-[540px] md:px-10 md:pb-10 md:pt-[52px]">
-      <div className="absolute -top-5 h-10 w-10 md:-top-7 md:h-14 md:w-14">
-        {curFeedback ? (
-          <Image width={56} height={56} src="/icons/icon-edit-feedback.svg" alt="Edit feedback" />
-        ) : (
-          <Image width={56} height={56} src="/icons/icon-new-feedback.svg" alt="New feedback" />
+    <FormWrapper
+      formName={curFeedback ? `Editing ’${curFeedback.title}’` : 'Create New Feedback'}
+      iconPath={curFeedback ? '/icons/icon-edit-feedback.svg' : '/icons/icon-new-feedback.svg'}
+      iconAlt={curFeedback ? 'Edit feedback' : 'New feedback'}
+    >
+      <form onSubmit={formik.handleSubmit} noValidate>
+        {serverError && (
+          <div
+            className="mt-4 rounded-md text-sm text-orange-200 md:text-base"
+            role="alert"
+            aria-describedby={serverError ? 'server-error' : undefined}
+          >
+            {serverError}
+          </div>
         )}
-      </div>
-      <h2 className="text-lg font-bold -tracking-[0.25px] text-dark-400 md:text-2xl md:-tracking-[-0.33px]">
-        {curFeedback ? `Editing ’${curFeedback.title}’` : 'Create New Feedback'}
-      </h2>
-
-      {serverError && (
-        <div className="mt-4 rounded-md text-sm text-orange-200 md:text-base" role="alert">
-          {serverError}
-        </div>
-      )}
-
-      <form onSubmit={formik.handleSubmit}>
-        <div className="mt-6 md:mt-10">
-          <label htmlFor="title">
-            <h3 className="text-sm font-bold -tracking-[0.18px] text-dark-400 md:text-[14px] md:-tracking-[0.19px]">
-              Feedback Title
-            </h3>
-            <p className="mt-1 text-sm text-dark-200 md:text-[14px]">
-              Add a short, descriptive headline
-            </p>
-          </label>
-          <input
-            type="text"
-            name="title"
-            id="title"
-            autoComplete="off"
-            onChange={formik.handleChange}
-            value={formik.values.title}
-            className={`mt-4 w-full rounded-md border bg-light-200 p-4 text-sm text-dark-400 outline-none placeholder:text-sm placeholder:text-light-600 focus:border focus:border-blue-300 md:text-[15px] ${ErrorBorderStyles['title']}`}
-            aria-invalid={formik.touched.title && formik.errors.title ? 'true' : 'false'}
-            aria-describedby={formik.errors.title ? 'title-error' : undefined}
-          />
-          {formik.touched.title && formik.errors.title && (
-            <div className="text-[14px] text-orange-200">{formik.errors.title}</div>
-          )}
-        </div>
-        <div className="mt-6">
-          <label htmlFor="category" className="mt-6">
-            <h3 className="text-sm font-bold -tracking-[0.18px] text-dark-400 md:text-[14px] md:-tracking-[0.19px]">
-              Category
-            </h3>
-            <p className="mt-1 text-sm text-dark-200 md:text-[14px]">
-              Choose a category for your feedback
-            </p>
-          </label>
+        <FormInput
+          type="text"
+          fieldName="title"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.title}
+          isTouched={formik.touched.title}
+          errors={formik.errors.title}
+          autoComplete="off"
+          fieldDescription="Add a short, descriptive headline"
+        />
+        <FormInput fieldName="category" fieldDescription="Choose a category for your feedback">
           <div className="mt-4">
             <Dropdown
               dropdownOptions={categoryOptions}
@@ -174,16 +142,9 @@ export default function FeedbackForm({ curFeedback }: { curFeedback?: FeedbackFo
               isFeedbackFormField
             />
           </div>
-        </div>
-
+        </FormInput>
         {curFeedback && (
-          <div className="mt-6">
-            <label htmlFor="status" className="mt-6">
-              <h3 className="text-sm font-bold -tracking-[0.18px] text-dark-400 md:text-[14px] md:-tracking-[0.19px]">
-                Update Status
-              </h3>
-              <p className="mt-1 text-sm text-dark-200 md:text-[14px]">Change feature state</p>
-            </label>
+          <FormInput fieldName="update status" fieldDescription="Change feedback state">
             <div className="mt-4">
               <Dropdown
                 dropdownOptions={statusOptions}
@@ -192,32 +153,20 @@ export default function FeedbackForm({ curFeedback }: { curFeedback?: FeedbackFo
                 isFeedbackFormField
               />
             </div>
-          </div>
+          </FormInput>
         )}
-
-        <div className="mt-6">
-          <label htmlFor="description" className="mt-6">
-            <h3 className="text-sm font-bold -tracking-[0.18px] text-dark-400 md:text-[14px] md:-tracking-[0.19px]">
-              Feedback Detail
-            </h3>
-            <p className="mt-1 text-sm text-dark-200 md:text-[14px]">
-              Include any specific comments on what should be improved, added, etc.
-            </p>
-          </label>
-          <textarea
-            name="description"
-            id="description"
-            autoComplete="off"
-            onChange={formik.handleChange}
-            value={formik.values.description}
-            className={`mt-4 w-full rounded-md border bg-light-200 p-4 text-sm text-dark-400 outline-none placeholder:text-sm placeholder:text-light-600 focus:border focus:border-blue-300 md:text-[15px] ${ErrorBorderStyles['description']}`}
-            aria-invalid={formik.touched.description && !!formik.errors.description}
-            aria-describedby={formik.errors.description ? 'description-error' : undefined}
-          />
-          <div className="text-[14px] text-orange-200">
-            {formik.touched.description && formik.errors.description}
-          </div>
-        </div>
+        <FormInput
+          isTextArea
+          labelTitle="Feedback Detail"
+          fieldName="description"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.description}
+          isTouched={formik.touched.description}
+          errors={formik.errors.description}
+          autoComplete="off"
+          fieldDescription="Add a short, descriptive headline"
+        />
         <div className="mt-10 flex flex-col gap-4 md:mt-8 md:flex-row-reverse">
           <Button type="submit" size="xl" variant="purple" disabled={formik.isSubmitting}>
             {curFeedback ? 'Save Changes' : 'Add Feedback'}
@@ -230,7 +179,7 @@ export default function FeedbackForm({ curFeedback }: { curFeedback?: FeedbackFo
               type="button"
               size="xl"
               variant="orange"
-              disabled={formik.isSubmitting || isDeleting}
+              disabled={isPending}
               onClick={() => setModalIsOpen(true)}
             >
               Delete
@@ -243,8 +192,8 @@ export default function FeedbackForm({ curFeedback }: { curFeedback?: FeedbackFo
         setModalIsOpen={setModalIsOpen}
         handleRemoveFeedback={handleRemoveFeedback}
         isSubmitting={formik.isSubmitting}
-        isDeleting={isDeleting}
+        isDeleting={isPending}
       />
-    </section>
+    </FormWrapper>
   );
 }

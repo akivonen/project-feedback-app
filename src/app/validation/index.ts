@@ -1,5 +1,6 @@
 import {
   string,
+  imageSchema,
   feedbackStatusEnum,
   commentTextSchema,
   usernameSchema,
@@ -16,10 +17,18 @@ import {
 
 import { commentFormSchema, commentSchema, replySchema } from './comment';
 
-import { signInSchema, signUpSchema } from './auth';
+import {
+  signInSchema,
+  signUpSchema,
+  profileUpdateServerSchema,
+  profileUpdateClientSchema,
+  changePasswordClientSchema,
+  changePasswordServerSchema,
+} from './user';
 
 export {
   string,
+  imageSchema,
   feedbackStatusEnum,
   commentTextSchema,
   usernameSchema,
@@ -34,4 +43,8 @@ export {
   replySchema,
   signInSchema,
   signUpSchema,
+  profileUpdateServerSchema,
+  profileUpdateClientSchema,
+  changePasswordClientSchema,
+  changePasswordServerSchema,
 };

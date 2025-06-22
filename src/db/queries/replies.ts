@@ -3,8 +3,9 @@ import { handleError } from '@/lib/utils';
 import db from '../index';
 import { replies } from '../schema';
 import { ReplyInsertData } from '@/types';
+import { Reply } from '@/types';
 
-export const createReply = async (reply: ReplyInsertData) => {
+export const createReply = async (reply: ReplyInsertData): Promise<Partial<Reply> | never> => {
   try {
     const [result] = await db.insert(replies).values(reply).returning();
     if (!result) {

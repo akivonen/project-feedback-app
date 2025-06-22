@@ -5,28 +5,18 @@ import { handleError } from '@/lib/utils';
 import { UserSignUpData } from '@/types';
 import { signUpSchema, validateFormData } from '../validation';
 import bcrypt from 'bcryptjs';
-import fs from 'node:fs';
+import handleImage from '@/lib/handleImage';
+import { revalidatePath } from 'next/cache';
 
-export async function signUpAction(user: UserSignUpData) {
+export async function signUpAction(user: UserSignUpData): Promise<void> {
   try {
     const validatedUser = validateFormData(user, signUpSchema, 'signUpAction');
     const hashedPassword = bcrypt.hashSync(user.password, 10);
-    const { image } = user;
-    let imagePath = null;
-    if (image) {
-      const extension = image.name.split('.').pop();
-      console.log(`extension: ${extension}`);
-      console.log(`path: ${imagePath}`);
-      imagePath = `/images/user-images/${user.username}.${extension}`;
-      const stream = fs.createWriteStream(`public/${imagePath}`);
-      const bufferedImage = await image.arrayBuffer();
-      stream.write(Buffer.from(bufferedImage), (error) => {
-        if (error) {
-          throw new Error('Saving image failed.');
-        }
-      });
-    }
+    const imagePath = validatedUser.image
+      ? await handleImage({ image: validatedUser.image, username: user.username })
+      : null;
     await createUser({ ...validatedUser, password: hashedPassword, image: imagePath });
+    revalidatePath('/[[...filter]]', 'page');
   } catch (error) {
     if (
       error instanceof Error &&

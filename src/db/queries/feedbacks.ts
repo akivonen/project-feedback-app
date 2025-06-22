@@ -34,7 +34,7 @@ export const getAllFeedbacks = unstable_cache(
   { revalidate: 600, tags: ['feedbacks'] }
 );
 
-export const getFeedbackById = async (feedbackId: string): Promise<Feedback> => {
+export const getFeedbackById = async (feedbackId: string): Promise<Feedback | null> => {
   try {
     const [feedback] = await db.query.feedbacks.findMany({
       with: {
@@ -53,15 +53,17 @@ export const getFeedbackById = async (feedbackId: string): Promise<Feedback> => 
       },
       where: eq(feedbacks.id, feedbackId),
     });
-    return feedback;
+    return feedback ?? null;
   } catch (error) {
     handleError(error, 'getFeedbackById', 'Database');
   }
 };
 
-export const createFeedback = async (feedback: FeedbackInsertData) => {
+export const createFeedback = async (
+  feedback: FeedbackInsertData
+): Promise<Partial<Feedback> | never> => {
   try {
-    const [result] = await db.insert(feedbacks).values(feedback).returning();
+    const [result] = await db.insert(feedbacks).values(feedback).returning({ id: feedbacks.id });
     if (!result) {
       throw new Error('Failed to insert feedback into database');
     }
@@ -71,7 +73,9 @@ export const createFeedback = async (feedback: FeedbackInsertData) => {
   }
 };
 
-export const updateFeedback = async (feedback: FeedbackFormData) => {
+export const updateFeedback = async (
+  feedback: FeedbackFormData
+): Promise<Partial<Feedback> | never> => {
   try {
     const { id, title, category, status, description } = feedback;
     const [result] = await db
@@ -89,7 +93,7 @@ export const updateFeedback = async (feedback: FeedbackFormData) => {
   }
 };
 
-export const deleteFeedback = async (id: string) => {
+export const deleteFeedback = async (id: string): Promise<Partial<Feedback> | never> => {
   try {
     const [result] = await db.delete(feedbacks).where(eq(feedbacks.id, id)).returning();
     if (!result) {

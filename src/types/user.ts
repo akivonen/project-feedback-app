@@ -1,30 +1,44 @@
-export type User = {
+type BaseUser = {
   id: string;
   name: string;
-  password: string;
   username: string;
   image: string | null;
+};
+
+export type User = BaseUser & {
+  password: string;
   created_at: Date;
 };
 
-export type UserSignInData = {
-  username: string;
-  password: string;
-};
+export type UserCredentials = Pick<User, 'username' | 'password'>;
 
-export type UserSignUpData = UserSignInData & {
+export type UserSignUpData = UserCredentials & {
   name: string;
   image?: File | null;
 };
 
-export type UserInsertData = UserSignInData & {
+export type UserInsertData = UserCredentials & {
   name: string;
   image?: string | null;
 };
 
-export type UserSessionProps = {
+export type UserSessionProps = Omit<BaseUser, 'username'>;
+
+export type UserProfileProps = UserSessionProps & {
+  username: string;
+};
+
+export type UpdateUserProfileActionProps = Omit<UserSignUpData, 'password'> & {
   id: string;
   username: string;
-  name: string;
-  image: string | null;
+};
+
+export type UpdateUserProfileProps = Omit<UserSessionProps, 'image'> & {
+  image?: string | null;
+};
+
+export type ChangeUserPasswordProps = {
+  id: string;
+  oldPassword: string;
+  newPassword: string;
 };

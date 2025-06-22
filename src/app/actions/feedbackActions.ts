@@ -37,7 +37,7 @@ export async function getFeedbackByIdAction(id: string): Promise<Feedback | null
   }
 }
 
-export async function createFeedbackAction(feedback: FeedbackInsertData): Promise<void> {
+export async function createFeedbackAction(feedback: FeedbackInsertData): Promise<string | null> {
   await validateAuthorization('createFeedbackAction');
   try {
     const validatedFeedback = validateFormData(
@@ -45,9 +45,13 @@ export async function createFeedbackAction(feedback: FeedbackInsertData): Promis
       feedbackInsertServerSchema,
       'createFeedbackAction'
     );
-    await createFeedback(validatedFeedback);
+    const { id } = await createFeedback(validatedFeedback);
+    if (!id) {
+      return null;
+    }
     revalidateTag('feedbacks');
     revalidatePath('/');
+    return id;
   } catch (error) {
     handleError(error, 'createFeedbackAction');
   }

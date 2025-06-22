@@ -22,8 +22,7 @@ export const authOptions: NextAuthConfig = {
         if (user && bcrypt.compareSync(password, user.password)) {
           return {
             id: user.id,
-            username: user.username,
-            name: user.name,
+            name: user.username,
             image: user.image,
           };
         }

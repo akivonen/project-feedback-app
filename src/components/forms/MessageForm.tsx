@@ -1,5 +1,5 @@
 'use client';
-import React, { memo } from 'react';
+import React, { memo, useTransition } from 'react';
 import { useFormik } from 'formik';
 import Button from '../buttons/Button';
 import { commentFormSchema } from '@/app/validation';
@@ -25,6 +25,7 @@ function MessageForm({
   user_id,
 }: MessageFormProps) {
   const { feedbackId } = useParams();
+  const [isPending, startTransition] = useTransition();
   const formik = useFormik({
     initialValues: {
       body: '',
@@ -32,35 +33,34 @@ function MessageForm({
     validationSchema: toFormikValidationSchema(commentFormSchema),
     validateOnBlur: true,
     validateOnChange: true,
-    onSubmit: async ({ body }, { setSubmitting, resetForm }) => {
-      setSubmitting(true);
-      try {
-        if (isReplyForm && commentId && replyingTo) {
-          await createReplyAction({
-            comment_id: commentId,
-            replying_to: replyingTo,
-            content: body,
-            user_id,
-          });
-          resetForm();
-          toast.success('Reply posted');
-        } else if (typeof feedbackId !== 'string') {
-          throw new Error('Invalid feedback_id');
-        } else {
-          await createCommentAction({ feedback_id: feedbackId, content: body, user_id });
-          resetForm();
-          toast.success('Comment posted');
+    onSubmit: async ({ body }) => {
+      startTransition(async () => {
+        try {
+          if (isReplyForm && commentId && replyingTo) {
+            await createReplyAction({
+              comment_id: commentId,
+              replying_to: replyingTo,
+              content: body,
+              user_id,
+            });
+            formik.resetForm();
+            toast.success('Reply posted');
+          } else if (typeof feedbackId !== 'string') {
+            throw new Error('Invalid feedback_id');
+          } else {
+            await createCommentAction({ feedback_id: feedbackId, content: body, user_id });
+            formik.resetForm();
+            toast.success('Comment posted');
+          }
+        } catch (error) {
+          if (error instanceof Error) {
+            toast.error(error.message);
+          } else {
+            toast.error('Unknown error occurred');
+            console.error(error);
+          }
         }
-      } catch (error) {
-        if (error instanceof Error) {
-          toast.error(error.message);
-        } else {
-          toast.error('Unknown error occurred');
-          console.error(error);
-        }
-      } finally {
-        setSubmitting(false);
-      }
+      });
     },
   });
   const replyFormStyles = isReplyForm
@@ -76,6 +76,7 @@ function MessageForm({
       className={replyFormStyles}
       id={id}
       aria-label={isReplyForm ? 'Reply form' : 'Comment form'}
+      noValidate
     >
       <label htmlFor="body" className="sr-only">
         {isReplyForm ? 'reply' : 'comment'}
@@ -103,7 +104,7 @@ function MessageForm({
             {250 - formik.values.body.length} characters left
           </span>
         )}
-        <Button variant="purple" size="lg" type="submit" disabled={formik.isSubmitting}>
+        <Button variant="purple" size="lg" type="submit" disabled={isPending}>
           {formik.isSubmitting ? 'Posting...' : `Post ${isReplyForm ? 'Reply' : 'Comment'}`}
         </Button>
       </div>

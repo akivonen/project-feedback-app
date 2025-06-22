@@ -14,3 +14,21 @@ export function handleError(error: unknown, context: string, type?: string): nev
 
 export const isInUpvotedList = (upvoters: Upvote[], userId: string | undefined): boolean =>
   !!userId && upvoters.some((vote: Upvote) => vote.user_id === userId);
+
+export const toCamelCase = (str: string): string =>
+  str.includes(' ')
+    ? str
+        .split(' ')
+        .map((word, i) => {
+          return i === 0 ? word : `${word[0].toUpperCase()}${word.slice(1)}`;
+        })
+        .join('')
+    : str;
+
+export const toCapitalCaseWithSpaces = (str: string): string =>
+  str.includes(' ')
+    ? str
+        .split(' ')
+        .map((word) => `${word[0].toUpperCase()}${word.slice(1)}`)
+        .join(' ')
+    : `${str[0].toUpperCase()}${str.slice(1)}`;
