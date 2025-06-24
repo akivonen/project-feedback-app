@@ -33,7 +33,7 @@ This project is a product feedback platform inspired by a Frontend Mentor challe
 
 ## Screenshot
 
-![Product Feedback App Screenshot](images/screenshot.png)
+![Product Feedback App Screenshot](public/images/screenshot.png)
 
 ## Links
 
