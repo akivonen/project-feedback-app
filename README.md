@@ -83,7 +83,7 @@ This project is a product feedback platform inspired by a Frontend Mentor challe
 - [NextAuth.js Documentation](https://authjs.dev/getting-started/installation) - Guided authentication setup.
 - [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/) - Best practices for testing React components.
 
-### Installation
+## Installation
 
 #### Clone the repository:
 
@@ -151,7 +151,7 @@ make test
 make lint
 ```
 
-### Project Structure
+## Project Structure
 
 - src/app: Next.js app router with pages, layouts, and server actions.
 - src/components: Reusable UI components.
