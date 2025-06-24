@@ -16,7 +16,6 @@ const mockRouter = {
   push: vi.fn(),
   refresh: vi.fn(),
   replace: vi.fn(),
-  back: vi.fn(),
 } as unknown as ReturnType<typeof useRouter>;
 vi.mock('next/navigation', () => ({
   useRouter: vi.fn(() => mockRouter as ReturnType<typeof useRouter>),
@@ -51,7 +50,7 @@ vi.mock('next-auth/react', () => ({
 }));
 
 vi.mock('@/app/actions/feedbackActions', () => ({
-  createFeedbackAction: vi.fn(() => Promise.resolve()),
+  createFeedbackAction: vi.fn(() => Promise.resolve('1')),
   updateFeedbackAction: vi.fn(() => Promise.resolve()),
   deleteFeedbackAction: vi.fn(() => Promise.resolve()),
 }));
@@ -233,7 +232,6 @@ describe('FeedbackForm', () => {
     await userEvent.click(screen.getByTestId('button-add-feedback'));
 
     await waitFor(() => {
-      expect(screen.getByTestId('loading-spinner')).toBeInTheDocument();
       expect(createFeedbackAction).toHaveBeenCalledWith({
         title: 'New feedback',
         category: 'UX',
@@ -242,7 +240,7 @@ describe('FeedbackForm', () => {
         user_id: '1',
       });
       expect(toast.success).toHaveBeenCalledWith('Feedback created successfully');
-      expect(mockRouter.replace).toHaveBeenCalledWith('/');
+      expect(mockRouter.push).toHaveBeenCalledWith('/feedbacks/1/');
     });
   });
 
@@ -261,7 +259,6 @@ describe('FeedbackForm', () => {
     await userEvent.click(screen.getByTestId('button-save-changes'));
 
     await waitFor(() => {
-      expect(screen.getByTestId('loading-spinner')).toBeInTheDocument();
       expect(updateFeedbackAction).toHaveBeenCalledWith({
         ...mockFeedback,
         title: 'Updated feedback',
@@ -270,7 +267,7 @@ describe('FeedbackForm', () => {
         description: 'Updated feedback test details',
       });
       expect(toast.success).toHaveBeenCalledWith('Feedback updated successfully');
-      expect(mockRouter.replace).toHaveBeenCalledWith('/');
+      expect(mockRouter.refresh).toHaveBeenCalled();
     });
   });
 
@@ -312,7 +309,7 @@ describe('FeedbackForm', () => {
   it('navigates back on cancel', async () => {
     render(<FeedbackForm {...defaultProps} />);
     await userEvent.click(screen.getByTestId('button-cancel'));
-    expect(mockRouter.back).toHaveBeenCalled();
+    expect(mockRouter.push).toHaveBeenCalledWith('/');
   });
 
   it('opens and closes delete modal', async () => {

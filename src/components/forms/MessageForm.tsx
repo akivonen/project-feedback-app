@@ -105,7 +105,7 @@ function MessageForm({
           </span>
         )}
         <Button variant="purple" size="lg" type="submit" disabled={isPending}>
-          {formik.isSubmitting ? 'Posting...' : `Post ${isReplyForm ? 'Reply' : 'Comment'}`}
+          {isPending ? 'Posting...' : `Post ${isReplyForm ? 'Reply' : 'Comment'}`}
         </Button>
       </div>
     </form>

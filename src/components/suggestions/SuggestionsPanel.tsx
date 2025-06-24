@@ -10,15 +10,20 @@ export default function SuggestionsPanel({ suggestionsCount }: { suggestionsCoun
   const { category, sort } = useFilter();
 
   return (
-    <div className="flex items-center justify-between bg-dark-300 px-6 py-2 align-middle md:rounded-lg lg:w-full">
-      <div id="sort-by" className="flex items-center" aria-label="Sort by">
+    <div
+      className="flex items-center justify-between bg-dark-300 px-6 py-2 align-middle md:rounded-lg lg:w-full"
+      role="toolbar"
+      aria-label="Suggestions controls"
+    >
+      <div id="sort-suggestions" className="flex items-center" aria-label="Sort suggestions">
         <div className="mr-[38px] hidden md:flex">
           <div>
             <Image
               width="23"
               height="24"
               src="/icons/icon-suggestions.svg"
-              alt="icon-suggestions"
+              alt="Suggestion icon"
+              loading="lazy"
             />
           </div>
           <span className="ml-4 text-[18px] font-bold text-white">

@@ -7,10 +7,21 @@ import {
   FeedbackHeaderSkeleton,
   FeedbackItemSkeleton,
 } from '@/components/feedback/';
+import { Metadata } from 'next';
 
 type FeedbackDetailsPageProps = {
   params: Promise<{ feedbackId: string }>;
 };
+
+export async function generateMetadata({ params }: FeedbackDetailsPageProps): Promise<Metadata> {
+  const { feedbackId } = await params;
+  const feedback = await getFeedbackByIdAction(feedbackId);
+
+  return {
+    title: `${feedback?.title} - Feedback Details Page`,
+    description: `${feedback?.description}`,
+  };
+}
 
 export const FeedbackDetailsPageSkeleton = () => {
   return (

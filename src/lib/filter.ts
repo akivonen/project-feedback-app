@@ -1,4 +1,5 @@
-import { Feedback, FilterCategory, Category } from '@/types';
+import { FilterCategory, Category } from '@/types/roadmap';
+import { Feedback } from '@/types/feedback';
 import { notFound } from 'next/navigation';
 
 export const categoryNamesMap = {
@@ -56,13 +57,14 @@ export const parseFilterParams = (filter: string[] | undefined) => {
 };
 
 export const getSortedSuggestionsByCategories = (
-  suggestions: Feedback[],
+  feedbacks: Feedback[],
   category: CategoryOption,
   sort: SortOption
 ) => {
-  if (!suggestions) {
+  if (!feedbacks) {
     return [];
   }
+  const suggestions = feedbacks?.filter((f) => f.status === 'Suggestion');
 
   const suggestionsByCategories =
     category === 'all'

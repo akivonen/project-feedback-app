@@ -65,7 +65,7 @@ export default function SignUpForm() {
   }
 
   return (
-    <FormWrapper formName="Sign Up">
+    <FormWrapper formName="Sign Up" ariaLabelledBy="signup-form-heading">
       <form onSubmit={formik.handleSubmit} noValidate>
         {serverError && (
           <div

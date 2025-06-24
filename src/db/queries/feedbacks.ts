@@ -59,11 +59,12 @@ export const getFeedbackById = async (feedbackId: string): Promise<Feedback | nu
   }
 };
 
-export const createFeedback = async (
-  feedback: FeedbackInsertData
-): Promise<Partial<Feedback> | never> => {
+export const createFeedback = async (feedback: FeedbackInsertData): Promise<Partial<Feedback>> => {
   try {
-    const [result] = await db.insert(feedbacks).values(feedback).returning({ id: feedbacks.id });
+    const [result] = await db
+      .insert(feedbacks)
+      .values(feedback)
+      .returning({ id: feedbacks.id, user_id: feedbacks.user_id, title: feedbacks.title });
     if (!result) {
       throw new Error('Failed to insert feedback into database');
     }
@@ -73,16 +74,14 @@ export const createFeedback = async (
   }
 };
 
-export const updateFeedback = async (
-  feedback: FeedbackFormData
-): Promise<Partial<Feedback> | never> => {
+export const updateFeedback = async (feedback: FeedbackFormData): Promise<Partial<Feedback>> => {
   try {
     const { id, title, category, status, description } = feedback;
     const [result] = await db
       .update(feedbacks)
       .set({ title, category, status, description })
       .where(eq(feedbacks.id, id))
-      .returning();
+      .returning({ id: feedbacks.id, user_id: feedbacks.user_id, title: feedbacks.title });
 
     if (!result) {
       throw new Error('Failed to update feedback in database');
@@ -93,7 +92,7 @@ export const updateFeedback = async (
   }
 };
 
-export const deleteFeedback = async (id: string): Promise<Partial<Feedback> | never> => {
+export const deleteFeedback = async (id: string): Promise<Partial<Feedback>> => {
   try {
     const [result] = await db.delete(feedbacks).where(eq(feedbacks.id, id)).returning();
     if (!result) {

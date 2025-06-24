@@ -1,5 +1,5 @@
-import { Feedback, Status } from '@/types';
-import { RoadmapStatus, RoadmapDetails } from '@/types';
+import { Feedback } from '@/types/feedback';
+import { RoadmapStatus, RoadmapDetails, Status } from '@/types/roadmap';
 
 export const statusOptions: Status[] = ['Suggestion', 'Planned', 'In-Progress', 'Live'] as const;
 export const roadmapStatuses: RoadmapStatus[] = ['Planned', 'In-Progress', 'Live'] as const;

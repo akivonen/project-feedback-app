@@ -1,6 +1,6 @@
 'use client';
 
-import { Feedback } from '@/types';
+import { Feedback } from '@/types/feedback';
 import { createContext, ReactNode } from 'react';
 
 interface FeedbacksContextType {

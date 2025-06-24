@@ -7,8 +7,14 @@ import { LoadingSpinner } from '@/components/common';
 import FormWrapper from '@/components/common/FormWrapper';
 import ProfileEditForm from '@/components/forms/ProfileEditForm';
 import ChangePasswordForm from '@/components/forms/ProfileChangePasswordForm';
+import { Metadata } from 'next';
 
 export const dynamic = 'force-dynamic';
+
+export const metadata: Metadata = {
+  title: 'Profile page title',
+  description: 'Profile page description',
+};
 
 export default async function ProfilePage() {
   const session = await auth();

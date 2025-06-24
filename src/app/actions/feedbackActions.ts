@@ -26,11 +26,11 @@ export async function getAllFeedbacksAction(): Promise<Feedback[]> {
 }
 
 export async function getFeedbackByIdAction(id: string): Promise<Feedback | null> {
-  if (!isValidUUID(id)) {
-    console.error('Invalid feedbackId');
-    throw new Error('Invalid feedbackId');
-  }
   try {
+    if (!isValidUUID(id)) {
+      console.error('Invalid feedbackId');
+      throw new Error('Invalid feedbackId');
+    }
     return await getFeedbackById(id);
   } catch (error) {
     handleError(error, 'getFeedbackById');
@@ -38,20 +38,16 @@ export async function getFeedbackByIdAction(id: string): Promise<Feedback | null
 }
 
 export async function createFeedbackAction(feedback: FeedbackInsertData): Promise<string | null> {
-  await validateAuthorization('createFeedbackAction');
   try {
+    await validateAuthorization('createFeedbackAction', feedback.user_id);
     const validatedFeedback = validateFormData(
       feedback,
       feedbackInsertServerSchema,
       'createFeedbackAction'
     );
     const { id } = await createFeedback(validatedFeedback);
-    if (!id) {
-      return null;
-    }
     revalidateTag('feedbacks');
-    revalidatePath('/');
-    return id;
+    return id || null;
   } catch (error) {
     handleError(error, 'createFeedbackAction');
   }
@@ -67,7 +63,6 @@ export async function updateFeedbackAction(feedback: FeedbackFormData): Promise<
     );
     await updateFeedback(validatedFeedback);
     revalidateTag('feedbacks');
-    revalidatePath('/');
   } catch (error) {
     handleError(error, 'updateFeedbackAction');
   }

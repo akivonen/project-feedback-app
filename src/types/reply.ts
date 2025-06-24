@@ -1,4 +1,4 @@
-import { UserSessionProps } from '@/types/user';
+import { UserProfileProps } from '@/types/user';
 
 export type Reply = {
   id: string;
@@ -6,7 +6,7 @@ export type Reply = {
   replying_to: string;
   comment_id: string;
   user_id: string;
-  user: UserSessionProps;
+  user: UserProfileProps;
   created_at: Date;
 };
 

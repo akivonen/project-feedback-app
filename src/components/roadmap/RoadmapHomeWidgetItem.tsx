@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icons } from '../common';
+import { Icons } from '../common/Icons';
 
 interface RoadmapHomeWidgetItemProps {
   state: string;

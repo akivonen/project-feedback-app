@@ -1,4 +1,4 @@
-import { UserSessionProps } from './user';
+import { UserProfileProps } from './user';
 import { Reply } from './reply';
 
 export type Comment = {
@@ -7,7 +7,7 @@ export type Comment = {
   content: string;
   user_id: string;
   created_at: Date;
-  user: UserSessionProps;
+  user: UserProfileProps;
   replies: Reply[] | [];
 };
 

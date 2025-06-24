@@ -29,14 +29,6 @@ export default function FeedbackForm({ curFeedback }: { curFeedback?: FeedbackFo
 
   const { data: session, status } = useSession();
 
-  if (!session?.user && status !== 'loading') {
-    router.push('/auth/signin');
-  }
-
-  if (curFeedback && session?.user?.id !== curFeedback.user_id) {
-    router.push('/');
-  }
-
   const initialValues = {
     title: '',
     category: 'Feature',
@@ -69,10 +61,12 @@ export default function FeedbackForm({ curFeedback }: { curFeedback?: FeedbackFo
           }
         } catch (error) {
           const errorMessage =
-            error instanceof Error ? error.message : 'An unexpected error occured in feedback form';
+            error instanceof Error
+              ? error.message
+              : 'An unexpected error occurred in feedback form';
           toast.error(errorMessage);
           setServerError(errorMessage);
-          console.error('FeedbackForm submission error:', error);
+          console.error('Form submission error:', error);
         }
       });
     },
@@ -102,6 +96,16 @@ export default function FeedbackForm({ curFeedback }: { curFeedback?: FeedbackFo
     ...categoryNames.slice(0, categoryNames.length - 1),
   ];
 
+  if (!session?.user && status !== 'loading') {
+    router.push('/auth/signin');
+    return null;
+  }
+
+  if (curFeedback && session?.user?.id !== curFeedback.user_id) {
+    router.push('/');
+    return null;
+  }
+
   if (isPending || status === 'loading') {
     return <LoadingSpinner />;
   }
@@ -111,6 +115,7 @@ export default function FeedbackForm({ curFeedback }: { curFeedback?: FeedbackFo
       formName={curFeedback ? `Editing ’${curFeedback.title}’` : 'Create New Feedback'}
       iconPath={curFeedback ? '/icons/icon-edit-feedback.svg' : '/icons/icon-new-feedback.svg'}
       iconAlt={curFeedback ? 'Edit feedback' : 'New feedback'}
+      ariaLabelledBy="feedback-form-heading"
     >
       <form onSubmit={formik.handleSubmit} noValidate>
         {serverError && (
@@ -124,12 +129,14 @@ export default function FeedbackForm({ curFeedback }: { curFeedback?: FeedbackFo
         )}
         <FormInput
           type="text"
+          labelTitle="Feedback Title"
           fieldName="title"
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values.title}
           isTouched={formik.touched.title}
           errors={formik.errors.title}
+          required
           autoComplete="off"
           fieldDescription="Add a short, descriptive headline"
         />
@@ -144,7 +151,11 @@ export default function FeedbackForm({ curFeedback }: { curFeedback?: FeedbackFo
           </div>
         </FormInput>
         {curFeedback && (
-          <FormInput fieldName="update status" fieldDescription="Change feedback state">
+          <FormInput
+            fieldName="status"
+            labelTitle="Update Status"
+            fieldDescription="Change feedback state"
+          >
             <div className="mt-4">
               <Dropdown
                 dropdownOptions={statusOptions}
@@ -165,13 +176,19 @@ export default function FeedbackForm({ curFeedback }: { curFeedback?: FeedbackFo
           isTouched={formik.touched.description}
           errors={formik.errors.description}
           autoComplete="off"
-          fieldDescription="Add a short, descriptive headline"
+          fieldDescription="Include any specific comments on what should be improved, added, etc."
         />
         <div className="mt-10 flex flex-col gap-4 md:mt-8 md:flex-row-reverse">
-          <Button type="submit" size="xl" variant="purple" disabled={formik.isSubmitting}>
+          <Button type="submit" size="xl" variant="purple" disabled={isPending}>
             {curFeedback ? 'Save Changes' : 'Add Feedback'}
           </Button>
-          <Button type="button" size="xl" variant="dark-blue" onClick={() => router.back()}>
+          <Button
+            type="button"
+            size="xl"
+            variant="dark-blue"
+            onClick={() => router.push('/')}
+            disabled={isPending || formik.isSubmitting}
+          >
             Cancel
           </Button>
           {curFeedback && (
@@ -191,7 +208,7 @@ export default function FeedbackForm({ curFeedback }: { curFeedback?: FeedbackFo
         modalIsOpen={modalIsOpen}
         setModalIsOpen={setModalIsOpen}
         handleRemoveFeedback={handleRemoveFeedback}
-        isSubmitting={formik.isSubmitting}
+        isSubmitting={isPending}
         isDeleting={isPending}
       />
     </FormWrapper>

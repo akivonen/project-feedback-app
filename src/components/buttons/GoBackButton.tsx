@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState, memo } from 'react';
-import { Icons } from '../common';
+import { Icons } from '../common/Icons';
 import { useRouter } from 'next/navigation';
 
 type GoBackButtonProps = {

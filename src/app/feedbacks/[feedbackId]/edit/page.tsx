@@ -6,10 +6,21 @@ import { notFound, redirect } from 'next/navigation';
 import { LoadingSpinner } from '@/components/common';
 import { FeedbackHeader } from '@/components/feedback/';
 import { auth } from '@/app/auth';
+import { Metadata } from 'next';
 
 type FeedbackEditPage = {
   params: Promise<{ feedbackId: string }>;
 };
+
+export async function generateMetadata({ params }: FeedbackEditPage): Promise<Metadata> {
+  const { feedbackId } = await params;
+  const feedback = await getFeedbackByIdAction(feedbackId);
+
+  return {
+    title: `${feedback?.title} - Feedback Edit Page`,
+    description: `${feedback?.description}`,
+  };
+}
 
 export default async function FeedbackEditPage({ params }: FeedbackEditPage) {
   const session = await auth();

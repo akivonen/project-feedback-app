@@ -4,6 +4,12 @@ import { LoadingSpinner } from '@/components/common';
 import FeedbackHeader from '@/components/feedback/FeedbackHeader';
 import { auth } from '@/app/auth';
 import { redirect } from 'next/navigation';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Feedback Add Page',
+  description: 'Add your product feedback',
+};
 
 export default async function FeedbackAddPage() {
   const session = await auth();
