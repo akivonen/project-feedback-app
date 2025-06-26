@@ -1,26 +1,26 @@
 install:
-    npm ci
+	npm ci
 
 build:
-    npm run build
+	npm run build
 
 start:
-    npm start
+	npm start
 
 dev:
-    npm run dev
+	npm run dev
 
 test:
-    npm test
+	npm test
 
 test-watch:
-    npm run test:watch
+	npm run test:watch
 
 test-coverage:
-    npm run test:coverage
+	npm run test:coverage
 
 lint:
-    npm run lint
+	npm run lint
 
 migrate:
-    npx drizzle-kit push
+	npx drizzle-kit push
