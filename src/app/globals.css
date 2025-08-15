@@ -5,3 +5,7 @@
 nextjs-portal {
   position: absolute;
 }
+
+html {
+  scrollbar-gutter: stable;
+}
