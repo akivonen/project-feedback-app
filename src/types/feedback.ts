@@ -2,32 +2,28 @@ import { Category, Status } from './roadmap';
 import { UserProfileProps } from './user';
 import { Comment } from './comment';
 import { Upvote } from './upvotes';
-export type Feedback = {
-  id: string;
-  user_id: string;
+
+export type BaseFeedback = {
   title: string;
   category: Category;
-  upvotes_count: number;
-  status: Status;
   description: string;
+  status: Status;
+  user_id: string;
+};
+
+export type Feedback = BaseFeedback & {
+  id: string;
+  upvotes_count: number;
   comments: Comment[] | [];
   created_at: Date;
   user: UserProfileProps;
   upvotes: Upvote[];
 };
 
-export type FeedbackInsertData = {
-  title: string;
-  category: Category;
-  description: string;
-  user_id: string;
-};
+export type FeedbackInputData = Omit<BaseFeedback, 'user_id'>;
 
-export type FeedbackFormData = {
+export type FeedbackInsertData = Omit<BaseFeedback, 'status'>;
+
+export type FeedbackFormData = BaseFeedback & {
   id: string;
-  title: string;
-  category: Category;
-  status: Status;
-  description: string;
-  user_id: string;
 };

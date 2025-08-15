@@ -1,8 +1,8 @@
 'use client';
 import React, { useState, useRef, useCallback } from 'react';
 import Image from 'next/image';
-import Button from '../buttons/Button';
-import { FormikErrors } from 'formik';
+import Button from '../../buttons/Button';
+import { useField } from 'formik';
 import { toast } from 'react-toastify';
 import { imageSchema } from '@/app/validation';
 import { z } from 'zod';
@@ -10,43 +10,25 @@ import { z } from 'zod';
 type ImagePickerProps = {
   name: string;
   label: string;
-  setFieldValue: (
-    field: string,
-    value: File | null,
-    shouldValidate?: boolean
-  ) =>
-    | Promise<void>
-    | Promise<
-        FormikErrors<{
-          image: null;
-        }>
-      >;
-  isTouched: boolean | undefined;
-  errors: string | undefined;
   imagePath?: string | null;
-};
+} & Omit<React.ComponentProps<'input'>, 'name'>;
 
-export default function ImagePicker({
-  name,
-  label,
-  setFieldValue,
-  isTouched,
-  errors,
-  imagePath = null,
-}: ImagePickerProps) {
+export default function ImagePicker({ name, label, imagePath = null }: ImagePickerProps) {
+  const [field, meta, helpers] = useField(name);
   const [pickedImage, setPickedImage] = useState<ArrayBuffer | string | null>(imagePath ?? null);
   const imageInput = useRef<HTMLInputElement | null>(null);
+  const hasError = meta.touched && meta.error;
   const handlePickImageClick = useCallback(() => {
     imageInput.current?.click();
   }, []);
 
   const handleClearImage = useCallback(() => {
     setPickedImage(null);
-    setFieldValue('image', null);
+    helpers.setValue(null);
     if (imageInput.current) {
       imageInput.current.value = '';
     }
-  }, [setFieldValue]);
+  }, [helpers]);
 
   const handleImageChange = useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,7 +36,7 @@ export default function ImagePicker({
 
       if (!file) {
         setPickedImage(null);
-        setFieldValue('image', null, true);
+        helpers.setValue(null, true);
         return;
       }
       try {
@@ -63,24 +45,23 @@ export default function ImagePicker({
         fileReader.onload = () => {
           if (typeof fileReader.result === 'string') {
             setPickedImage(fileReader.result);
-            setFieldValue('image', file, true);
+            helpers.setValue(file, true);
           }
         };
         fileReader.onerror = () => {
-          setFieldValue('image', null, true);
+          helpers.setValue(null, true);
           toast.error('Failed to read the image file. Please try another file');
         };
         fileReader.readAsDataURL(file);
-        console.log(1);
       } catch (error) {
         setPickedImage(null);
-        setFieldValue('image', null, true);
+        helpers.setValue(null, true);
         const errorMessage =
           error instanceof z.ZodError ? error.errors[0].message : 'Invalid image file';
         toast.error(errorMessage);
       }
     },
-    [setFieldValue]
+    [helpers]
   );
 
   return (
@@ -94,7 +75,7 @@ export default function ImagePicker({
       <div className="mt-4 flex flex-col items-center sm:flex-row sm:items-start">
         <div
           className={`relative flex h-40 w-40 items-center justify-center rounded-md border bg-light-200 p-4 text-sm text-dark-400 outline-none ${
-            isTouched && errors ? 'border-orange-200' : 'border-dark-400/20'
+            hasError ? 'border-orange-200' : 'border-dark-400/20'
           }`}
           aria-live="polite"
         >
@@ -111,6 +92,7 @@ export default function ImagePicker({
           )}
         </div>
         <input
+          {...field}
           type="file"
           name={name}
           id={name}
@@ -118,7 +100,7 @@ export default function ImagePicker({
           ref={imageInput}
           onChange={handleImageChange}
           className="hidden"
-          aria-describedby={errors && isTouched ? `${name}-error` : undefined}
+          aria-describedby={hasError ? `${name}-error` : undefined}
         />
         <div className="mt-4 flex flex-col gap-4 sm:ml-4 sm:mt-0">
           <Button type="button" size="xl" variant="blue" onClick={handlePickImageClick}>
@@ -129,7 +111,7 @@ export default function ImagePicker({
               Clear Image
             </Button>
           )}
-          {isTouched && errors && <div className="text-[14px] text-orange-200">{errors}</div>}
+          {hasError && <div className="text-[14px] text-orange-200">{meta.error}</div>}
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { Feedback, FeedbackInsertData, FeedbackFormData } from './feedback';
+import { Feedback, FeedbackInsertData, FeedbackFormData, FeedbackInputData } from './feedback';
 import {
   Category,
   FilterCategory,
@@ -13,6 +13,7 @@ import {
   User,
   UserCredentials,
   UserSignUpData,
+  UserSignUpFormData,
   UserInsertData,
   UserSessionProps,
   UserProfileProps,
@@ -25,6 +26,7 @@ export type {
   Feedback,
   FeedbackInsertData,
   FeedbackFormData,
+  FeedbackInputData,
   Category,
   FilterCategory,
   Status,
@@ -38,6 +40,7 @@ export type {
   User,
   UserCredentials,
   UserSignUpData,
+  UserSignUpFormData,
   UserInsertData,
   UserSessionProps,
   UserProfileProps,

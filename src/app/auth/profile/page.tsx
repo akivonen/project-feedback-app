@@ -4,7 +4,7 @@ import { redirect, notFound } from 'next/navigation';
 import { UserProfileProps } from '@/types';
 import { Suspense } from 'react';
 import { LoadingSpinner } from '@/components/common';
-import FormWrapper from '@/components/common/FormWrapper';
+import FormWrapper from '@/components/common/form/FormWrapper';
 import ProfileEditForm from '@/components/forms/ProfileEditForm';
 import ChangePasswordForm from '@/components/forms/ProfileChangePasswordForm';
 import { Metadata } from 'next';

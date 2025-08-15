@@ -17,6 +17,10 @@ export type UserSignUpData = UserCredentials & {
   image?: File | null;
 };
 
+export type UserSignUpFormData = UserSignUpData & {
+  confirmPassword: string;
+};
+
 export type UserInsertData = UserCredentials & {
   name: string;
   image?: string | null;
